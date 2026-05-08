@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(upload_to="users/avatars/", blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null= True)
     city = models.CharField(max_length=100, blank=True)
@@ -26,7 +26,7 @@ class SavedCar(models.Model):
     class Meta:
         unique_together = ['user', 'car']
         ordering = ['saved_at']
-        verbose_name = "Xe đã lưu"
+        verbose_name_plural = "Xe đã lưu"
         
     def __str__(self):
         return f"{self.user.username} -> {self.car.name}"
