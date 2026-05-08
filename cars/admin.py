@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Brand, Car, CarImage, CarSpecification, Review
+from .models import Brand, Car, CarImage, CarSpecification, Review, Comparison
 
 # Register your models here.
 class CarSpecificationInline(admin.StackedInline):
@@ -27,6 +27,18 @@ class CarAdmin(admin.ModelAdmin):
     list_editable = ['is_featured', 'is_active']
     inlines = [CarSpecificationInline, CarImageInline]
     
+    
+@admin.action(description="Approve review")
+def approve_reviews(modeladmin, request, queryset):
+    updated = queryset.update(is_approved=True)
+    modeladmin.message_user(request, f"Đã duyệt {updated} reviews")
+    
+@admin.action(description="Reject review")
+def reject_reviews(modeladmin, request, queryset):
+    updated = queryset.update(is_approved=False)
+    modeladmin.message_user(request, f"Đã từ chối {updated} reviews")
+
+
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['author_name', 'car', 'rating', 'is_approved', 'created_at']
@@ -34,6 +46,14 @@ class ReviewAdmin(admin.ModelAdmin):
     list_editable = ['is_approved']
     search_fields = ['author_name', 'car__name', 'title']
     readonly_fields = ['created_at']
+    actions = [approve_reviews, reject_reviews]
     
-
+@admin.register(Comparison)
+class ComparisonAdmin(admin.ModelAdmin):
+    list_display = ['__str__','car_count', 'created_at']
+    readonly_fields = ['created_at', 'updated_at']
+    filter_horizontal = ['cars']
     
+    @admin.display(description="Car count")
+    def car_count(self, obj):
+        return obj.cars.count()
