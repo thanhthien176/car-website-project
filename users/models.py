@@ -19,7 +19,7 @@ class UserProfile(models.Model):
 
 class SavedCar(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_cars')
-    car = models.ForeignKey('cars.Car', on_delete=models.CASCADE, related_name='saved_by')
+    car = models.ForeignKey('cars.CarVariant', on_delete=models.CASCADE, related_name='saved_by')
     saved_at = models.DateTimeField(auto_now_add=True)
     note = models.TextField(blank=True)
     
@@ -29,7 +29,7 @@ class SavedCar(models.Model):
         verbose_name_plural = "Xe đã lưu"
         
     def __str__(self):
-        return f"{self.user.username} -> {self.car.name}"
+        return f"{self.user.username} -> {self.car.variant_name}"
     
     
     
