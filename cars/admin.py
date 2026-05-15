@@ -15,6 +15,44 @@ from .models import (
 
 # Register your models here.
 
+# ======= Export cars CSV =======
+def export_cars_csv(modeladmin, request, queryset):
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="cars-export.csv"'
+    response.write('\ufeff')  # BOM for Excel UTF-8 compatibility
+    
+    writer = csv.writer(response)
+    writer.writerow([
+        'ID', 'Brand', 'Model', 'Variant', 'Year',
+        'Body Type', 'Fuel Type', 'Price Min', 'Price Max', 
+        'Avg Rating', 'Is Active',        
+    ])
+    
+    qs = queryset.select_related(
+        "car_model__brand",
+        "car_model__body_type",
+    )
+    
+    for variant in qs:
+        model = variant.car_model
+        writer.writerow([
+            variant.id,
+            model.brand.name,
+            model.name,
+            variant.variant_name,
+            model.model_year or "",
+            model.body_type.name if model.body_type else "",
+            variant.get_fuel_type_display(),
+            variant.price_min/1_000_000,
+            variant.price_max/1_000_000,
+            model.avg_rating,
+            "Yes" if variant.is_active else "No",
+        ])
+        
+    return response
+
+export_cars_csv.short_description = "Export selected variants to CSV"
+
 # ---------------------------------------------------------------------------
 # Inlines
 # ---------------------------------------------------------------------------
@@ -185,7 +223,9 @@ class CarVariantAdmin(admin.ModelAdmin):
 
     prepopulated_fields = {'slug': ('variant_name',)}
 
-    list_editable = ['is_active'] 
+    list_editable = ['is_active']
+    
+    actions = [export_cars_csv] 
 
     inlines = [ 
     CarImageInline, 
@@ -210,14 +250,3 @@ class CarVariantAdmin(admin.ModelAdmin):
     def get_body_type(self, obj): 
         return obj.car_model.body_type
 
-# ======= Export cars CSV =======
-def export_cars_csv(modeladmin, request, queryset):
-    response = HttpResponse(content_type="text/csv")
-    response['Content-Disposition'] = 'attachmen; filename="cars-export.csv"'
-    response.write('\ufeff')
-    
-    writer = csv.writer(response)
-    writer.writerow([
-        'ID', 'Brand', 'CarModel', 'CarVariant', 'Year',
-        
-    ])
