@@ -1,6 +1,9 @@
+import csv
+
 from django.contrib import admin
 from django.db.models.query import QuerySet
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
+
 
 from .models import (
     Brand, CarModel, CarVariant, CarImage,
@@ -124,7 +127,7 @@ class RatingFilter(admin.SimpleListFilter):
             "low":       {"avg_rating__gt": 0,  "avg_rating__lt": 2},
             "no_review": {"avg_rating": 0},
         }
-        f = map_filter.get(v)
+        f = map_filter.get(v) if v else None
         return queryset.filter(**f) if f else queryset
     
 # ---------------------------------------------------------------------------
@@ -135,8 +138,7 @@ class RatingFilter(admin.SimpleListFilter):
 class BrandAdmin(admin.ModelAdmin):
     list_display  = ['name', 'country_of_origin', 'founded_year', 'is_active']
     list_filter   = ['is_active', 'country_of_origin']
-    # BUG FIX #2: 'search_field' (thiếu 's') → Django bỏ qua hoàn toàn.
-    search_fields = ['name']   # ← đã sửa
+    search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
 
 # ---------------------------------------------------------------------------
@@ -148,7 +150,7 @@ class CarModelAdmin(admin.ModelAdmin):
     list_display  = ['__str__', 'brand', 'body_type', 'model_year', 'avg_rating']
     list_filter   = ['brand', 'body_type', 'car_class', RatingFilter]  
     search_fields = ['name', 'brand__name']
-    prepopulated_fields = {'car_slug': ('name',)}
+    prepopulated_fields = {'slug': ('name',)}
     readonly_fields = ['avg_rating']
 
 
@@ -181,7 +183,7 @@ class CarVariantAdmin(admin.ModelAdmin):
 
     search_fields = ['variant_name', 'car_model__name', 'car_model__brand__name']
 
-    prepopulated_fields = {'variant_slug': ('variant_name',)}
+    prepopulated_fields = {'slug': ('variant_name',)}
 
     list_editable = ['is_active'] 
 
@@ -207,3 +209,15 @@ class CarVariantAdmin(admin.ModelAdmin):
     @admin.display(description="Vehicle type", ordering='car_model__body_type__name') 
     def get_body_type(self, obj): 
         return obj.car_model.body_type
+
+# ======= Export cars CSV =======
+def export_cars_csv(modeladmin, request, queryset):
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] = 'attachmen; filename="cars-export.csv"'
+    response.write('\ufeff')
+    
+    writer = csv.writer(response)
+    writer.writerow([
+        'ID', 'Brand', 'CarModel', 'CarVariant', 'Year',
+        
+    ])

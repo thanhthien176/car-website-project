@@ -31,7 +31,7 @@ class Brand(SEOMetaData, models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True)
     country_of_origin = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to=UploadToPath('brand','logos'), 
+    logo = models.ImageField(upload_to=UploadToPath('brand','logos', slug_field='slug'), 
                              blank=True, null=True, 
                              validators=[validate_image_size, validate_image_extension])
     description = models.TextField(blank=True, null=True)
@@ -70,12 +70,12 @@ class CarModel(SEOMetaData, models.Model):
     body_type = models.ForeignKey(BodyType, on_delete=models.SET_NULL, null=True)
     car_class = models.ForeignKey(CarClass, on_delete=models.SET_NULL, null=True, blank=True)
     
-    car_slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True)
     
     model_year = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     
-    thumbnail = models.ImageField(upload_to = UploadToPath('cars','thumbnail'), 
+    thumbnail = models.ImageField(upload_to = UploadToPath('cars','thumbnail', slug_field='slug'), 
                                   blank=True, null=True, 
                                   validators=[validate_image_size, validate_image_extension])
     
@@ -89,7 +89,7 @@ class CarModel(SEOMetaData, models.Model):
             )
         ]
         indexes = [
-            models.Index(fields=['car_slug']),
+            models.Index(fields=['slug']),
             models.Index(fields=['brand'])
         ]
         ordering = ['brand__name','name', '-model_year']
@@ -111,8 +111,8 @@ class CarModel(SEOMetaData, models.Model):
             )
         
     def save(self, *args, **kwargs):
-        if not self.car_slug:
-            self.car_slug = slugify(f"{self.brand.name}-{self.name}")
+        if not self.slug:
+            self.slug = slugify(f"{self.brand.name}-{self.name}")
             
             
         super().save(*args, **kwargs)
@@ -143,7 +143,7 @@ class CarVariant(SEOMetaData, models.Model):
     # Basic Information
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="variants")
     variant_name = models.CharField(max_length=100)
-    variant_slug = models.SlugField(max_length=300, unique=True, blank=True)
+    slug = models.SlugField(max_length=300, unique=True, blank=True)
     
     # classification
     fuel_type = models.CharField(max_length=20, choices=FUEL_TYPE_CHOICES)    
@@ -162,7 +162,7 @@ class CarVariant(SEOMetaData, models.Model):
             )
         ]
         indexes = [
-            models.Index(fields=['variant_slug']),
+            models.Index(fields=['slug']),
             models.Index(fields=['fuel_type'])
         ]
         verbose_name = "Variant"
@@ -184,8 +184,8 @@ class CarVariant(SEOMetaData, models.Model):
             )
     
     def save(self, *args, **kwargs):
-        if not self.variant_slug:
-            self.variant_slug = slugify(f"{self.car_model}-{self.variant_name}")
+        if not self.slug:
+            self.slug = slugify(f"{self.car_model}-{self.variant_name}")
         super().save(*args, **kwargs)
         
     @property
@@ -339,7 +339,7 @@ class SafetySpecification(models.Model):
     
 class CarImage(models.Model):
     car = models.ForeignKey(CarVariant, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to=UploadToPath('cars', 'gallery'), 
+    image = models.ImageField(upload_to=UploadToPath('cars', 'gallery', slug_field='car.slug'), 
                               validators=[validate_image_size, validate_image_extension])
     caption = models.CharField(max_length=200, blank=True)
     is_primary = models.BooleanField(default=False)
