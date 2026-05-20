@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+
+{% block userlinks %}
+  <a href="{% url 'admin_dashboard' %}">📊 Dashboard</a> |
+  {{ block.super }}
+{% endblock %}
+
+{% block nav-global %}
+<div style="background:#e8452c; padding:8px 16px;">
+  <a href="{% url 'admin_dashboard' %}" 
+     style="color:white; font-weight:600; text-decoration:none;">
+    📊 Xem Dashboard →
+  </a>
+</div>
+{% endblock %}

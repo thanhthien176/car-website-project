@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from cars.views.dashboard_view import admin_dashboard
 
 urlpatterns = [
+    path('admin/dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin/', admin.site.urls),
 ]

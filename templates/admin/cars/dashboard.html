@@ -1,0 +1,289 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Dashboard — CarCompare{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+  {# ── Header ─────────────────────────────────────────────────────────── #}
+  <div class="db-header">
+    <div class="db-header-left">
+      <h1>Car<span>Compare</span> Dashboard</h1>
+      <p>Tổng quan dữ liệu — {{ now|date:"d/m/Y H:i" }}</p>
+    </div>
+    <div class="db-header-right">
+      <a href="{% url 'admin:cars_carvariant_changelist' %}" class="db-btn db-btn-ghost">
+        🚗 Quản lý xe
+      </a>
+      <a href="{% url 'admin:cars_review_changelist' %}" class="db-btn db-btn-primary">
+        ⚠️ Duyệt đánh giá
+      </a>
+    </div>
+  </div>
+
+  {# ── Pending reviews alert ───────────────────────────────────────────── #}
+  {% if pending_reviews %}
+  <div class="alert-bar alert-warn" style="margin-top:20px;">
+    <span class="alert-icon">⚠️</span>
+    <span>Có <strong>{{ pending_reviews }}</strong> đánh giá chờ duyệt.</span>
+    <a href="{% url 'admin:cars_review_changelist' %}?is_approved__exact=0" class="alert-link" style="margin-left:auto;">
+      Duyệt ngay →
+    </a>
+  </div>
+  {% endif %}
+
+  {# ── KPI ─────────────────────────────────────────────────────────────── #}
+  <div class="db-section">
+    <p class="db-section-title">Tổng quan</p>
+    <div class="kpi-grid">
+
+      <div class="kpi-card">
+        <div class="kpi-icon">🏷️</div>
+        <div class="kpi-value">{{ total_brands }}</div>
+        <div class="kpi-label">Thương hiệu đang hoạt động</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon blue">🚘</div>
+        <div class="kpi-value">{{ total_models }}</div>
+        <div class="kpi-label">Dòng xe (CarModel)</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon green">⚙️</div>
+        <div class="kpi-value">{{ active_variants }}</div>
+        <div class="kpi-label">Biến thể đang bán</div>
+        {% if total_variants != active_variants %}
+        <span class="kpi-badge badge-warn">{{ total_variants }} tổng</span>
+        {% endif %}
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon gold">🖼️</div>
+        <div class="kpi-value">{{ total_images }}</div>
+        <div class="kpi-label">Hình ảnh đã upload</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon">⭐</div>
+        <div class="kpi-value">{{ total_reviews }}</div>
+        <div class="kpi-label">Đánh giá tổng cộng</div>
+        {% if pending_reviews %}
+        <span class="kpi-badge badge-warn">{{ pending_reviews }} chờ duyệt</span>
+        {% else %}
+        <span class="kpi-badge badge-ok">Đã duyệt hết</span>
+        {% endif %}
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon blue">🔄</div>
+        <div class="kpi-value">{{ total_comparisons }}</div>
+        <div class="kpi-label">Lượt so sánh xe</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon gold">📅</div>
+        <div class="kpi-value">{{ new_reviews_7d }}</div>
+        <div class="kpi-label">Đánh giá mới (7 ngày)</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon green">📊</div>
+        <div class="kpi-value">{{ avg_rating_global }}</div>
+        <div class="kpi-label">Rating trung bình toàn site</div>
+      </div>
+
+    </div>
+  </div>
+
+  {# ── Charts Row ───────────────────────────────────────────────────────── #}
+  <div class="db-section" style="margin-top:24px;">
+    <p class="db-section-title">Phân tích dữ liệu xe</p>
+    <div class="chart-row">
+
+      {# Fuel type #}
+      <div class="chart-card">
+        <div class="chart-card-title">🔋 Phân loại nhiên liệu</div>
+        <div class="chart-wrap">
+          <canvas id="chartFuel"></canvas>
+        </div>
+      </div>
+
+      {# Body type #}
+      <div class="chart-card">
+        <div class="chart-card-title">🚙 Phân loại thân xe</div>
+        <div class="chart-wrap">
+          <canvas id="chartBody"></canvas>
+        </div>
+      </div>
+
+      {# Price bracket #}
+      <div class="chart-card">
+        <div class="chart-card-title">💰 Phân khúc giá</div>
+        <div class="chart-wrap">
+          <canvas id="chartPrice"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {# ── Rating + Completeness ────────────────────────────────────────────── #}
+  <div class="db-section" style="margin-top:24px;">
+    <p class="db-section-title">Đánh giá & Dữ liệu</p>
+    <div class="chart-row" style="grid-template-columns: 1fr 1fr;">
+
+      {# Rating distribution #}
+      <div class="chart-card">
+        <div class="chart-card-title">⭐ Phân bố đánh giá (đã duyệt)</div>
+        <div style="display:flex; gap:24px; align-items:center; margin-bottom:16px;">
+          <div>
+            <div class="avg-rating-big">{{ avg_rating_global }}</div>
+            <div class="avg-stars">
+              {% for i in "12345" %}★{% endfor %}
+            </div>
+            <div style="font-size:12px; color:var(--text-3); margin-top:6px;">
+              {{ total_reviews }} đánh giá
+            </div>
+          </div>
+          <div style="flex:1;">
+            {% for item in rating_dist reversed %}
+            <div class="rating-row">
+              <span class="star-label">{{ item.star }}★</span>
+              <div class="rating-bar-track">
+                <div class="rating-bar-fill"
+                     style="width: {% if total_reviews %}{% widthratio item.count total_reviews 100 %}{% else %}0{% endif %}%">
+                </div>
+              </div>
+              <span class="rating-count">{{ item.count }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {# Data completeness #}
+      <div class="completeness-card">
+        <div class="chart-card-title" style="margin:-20px -20px 20px; padding:16px 20px; border-bottom:1px solid var(--border);">
+          📋 Mức độ hoàn thiện dữ liệu ({{ total_variants }} biến thể)
+        </div>
+        {% for item in completeness %}
+        <div class="comp-row">
+          <div class="comp-head">
+            <span>{{ item.label }}</span>
+            <span>{{ item.done }}/{{ item.total }} — {{ item.pct }}%</span>
+          </div>
+          <div class="comp-track">
+            <div class="comp-fill {% if item.pct >= 80 %}high{% elif item.pct >= 50 %}medium{% else %}low{% endif %}"
+                 style="width: {{ item.pct }}%">
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+
+  {# ── Tables ───────────────────────────────────────────────────────────── #}
+  <div class="db-section" style="margin-top:24px;">
+    <p class="db-section-title">Xếp hạng</p>
+    <div class="table-row">
+
+      {# Top brands #}
+      <div class="table-card">
+        <div class="table-card-title">🏆 Top thương hiệu nhiều xe nhất</div>
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Thương hiệu</th>
+              <th>Dòng xe</th>
+              <th>Biến thể</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for brand in top_brands %}
+            <tr>
+              <td class="rank">{{ forloop.counter }}</td>
+              <td>
+                <a href="{% url 'admin:cars_brand_change' brand.pk %}" class="brand-name">
+                  {{ brand.name }}
+                </a>
+              </td>
+              <td><span class="num-pill">{{ brand.model_count }}</span></td>
+              <td><span class="num-pill accent">{{ brand.variant_count }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="color:var(--text-3); text-align:center; padding:24px;">Chưa có dữ liệu</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {# Top rated #}
+      <div class="table-card">
+        <div class="table-card-title">⭐ Dòng xe được đánh giá cao nhất</div>
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Dòng xe</th>
+              <th>Hãng</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for model in top_rated_models %}
+            <tr>
+              <td class="rank">{{ forloop.counter }}</td>
+              <td>
+                <a href="{% url 'admin:cars_carmodel_change' model.pk %}" class="brand-name">
+                  {{ model.name }}
+                </a>
+              </td>
+              <td style="color:var(--text-3); font-size:12px;">{{ model.brand.name }}</td>
+              <td class="star-val">{{ model.avg_rating }}★</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="color:var(--text-3); text-align:center; padding:24px;">Chưa có đánh giá được duyệt</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  {# ── Price overview ────────────────────────────────────────────────────── #}
+  <div class="db-section" style="margin-top:24px; padding-bottom:0;">
+    <p class="db-section-title">Tổng quan giá (triệu VNĐ — chỉ biến thể đang bán)</p>
+    <div class="price-stats">
+      <div class="price-stat">
+        <div class="price-stat-val">{{ price_overview.min }} tr</div>
+        <div class="price-stat-label">Thấp nhất</div>
+      </div>
+      <div class="price-stat">
+        <div class="price-stat-val">{{ price_overview.avg_min }} tr</div>
+        <div class="price-stat-label">Giá khởi điểm TB</div>
+      </div>
+      <div class="price-stat">
+        <div class="price-stat-val">{{ price_overview.max }} tr</div>
+        <div class="price-stat-label">Cao nhất</div>
+      </div>
+    </div>
+  </div>
+
+</div>{# end content-main #}
+
+{# ── Chart.js scripts ─────────────────────────────────────────────────── #}
+<script src = "{% static "admin/js/dashboard.js" %}"></script>
+{% endblock %}
