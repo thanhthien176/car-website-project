@@ -249,4 +249,12 @@ class CarVariantAdmin(admin.ModelAdmin):
     @admin.display(description="Vehicle type", ordering='car_model__body_type__name') 
     def get_body_type(self, obj): 
         return obj.car_model.body_type
+    
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display  = ['author_name', 'car', 'rating', 'is_approved', 'created_at']
+    list_filter   = ['is_approved', 'rating']
+    search_fields = ['author_name', 'car__name']
+    list_editable = ['is_approved']
+    readonly_fields = ['created_at']
 
