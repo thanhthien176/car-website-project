@@ -25,7 +25,7 @@ class AdminDashboardSelector:
         
     def get_review_stats(self)->dict:
         avg_rating_global = Review.objects.filter(is_approved=True).aggregate(avg=Avg('rating'))['avg'] or 0
-        new_review_7d = Review.objects.filter(created_at__gte=self.seven_day_ago).count()
+        new_reviews_7d = Review.objects.filter(created_at__gte=self.seven_day_ago).count()
         
         rating_dist = []
         for star in range(1,6):
@@ -33,7 +33,7 @@ class AdminDashboardSelector:
             rating_dist.append({"star": star, "count": cnt})
         return {
             "avg_rating_global": avg_rating_global,
-            "new_review_7d": new_review_7d,
+            "new_reviews_7d": new_reviews_7d,
             "rating_dist": rating_dist,
         }
     
@@ -137,6 +137,7 @@ class AdminDashboardSelector:
             {'label': 'Có thông số động cơ',  'done': total_variants - missing_engine,     'total': total_variants},
             {'label': 'Có kích thước',         'done': total_variants - missing_dimension,  'total': total_variants},
             {'label': 'Có thông số an toàn',   'done': total_variants - missing_safety,     'total': total_variants},
+            {'label': 'có vận hành',           'done': total_variants - missing_performance, 'total': total_variants},
             {'label': 'Có hình ảnh',           'done': total_variants - missing_image,      'total': total_variants},
         ]
         for item in completeness:

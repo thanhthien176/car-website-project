@@ -7,7 +7,7 @@ from django.core.files.base import ContentFile
 
 logger = logging.getLogger(__name__)
 
-def covert_to_webp(image_field, quality=85, max_size=None):
+def convert_to_webp(image_field, quality=85, max_size=None):
     """Convert image to WebP, resize if necessary, maintain aspect ratio.
 
     Args:

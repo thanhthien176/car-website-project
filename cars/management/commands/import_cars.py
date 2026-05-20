@@ -62,7 +62,7 @@ class Command(BaseImportCommand):
                 defaults={"slug": slugify(car_class_name)}
             )
             if class_created:
-                stats["body_type_created"] += 1
+                stats["class_created"] += 1
                 self.stdout.write(f" + CarClass: {car_class}")
         
         # ── 4. CarModel ────────────────────────────────────────────────

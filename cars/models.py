@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.utils.text import slugify
 from .validators import validate_image_size, validate_image_extension
 from .utils.upload_utils import UploadToPath
@@ -110,6 +111,11 @@ class CarModel(SEOMetaData, models.Model):
             f"{self.brand.name}-{self.name}"
             )
         
+    def recalculate_avg_rating(self)-> None:
+        avg = self.reviews.filter(is_approved=True).aggregate(Avg("rating"))["rating__avg"]
+        self.avg_rating = avg or 0
+        self.save(update_fields=["avg_rating"])
+        
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.brand.name}-{self.name}")
@@ -190,6 +196,8 @@ class CarVariant(SEOMetaData, models.Model):
         
     @property
     def price_range(self):
+        if self.price_min is None or self.price_max is None:
+            return "Liên hệ"
         min_m = self.price_min/1_000_000
         max_m = self.price_max/1_000_000
         return f'{min_m:,.0f} - {max_m:,.0f} triệu VNĐ'
