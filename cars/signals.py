@@ -2,8 +2,9 @@ import logging
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.db.models import Avg
+from django.core.cache import cache
 
-from .models import Brand, CarImage, CarModel, Review
+from .models import Brand, CarImage, CarModel, Review, CarVariant
 from .utils.image_utils import covert_to_webp
 import os
 
@@ -14,6 +15,12 @@ logger = logging.getLogger(__name__)
 _THUMBNAIL_MAX_SIZE = (1280, 1280)
 _GALLERY_MAX_SIZE = (1920, 1920)
 _LOGO_MAX_SIZE = (400, 400)
+_MODEL_TO_WATCH = [CarModel, Review, Brand, CarVariant]
+
+@receiver([post_save, post_delete], sender=None)
+def clear_dashboard_cache(sender, instance, **kwargs):
+    if sender in _MODEL_TO_WATCH:
+        cache.delete("admin_dashboard_context")
 
 # Helper
 def _replace_with_webp(instance, field_name: str, max_size:tuple):
