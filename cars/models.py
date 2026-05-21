@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.db.models import Avg
 from django.utils.text import slugify
@@ -191,15 +192,22 @@ class CarVariant(SEOMetaData, models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(f"{self.car_model}-{self.variant_name}")
+            base_slug = slugify(f"{self.car_model}-{self.variant_name}")
+            new_slug = base_slug
+            count = 1
+            while CarVariant.objects.filter(slug=new_slug).exists():
+                new_slug = slugify(f"{base_slug}-{count}")
+                count += 1
+            self.slug = new_slug
+            
         super().save(*args, **kwargs)
         
     @property
     def price_range(self):
         if self.price_min is None or self.price_max is None:
             return "Liên hệ"
-        min_m = self.price_min/1_000_000
-        max_m = self.price_max/1_000_000
+        min_m = self.price_min/Decimal(1_000_000)
+        max_m = self.price_max/Decimal(1_000_000)
         return f'{min_m:,.0f} - {max_m:,.0f} triệu VNĐ'
     
     @property

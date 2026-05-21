@@ -1,3 +1,4 @@
+from decimal import Decimal
 from cars.models import Brand, BodyType, CarClass, CarModel, CarVariant
 
 def make_brand(**kwargs) -> Brand:
