@@ -1,6 +1,6 @@
-# make add pkg=requests: add requests package
 .PHONY: run test migrate shell
 
+# make add pkg=requests: add requests package
 add:
 	poetry add $(pkg)
 
@@ -21,6 +21,10 @@ superuser:
 
 test:
 	poetry run pytest
+
+# example: make test-path path=cars/tests/test_models.py
+test-path:
+	poetry run pytest ${path}
 
 shell:
 	poetry run python manage.py shell
