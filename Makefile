@@ -4,6 +4,9 @@
 add:
 	poetry add $(pkg)
 
+config-venv:
+	poetry config virtualenvs.in-project true	
+
 install:
 	poetry install
 
