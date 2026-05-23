@@ -1,0 +1,87 @@
+import io
+from PIL import Image, UnidentifiedImageError
+from unittest.mock import MagicMock, patch
+
+from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+from cars.utils.image_utils import convert_to_webp
+
+class ConvertToWebpTest(TestCase):
+    """
+    Testing conversion logic without a real image file —
+    using PIL to create an in-memory image.
+    """
+    def _create_test_image(self, width=200, height=150, mode="RGB"):
+        color = (
+            (100, 150, 200, 128)
+            if mode == "RGBA"
+            else (100, 150, 200)
+        )
+        
+        img = Image.new(mode, (width, height), color=color)
+        buf = io.BytesIO()
+        fmt = "PNG" if mode == "RGBA" else "JPEG"
+        img.save(buf, format=fmt)
+        
+        return SimpleUploadedFile(
+            name=f"test_image.{fmt.lower()}",
+            content=buf.getvalue(),
+            content_type=f"image/{fmt.lower()}"
+        )
+
+    
+    def test_returns_content_file_for_valid_image(self):
+        field = self._create_test_image(mode="RGB")
+        
+        result = convert_to_webp(field)
+        
+        self.assertIsNotNone(result)
+        
+        self.assertEqual(Image.open(result).format, "WEBP")
+        self.assertTrue(result.name.endswith(".webp"))
+        
+    def test_return_none_for_empty_field(self):
+        self.assertIsNone(convert_to_webp(None))
+        
+    def test_returns_none_on_open_error(self):
+        field = self._create_test_image()
+        
+        with patch("cars.utils.image_utils.Image.open", side_effect=UnidentifiedImageError):
+            result = convert_to_webp(field)
+            
+            self.assertIsNone(result)
+        
+    def test_rgba_image_handled(self):
+        field = self._create_test_image(mode="RGBA")
+        
+        result = convert_to_webp(field)
+        
+        self.assertIsNotNone(result)
+    
+        img = Image.open(result)
+        self.assertEqual(img.format, "WEBP")
+        self.assertEqual(img.mode, "RGBA")
+        
+    def test_max_size_resize_image(self):
+        field = self._create_test_image(width=3000, height=2000)
+        result = convert_to_webp(field, quality=85, max_size=(1280, 1280))
+        
+        self.assertIsNotNone(result)
+    
+        img = Image.open(result)
+        self.assertLessEqual(img.size[0], 1280)
+        self.assertLessEqual(img.size[1], 1280)
+    
+    def test_file_extension_is_changed_to_webp(self):
+        field = self._create_test_image()
+        field.name = "toyota-abc123.jpg"
+        
+        result = convert_to_webp(field)
+        
+        print(f"DEBUG: result.name sau khi chạy: {result.name}")
+        self.assertEqual(result.name, "toyota-abc123.webp")
+            
+        
+        
+    

@@ -66,8 +66,9 @@ def convert_to_webp(image_field, quality=85, max_size=None):
     
     output.seek(0)
     
-    base_name = os.path.splitext(image_field.name)[0]
-    return ContentFile(output.read(), name=f"{base_name}.webp")
+    name, ext = os.path.splitext(image_field.name)
+    new_name = f"{name}.webp"
+    return ContentFile(output.read(), name=new_name)
     
     
     
