@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}CarCompare - Trang chủ{% endblock  %}
+{% block mete_description %}So sánh thông số và giá xe hơi tại Việt Nam{% endblock %}
+
+{% block content %}
+    <h1>Welcome To CarCompare</h1>
+    <section>
+        <h2>Hãng xe nổi bật ({{ featured_brands.count }})</h2>
+        {% for brand in featured_brands %}
+            <p>{{ brand.name }} - {{ brand.country_of_origin }}</p>
+        {% empty %}
+            <p>Chưa có hãng nào</p>
+        {% endfor %}
+    </section>
+
+    <section>
+        <h2>Xe mới nhất</h2>
+        {% for variant in latest_variants %}
+            <p>{{ variant}}</p>
+        {% empty %}
+            <p>Chưa có xe nào</p>
+        {% endfor %}
+    </section>
+
+    <section>
+        <h2>Đánh giá cao nhất</h2>
+        {% for car in top_rated %}
+            <p>{{car}} - *{{car.avg_rating}}</p>
+        {% empty %}
+            <p>Chưa có đánh giá nào.</p>
+        {% endfor %}
+    </section>
+
+{% endblock %}
