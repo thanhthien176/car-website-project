@@ -9,6 +9,7 @@
         <h2>Hãng xe nổi bật ({{ featured_brands.count }})</h2>
         {% for brand in featured_brands %}
             <p>{{ brand.name }} - {{ brand.country_of_origin }}</p>
+            <p>{{ brand.model_count }} dòng xe</p>
         {% empty %}
             <p>Chưa có hãng nào</p>
         {% endfor %}

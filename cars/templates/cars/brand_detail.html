@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %} {% endblock %}
+
+{% block extra_head %} {% endblock %}
+
+{% block content %}
+<div class="container brand-detail-page">
+    <!-- brand header -->
+     <section class="brand-header">
+        {% if brand.logo %}
+            <img src="{{ brand.logo }}" alt="{{ brand.name }}">
+        {% endif %}
+        <h1>{{ brand.name }}</h1>
+        <p>{{ brand.country_of_origin }}</p>
+
+        {% if brand.founded_year %}
+            <p>Thành lập {{ brand.founded_year }}</p>
+        {% endif %}
+
+        {% if brand.website %}
+            <a href="{{ brand.website }}" target="_blank" rel="nooppener">
+                Website chính thức
+            </a>
+        {% endif %}
+        {% if brand.description %}
+            <p>{{ brand.description}}</p>
+        {% endif %}
+
+    </section>
+
+    <section class="brand-model">
+        <h2>Các dòng xe của hãng {{brand.name}}</h2>
+        {% if car_models %}
+        <div class="model-grid">
+            {% for model in car_models%}
+            <article class="model-card">
+                {% if model.thumbnail %}
+                <img src="{{ model.thumbnail }}" alt="{{ model }}">
+                {% endif %}
+                <h3>
+                    <!--model.get_absolute_url-->
+                    <a href="{{model}}">{{ model }}</a>
+                   
+                </h3>
+                {% if model.body_type %}
+                    <p>{{ model.body_type }}</p>
+                {% endif %}
+                {% if model.avg_rating %}
+                    <p>{{ model.avg_rating }} *</p>
+                {% endif %}
+
+                <p>{{ model.variants.count }} phiên bản</p>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>Hãng này chưa có dòng xe nào.</p>
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+from django.db.models import Count
 from cars.models import Brand, CarModel, CarVariant
 
 class CarSelector:
@@ -6,8 +7,13 @@ class CarSelector:
     Keeps views thin and business logic testable in isolation.
     """
     def get_featured_brands(self, limit: int = 8):
+        """
+        Return active brands with model_count annotation to avoid N+1.
+        Template use {{ brand.model_count }} instead of {{ brand.car_models.count }}
+        """
         return (Brand.objects
                 .filter(is_active=True)
+                .annotate(model_count=Count('car_models', distinct=True))
                 .order_by("name")[:limit]
                 )
         

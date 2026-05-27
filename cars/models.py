@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.db import models
 from django.db.models import Avg
 from django.utils.text import slugify
+from django.urls import reverse
 from .validators import validate_image_size, validate_image_extension
 from .utils.upload_utils import UploadToPath
 
@@ -65,6 +66,10 @@ class Brand(SEOMetaData, models.Model):
     def __str__(self):
         return self.name
     
+    def get_absolute_url(self):
+        return reverse("cars:brand_detail", kwargs={"slug": self.slug})
+    
+    
 class CarModel(SEOMetaData, models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="car_models")
     name = models.CharField(max_length=100)
@@ -127,6 +132,10 @@ class CarModel(SEOMetaData, models.Model):
     def __str__(self):
         return f"{self.brand.name} {self.name}"
     
+    def get_absolute_url(self):
+        return reverse("cars:car_detail", kwargs={"slug": self.slug})
+    
+    
 class CarVariant(SEOMetaData, models.Model):
     # BODY_TYPE_CHOICES = [
     #     ('sedan', 'Sedan'),
@@ -170,7 +179,8 @@ class CarVariant(SEOMetaData, models.Model):
         ]
         indexes = [
             models.Index(fields=['slug']),
-            models.Index(fields=['fuel_type'])
+            models.Index(fields=['fuel_type']),
+            models.Index(fields=['price_min'])
         ]
         verbose_name = "Variant"
         verbose_name_plural = "Variants"

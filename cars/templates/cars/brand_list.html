@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %} {% endblock %}
+
+{% block extra_head %} {% endblock %}
+
+{% block content %}
+<div class="brand_list_page">
+    <h1>Các hãng xe</h1>
+    {% if brands %}
+        <article class="brand_grid">
+        {% for brand in brands %}
+            <article class="brand_card">
+            {% if brand.logo %}
+                <img src="{{ brand.logo.url }}" alt="{{ brand.name }}">
+            {% endif %}
+            <h2>
+                <a href="{{ brand.get_absolute_url }}">{{ brand.name }}</a>
+            </h2>
+            <p>
+                {{ brand.country_of_origin }}
+            </p>
+            <p>
+                {{ brand.model_count }} dòng xe
+            </p>
+               
+        </article>
+
+        {% endfor %}
+
+        </article>
+    
+    {% else %}
+
+    {% endif %}
+</div>
+{% endblock %}
