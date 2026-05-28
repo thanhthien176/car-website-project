@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Danh sách xe | CarCompare{% endblock title %}
+
+{% block content %}
+<div class="car-list-page">
+    <h1>Tất cả các dòng xe</h1>
+
+    {# Filter indicator - hiển thị khi đang filter theo brand #}
+    {% if curren_brand %}
+    <p>Đang lọc theo brand: <strong>{{curren_brand}}</strong>
+        <a href="{% url 'cars:car_list' %}">x Bỏ lọc</a>
+    </p>
+
+    {% endif %}
+
+    {# Car grid #}
+    <div class="car-grid">
+    {% for car in car_models  %}
+        <article class="car-card">
+            {% if car.thumbnail %}
+                <img src="{{ car.thumbnail.url }}" alt="{{ car }}">
+            {% endif %}
+            <h2>
+                <a href="{{ car.get_absolute_url }}">{{ car }}</a>
+            </h2>
+            <p>
+                <a href="{% url 'cars:car_list' %}?brand={{ car.brand.slug }}">
+                    {{ car.brand.name }}
+                </a>
+            </p>
+            <p>Số phiên bản: {{ car.variant_count }}</p>
+            {% if car.avg_rating %}
+                <p>Đánh giá: {{ car.avg_rating }}</p>
+            {% endif %}
+        </article>
+    {% empty %}
+        <p>Không tìm thấy xe nào.</p>
+    {% endfor %}
+    
+    </div>
+
+
+</div>
+
+{% endblock content %}
+

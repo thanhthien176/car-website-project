@@ -133,7 +133,9 @@ class CarModel(SEOMetaData, models.Model):
         return f"{self.brand.name} {self.name}"
     
     def get_absolute_url(self):
-        return reverse("cars:car_detail", kwargs={"slug": self.slug})
+        return (reverse("cars:car_list")
+                # + f'?brand={self.brand.slug}'
+                )
     
     
 class CarVariant(SEOMetaData, models.Model):
@@ -230,6 +232,10 @@ class CarVariant(SEOMetaData, models.Model):
         
     def __str__(self):
         return f"{self.car_model} {self.variant_name}"
+    
+    def get_absolute_url(self):
+        return reverse("cars:variant_detail", kwargs={"slug": self.slug})
+    
     
 class DimensionSpecification(models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='dimension')

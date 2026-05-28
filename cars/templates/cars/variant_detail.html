@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}{{ variant.get_meta_title }}{% endblock title %}
+{% block meta_description %}{{ variant.get_meta_description }}{% endblock meta_description %}
+
+{% block content %}
+<div class="variant-detail-page">
+
+    {# Breadcrumb #}
+    <nav class="breadcrumb">
+    <a href="{% url 'cars:home' %}">Trang chủ</a> →
+    <a href="{% url 'cars:car_list' %}">Xe hơi</a> →
+    <a href="{{ variant.car_model.brand.get_absolute_url }}">{{ variant.car_model.brand.name }}</a> →
+    <span>{{ variant }}</span>
+    </nav>
+
+    {# Main info #}
+    <h1>{{ variant }}</h1>
+    <p class="price">{{ variant.price_range }}</p>
+    <p>Nhiên liệu: {{ variant.get_fuel_type_display }}</p>
+
+    {# Image #}
+    {% if variant.images.all %}
+        <div clas="image-gallery">
+        {% for image in variant.images.all %}
+        <img src="{{ img.image.url }}" 
+            alt="{{ img.caption | default:variant}}"
+            {% if img.is_primary %}class="primary"{% endif %}>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Variant switcher — other variants of same model #}
+    {% if other_variants %}
+        <section class="variant-switcher">
+            <h3>Phiên bản khác của {{ other_variants.car_model }}</h3>
+            {% for variant in other_variants %}
+                <a href="{{ variant.get_absolute_url }}">{{variant}} - {{ variant.price_range }}</a>
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    {# Specifications #}
+    {% if variant.dimension %}
+    <section class="spec">
+        <h3>Kích thước</h3>
+        <ul>
+            <li>Dài: {{variant.dimension.length}}</li>
+            <li>Rộng: {{variant.dimension.width}}</li>
+            <li>Cao: {{variant.dimension.height}}</li>
+            <li>Chiều dài cơ sở: {{variant.dimension.wheelbase}}</li>
+            <li>Khoảng sáng gầm: {{variant.dimension.ground_clearance}}</li>
+            <li>Số chỗ: {{variant.dimension.seating_capacity}}</li>
+            <li>Dung tích bình nhiên liệu: {{variant.dimension.fuel_tank_capacity}}</li>
+
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if variant.engine %}
+    <section class="spec">
+        <h3>Kích thước</h3>
+        <ul>
+            <li>Loại: {{variant.engine.engine_type}}</li>
+            <li>Dung tích xi lanh: {{variant.engine.displacement}}</li>
+            <li>Công suất tối đa (HP): {{variant.engine.max_power}}</li>
+            <li>Momen xoắn tối đa (Nm): {{variant.engine.max_torque}}</li>
+            <li>Hệ số truyền động: {{variant.engine.drive_train}}</li>
+            <li>Hộp số: {{variant.engine.get_transmission_display}}</li>
+
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if variant.engine %}
+    <section class="spec">
+        <h3>Kích thước</h3>
+        <ul>
+            <li>Loại: {{variant.engine.engine_type}}</li>
+            <li>Dung tích xi lanh: {{variant.engine.displacement}}</li>
+            <li>Công suất tối đa (HP): {{variant.engine.max_power}}</li>
+            <li>Momen xoắn tối đa (Nm): {{variant.engine.max_torque}}</li>
+            <li>Hệ số truyền động: {{variant.engine.drive_train}}</li>
+            <li>Hộp số: {{variant.engine.get_transmission_display}}</li>
+
+        </ul>
+    </section>
+    {% endif %}
+
+    {# Review #}
+    <section class="reviews">
+        <h3>Đánh giá ({{ reviews|length}})</h3>
+        {% for review in reviews %}
+        <article class="review-card">
+            <strong>{{ review.author_name }}</strong>
+            <span>{{ review.rating }} *</span>
+            <h4>{{ review.title }}</h4>
+            <p>{{ review.content }}</p>
+        </article>
+        {% empty %}
+            <p>Chưa có đánh giá nào.</p>
+        {% endfor %}
+
+    </section>
+
+</div>
+
+{% endblock content %}

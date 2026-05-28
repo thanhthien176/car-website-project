@@ -40,7 +40,7 @@
                 {% endif %}
                 <h3>
                     <!--model.get_absolute_url-->
-                    <a href="{{model}}">{{ model }}</a>
+                    <a href="{{ model.get_absolute_url }}">{{ model }}</a>
                    
                 </h3>
                 {% if model.body_type %}

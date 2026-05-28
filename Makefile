@@ -10,7 +10,7 @@ config-venv:
 install:
 	poetry install
 
-run-server:
+runserver:
 	poetry run python manage.py runserver
 
 migrations:
