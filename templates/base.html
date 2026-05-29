@@ -1,3 +1,4 @@
+{% load static car_filters %}
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -6,21 +7,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CarCompare{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}So sánh xe hơi tại Việt Nam{% endblock %}">
+    
+    {# Bootstrap css #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    {# Bootstrap Icons #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    {# Custom css #}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    
+    {% block style %}{% endblock style %}
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <nav>
-        <a href="/">CarCompare</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'cars:home' %}">
+                <span class="brand-icon">🚗</span> CarCompare
+            </a>
+
+            {# Mobile toggle #}
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% active_url 'home' %}"
+                           href="{% url 'cars:home' %}">
+                            <i class="bi bi-house"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% active_url 'brand_list' %}"
+                           href="{% url 'cars:brand_list' %}">
+                            <i class="bi bi-shield-check"></i> Hãng xe
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% active_url 'car_list' %}"
+                           href="{% url 'cars:car_list' %}">
+                            <i class="bi bi-car-front"></i> Tất cả xe
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <main>
+    {# Main content #}
+    <main class="container my-4">
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <p>CarCompare © 2025</p>
+    <footer class="bg-dark text-secondary text-center py-4 mt-5">
+        <div class="container">
+            <p>CarCompare © 2025</p>
+        </div>
     </footer>
 
+    {# Bootstrap JS bundle (includes Popper) #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     {% block extra_js %}{% endblock %}
+
 </body>
 </html>

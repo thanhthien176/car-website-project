@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load car_filters %}
 
 {% block title %} {% endblock %}
 
@@ -6,32 +7,32 @@
 
 {% block content %}
 <div class="brand_list_page">
-    <h1>Các hãng xe</h1>
-    {% if brands %}
-        <article class="brand_grid">
-        {% for brand in brands %}
-            <article class="brand_card">
-            {% if brand.logo %}
-                <img src="{{ brand.logo.url }}" alt="{{ brand.name }}">
-            {% endif %}
-            <h2>
-                <a href="{{ brand.get_absolute_url }}">{{ brand.name }}</a>
-            </h2>
-            <p>
-                {{ brand.country_of_origin }}
-            </p>
-            <p>
-                {{ brand.model_count }} dòng xe
-            </p>
-               
-        </article>
+    <h1 class="mb-4">Tất cả các hãng xe <span class="badge bg-secondary">{{brands|length}}</span></h1>
+   
+    <article class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+    {% for brand in brands %}
+    <div class="col">
+        <a href="{{ brand.get_absolute_url }}" class="text-decoration-none">
+            <div class="card-body py-3">
+                {% if brand.logo %}
+                    <img src="{{ brand.logo.url }}" alt="{{ brand }}"
+                        class="brand-logo mb-2">
+                {% else %}
+                    <i class="bi bi-shield-check fs-2 text-secondary mb-2 d-block"></i>
+                {% endif %}
+                <p class="fw-semibold mb-0">{{ brand.name }}</p>
+                <small class="text-muted">{{ brand.model_count }} dòng xe</small>
+            </div>
+        </a>               
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-muted">Chưa có hãng xe nào.</p>
+    </div>
+    {% endfor %}
 
-        {% endfor %}
-
-        </article>
+    </article>
     
-    {% else %}
 
-    {% endif %}
 </div>
 {% endblock %}
