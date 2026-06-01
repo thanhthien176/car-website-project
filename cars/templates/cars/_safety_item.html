@@ -1,0 +1,16 @@
+{# Partial: render one safety feature with icon check /x #}
+<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+    <span class="small"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="{{ help_text }}"
+        style="cursor: pointer; border-bottom: 1px dotted #ccc;">
+        {{ label }}
+    </span>
+    {% if value %}
+        <i class="bi bi-check-circle-fill text-success"></i>
+    {% else %}
+        <i class="bi bi-x-circle text-secondary opacity-50"></i>
+    {% endif %}
+
+</li>

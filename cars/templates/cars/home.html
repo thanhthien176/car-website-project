@@ -91,7 +91,9 @@
                     <div class="card-body">
                         <h6 class="card-title">{{ car }}</h6>
                         <span class="stars">
-                            {% for i in car.avg_rating|star_range %}★{% endfor %}
+                            {% for star in car.avg_rating|star_range %}
+                                <i class="bi {{star}} text-warning small"></i>
+                            {% endfor %}
                         </span>
                         <span class="text-muted small">{{ car.avg_rating }}</span>
                     </div>

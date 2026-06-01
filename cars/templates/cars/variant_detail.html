@@ -1,107 +1,341 @@
 {% extends "base.html" %}
+{% load static car_filters %}
 
 {% block title %}{{ variant.get_meta_title }}{% endblock title %}
 {% block meta_description %}{{ variant.get_meta_description }}{% endblock meta_description %}
 
 {% block content %}
-<div class="variant-detail-page">
+<div class="container py-4">
 
     {# Breadcrumb #}
-    <nav class="breadcrumb">
-    <a href="{% url 'cars:home' %}">Trang chủ</a> →
-    <a href="{% url 'cars:car_list' %}">Xe hơi</a> →
-    <a href="{{ variant.car_model.brand.get_absolute_url }}">{{ variant.car_model.brand.name }}</a> →
-    <span>{{ variant }}</span>
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'cars:home' %}">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'cars:brand_detail' slug=variant.car_model.brand.slug %}">
+                    {{ variant.car_model.brand.name }}
+                </a> 
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ variant.car_model.get_absolute_url }}">
+                    {{ variant.car_model.name }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active">
+                {{ variant }}
+            </li>
+        </ol>
     </nav>
 
-    {# Main info #}
-    <h1>{{ variant }}</h1>
-    <p class="price">{{ variant.price_range }}</p>
-    <p>Nhiên liệu: {{ variant.get_fuel_type_display }}</p>
+    {# ── Hero: Image + Key Info ───────────────────────────────────── #}
+    <div class="row g-4 mb-5">
 
-    {# Image #}
-    {% if variant.images.all %}
-        <div clas="image-gallery">
-        {% for image in variant.images.all %}
-        <img src="{{ img.image.url }}" 
-            alt="{{ img.caption | default:variant}}"
-            {% if img.is_primary %}class="primary"{% endif %}>
-        {% endfor %}
+        {# Left: Primary image #}
+        <div class="col-md-6">
+            {% if variant.primary_image %}
+                <img src="{{ variant.primary_image }}" 
+                alt="{{ variant }}"
+                class="img-fluid rounded shadow w-100"
+                style="max-height:350px; object-fit: cover;">
+            {% else %}
+                <div class="bg-light rounded d-flex align-items-center justify-content-center shadow"
+                    style="height:350px;">
+                    <i class="bi bi-car-front" style="font-size:6rem; color:#adb5bd;"></i>
+                </div>
+            {% endif %}
+
+            {# Thumbnail strip — remaining image #}
+            {% with variant.images.all as all_images %}
+                {% if all_images.count > 1 %}
+                    <div class="d-flex gap-2 mt-2 flex-wrap">
+                        {% for img in all_images %}
+                            <img src="{{ img.image.url }}" 
+                                alt="{{ variant }}"
+                                class="rounded border"
+                                style="height:60px; width: 80px; object-fit:cover; cursor:pointer;">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
         </div>
-    {% endif %}
 
-    {# Variant switcher — other variants of same model #}
-    {% if other_variants %}
-        <section class="variant-switcher">
-            <h3>Phiên bản khác của {{ other_variants.car_model }}</h3>
-            {% for variant in other_variants %}
-                <a href="{{ variant.get_absolute_url }}">{{variant}} - {{ variant.price_range }}</a>
-            {% endfor %}
+        {# Right: Key info #}
+        <div class="col-md-6">
+            <p class="text-muted mb-1">
+                <a href="{% url 'cars:brand_detail' slug=variant.car_model.brand.slug %}"
+                    class="text-decoration-none">
+                    {{ variant.car_model.brand.name }}
+                </a>
+                ,
+                <a href="{{ variant.car_model.get_absolute_url }}"
+                    class="text-decoration-none">
+                    {{ variant.car_model.name }}
+                </a>
+            </p>
+
+            <h1 class="h2 mb-3">{{ variant.variant_name }}</h1>
+
+            {# Price #}
+            <div class="p-3 bg-light rounded mb-3">
+                <p class="text-muted small mb-1">Giá bán lẻ đề xuất</p>
+                <p class="price-tag fs-5 fw-bold mb-0">{{ variant.price_range }}</p>
+            </div>
+
+             {# Quick specs #}
+             <table class="table table-sm table-borderless mb-3">
+                <tbody>
+                    <tr>
+                        <td class="text-muted text-nowrap" style="width: 40px;">Nhiên liệu</td>
+                        <td><strong>{{ variant.get_fuel_type_display }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted text-nowrap">Hộp số</td>
+                        <td><strong>{{ variant.engine.get_transmission_display }}</strong></td>
+                    </tr>
+                    {% if variant.engine.displacement %}
+                        <tr>
+                            <td class="text-muted text-nowrap">Dung tích</td>
+                            <td><strong>{{ variant.engine.displacement }} cc</strong></td>
+                        </tr>
+                    {% endif %}
+                    {% if variant.engine.max_power %}
+                        <tr>
+                            <td class="text-muted">Công suất</td>
+                            <td><strong>{{ variant.engine.max_power }} HP</strong></td>
+                        </tr>
+                    {% endif %}
+                    {% if variant.dimension %}
+                        {% if variant.dimension.seating_capacity %}
+                            <tr>
+                                <td class="text-muted">Số chỗ</td>
+                                <td><strong>{{ variant.dimension.seating_capacity }}</strong></td>
+                            </tr>
+                        {% endif %}                        
+                    {% endif %}                    
+                </tbody>
+             </table>
+
+            {# Variant switcher — other variants of the same model #}
+            {% if other_variants %}
+             <div class="mb-3">
+                <p class="text-muted small mb-2">Phiên bản khác cùng dòng</p>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for v in other_variants %}
+                        <a href="{{ v.get_absolute_url }}"
+                            class="btn btn-outline-secondary btn-sm">
+                            {{ v.variant_name }}
+                        </a>
+                    {% endfor %}
+                </div>
+             </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    {# ── Specs Tabs ───────────────────────────────────────────────── #}
+    <h2 class="mb-3">Thông số kỹ thuật</h2>
+
+    <ul class="nav nav-tabs mb-3" id="specTabs">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-engine">
+                Động cơ
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-dimension">
+                Kích thước
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-safety">
+                An toàn
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content mb-5">
+
+        {# Engine tab #}
+        <div class="tab-pane fade show active" id="tab-engine">
+            {% if variant.engine %}
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        {% if variant.engine.engine_type %}
+                            <tr>
+                                <td class="text-muted">Loại động cơ</td>
+                                <td>{{ variant.engine.engine_type }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if variant.engine.displacement %}
+                            <tr>
+                                <td class="text-muted">Dung tích (cc)</td>
+                                <td>{{ variant.engine.displacement }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if variant.engine.max_power %}
+                            <tr>
+                                <td class="text-muted">Công suất tối đa (HP)</td>
+                                <td>{{ variant.engine.max_power }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if variant.engine.max_torque %}
+                            <tr>
+                                <td class="text-muted">Momen xoắn (Nm)</td>
+                                <td>{{ variant.engine.max_torque }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr><td class="text-muted">Hộp số</td>
+                        <td>{{ variant.engine.get_transmission_display }}</td></tr>
+                        {% if variant.engine.drive_train %}
+                            <tr><td class="text-muted">Hệ dẫn động</td>
+                                <td>{{ variant.engine.drive_train }}</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            {% else %}
+            <div class="alert alert-light text-muted">
+                <i class="bi bi-info-circle"></i> Chưa có dữ liệu động cơ.
+            </div>
+            {% endif %}
+        </div>
+
+        {# Dimension tab #}
+        <div class="tab-pane fade" id="tab-dimension">
+            {% if variant.dimension %}
+                <table class="table table-striped table-hover">
+                    <tbody>
+                        {% if variant.dimension.length %}
+                        <tr>
+                            <td class="text-muted">Dài (mm)</td>
+                            <td>{{ variant.dimension.length }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if variant.dimension.width %}
+                        <tr>
+                            <td class="text-muted">Rộng (mm)</td>
+                            <td>{{ variant.dimension.width }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if variant.dimension.height %}
+                        <tr>
+                            <td class="text-muted">Cao (mm)</td>
+                            <td>{{ variant.dimension.height }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if variant.dimension.wheelbase %}
+                        <tr>
+                            <td class="text-muted">Chiều dài cơ sở (mm)</td>
+                            <td>{{ variant.dimension.wheelbase }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if variant.dimension.ground_clearance %}
+                        <tr>
+                            <td class="text-muted">Khoảng sáng gầm (mm)</td>
+                            <td>{{ variant.dimension.ground_clearance }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if variant.dimension.seating_capacity %}
+                        <tr>
+                            <td class="text-muted">Số chỗ ngồi</td>
+                            <td>{{ variant.dimension.seating_capacity }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if variant.dimension.fuel_tank_capacity %}
+                        <tr>
+                            <td class="text-muted">Dung tích bình nhiên liệu (lít)</td>
+                            <td>{{ variant.dimension.fuel_tank_capacity }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            {% else %}
+            <div class="alert alert-light text-muted">
+                <i class="bi bi-info-circle"></i> Chưa có dữ liệu kích thước.
+            </div>
+            {% endif %}
+
+        </div>
+
+        {# Safety tab #}
+        <div class="tab-pane fade" id="tab-safety">
+            {% if variant.safety %}
+            <div class="row g-2">
+                {% with s=variant.safety %}
+                {# Airbag count #}
+                {% if s.airbag %}
+                    <div class="col-12 mb-2">
+                        <span class="fw-semibold">Túi khí:</span> {{ s.airbag }} túi
+                        {% if s.safety_rating %}
+                            &nbsp;·&nbsp;
+                            <span class="fw-semibold">NCAP:</span>
+                            {% for star in s.safety_rating|star_range %}
+                                <i class="bi {{star}} text-warning small"></i>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {# Boolean safety features — dùng include pattern #}
+                <div class="col-md-6">
+                    <ul class="list-group list-group-flush">
+                    {% for item in s.boolean_safety_items %}
+                        {% include 'cars/_safety_item.html' with label=item.short_name value=item.value help_text=item.help_text%}
+                    {% endfor %}
+                        
+                    </ul>
+                </div>
+                {% endwith %}
+            </div>
+            {% else %}
+            <div class="alert alert-light text-muted">
+                <i class="bi bi-info-circle"></i> Chưa có dữ liệu thông số an toàn.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ── Reviews ──────────────────────────────────────────────────── #}
+    {% if reviews %}
+        <section class="mb-5">
+            <h2 class="mb-4">Đánh giá từ người dùng</h2>
+            <div class="row g-3">
+                {% for review in reviews %}
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center mb-2">
+                                <strong>{{ review.author_name }}</strong>
+                                <span>
+                                    {% for star in review.rating|star_range %}
+                                        <i class="bi {{ star }} text-warning small"></i>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                            <h6>{{ review.title }}</h6>
+                            <p class="text-muted small mb-2">
+                                {{ review.content|truncatewords:30 }}
+                            </p>
+                            {% if review.pros %}
+                                <p class="small mb-1">
+                                    <i class="bi bi-hand-thumbs-up text-success"></i>
+                                    {{ review.pros|truncatewords:15 }}
+                                </p>
+                            {% endif %}
+                            {% if review.cons %}
+                                <p class="small mb-0">
+                                    <i class="bi bi-hand-thumbs-down text-danger"></i>
+                                    {{ review.cons|truncatewords:15 }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </section>
     {% endif %}
-
-    {# Specifications #}
-    {% if variant.dimension %}
-    <section class="spec">
-        <h3>Kích thước</h3>
-        <ul>
-            <li>Dài: {{variant.dimension.length}}</li>
-            <li>Rộng: {{variant.dimension.width}}</li>
-            <li>Cao: {{variant.dimension.height}}</li>
-            <li>Chiều dài cơ sở: {{variant.dimension.wheelbase}}</li>
-            <li>Khoảng sáng gầm: {{variant.dimension.ground_clearance}}</li>
-            <li>Số chỗ: {{variant.dimension.seating_capacity}}</li>
-            <li>Dung tích bình nhiên liệu: {{variant.dimension.fuel_tank_capacity}}</li>
-
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if variant.engine %}
-    <section class="spec">
-        <h3>Kích thước</h3>
-        <ul>
-            <li>Loại: {{variant.engine.engine_type}}</li>
-            <li>Dung tích xi lanh: {{variant.engine.displacement}}</li>
-            <li>Công suất tối đa (HP): {{variant.engine.max_power}}</li>
-            <li>Momen xoắn tối đa (Nm): {{variant.engine.max_torque}}</li>
-            <li>Hệ số truyền động: {{variant.engine.drive_train}}</li>
-            <li>Hộp số: {{variant.engine.get_transmission_display}}</li>
-
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if variant.engine %}
-    <section class="spec">
-        <h3>Kích thước</h3>
-        <ul>
-            <li>Loại: {{variant.engine.engine_type}}</li>
-            <li>Dung tích xi lanh: {{variant.engine.displacement}}</li>
-            <li>Công suất tối đa (HP): {{variant.engine.max_power}}</li>
-            <li>Momen xoắn tối đa (Nm): {{variant.engine.max_torque}}</li>
-            <li>Hệ số truyền động: {{variant.engine.drive_train}}</li>
-            <li>Hộp số: {{variant.engine.get_transmission_display}}</li>
-
-        </ul>
-    </section>
-    {% endif %}
-
-    {# Review #}
-    <section class="reviews">
-        <h3>Đánh giá ({{ reviews|length}})</h3>
-        {% for review in reviews %}
-        <article class="review-card">
-            <strong>{{ review.author_name }}</strong>
-            <span>{{ review.rating }} *</span>
-            <h4>{{ review.title }}</h4>
-            <p>{{ review.content }}</p>
-        </article>
-        {% empty %}
-            <p>Chưa có đánh giá nào.</p>
-        {% endfor %}
-
-    </section>
 
 </div>
 

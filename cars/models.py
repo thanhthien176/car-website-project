@@ -133,10 +133,8 @@ class CarModel(SEOMetaData, models.Model):
         return f"{self.brand.name} {self.name}"
     
     def get_absolute_url(self):
-        return (reverse("cars:car_list")
-                # + f'?brand={self.brand.slug}'
-                )
-    
+        return reverse("cars:car_detail", kwargs={"slug": self.slug})
+        
     
 class CarVariant(SEOMetaData, models.Model):
     # BODY_TYPE_CHOICES = [
@@ -348,8 +346,8 @@ class SafetySpecification(models.Model):
     
     # active safety
     pcs = models.BooleanField(default=False, help_text="Cảnh báo tiền va chạm(pre-collision warning)")
-    lda = models.BooleanField(default=False, help_text="Cảnh báo lệch làn đường(Lane departure alert")
-    lta = models.BooleanField(default=False, help_text="Hỗ trợ giữ làn đường(lane tracing assist")
+    lda = models.BooleanField(default=False, help_text="Cảnh báo lệch làn đường(Lane departure alert)")
+    lta = models.BooleanField(default=False, help_text="Hỗ trợ giữ làn đường(lane tracing assist)")
     drcc = models.BooleanField(default=False, help_text="Hệ thống điều khiển hành trình chủ động(Dynamic radar cruise control)")
     ahb = models.BooleanField(default=False, help_text="Đèn chiếu xa tự động(Automatic high beam)")
     parking_camera = models.CharField(max_length=30, null=True, blank=True, help_text="camera hỗ trợ đỗ xe")
@@ -367,6 +365,21 @@ class SafetySpecification(models.Model):
     airbag = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Túi khí")
     
     safety_rating = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Sao NCAP")
+    
+    @property
+    def boolean_safety_items(self):
+        items = []
+        for field in self._meta.get_fields():
+            if isinstance(field, models.BooleanField):
+                value = getattr(self, field.name)
+                
+                items.append({
+                    'short_name': field.name.upper(),
+                    'help_text': field.help_text or '',
+                    'value': value,
+                })
+        
+        return items
     
     
 class CarImage(models.Model):

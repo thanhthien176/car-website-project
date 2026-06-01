@@ -2,7 +2,7 @@ from typing import Any
 
 from django.db.models import QuerySet, Count
 from django.views.generic import ListView, DetailView
-from ..models import CarModel, CarVariant
+from ..models import CarModel, CarVariant, Brand, BodyType
 
 class CarModelListView(ListView):
     """list car models, supports optional ?brand=<slug> filter
@@ -22,16 +22,51 @@ class CarModelListView(ListView):
               .order_by("brand__name", "name")
               )
         brand_slug = self.request.GET.get('brand')
+        body_slug = self.request.GET.get('body')
         if brand_slug:
             qs = qs.filter(brand__slug=brand_slug)
+        if body_slug:
+            qs = qs.filter(body_type__slug=body_slug)
         return qs
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Pass current filter back to template for active state UI
+        # Sidebar data
+        context['all_brands'] = Brand.objects.filter(is_active=True).order_by('name')
+        context['all_body_types'] = BodyType.objects.all().order_by('name')
+        # Preserve active filter state for template
         context['current_brand'] = self.request.GET.get('brand', '')
+        context['current_body'] = self.request.GET.get('body', '')
         return context
     
+class CarModelDetailView(DetailView):
+    """
+    Show a single CarModel with all its active variants.
+    This is the "model page" - user picks a variant from here.
+    """
+    model = CarModel
+    template_name = "cars/car_detail.html"
+    context_object_name = "car_model"
+    slug_url_kwarg = "slug"
+    
+    def get_queryset(self) -> QuerySet:
+        return (
+            CarModel.objects
+            .select_related('brand', 'body_type', 'car_class')
+        )
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['variants'] = (self.object.variants
+                               .filter(is_active=True)
+                               .prefetch_related('images')
+                               .order_by('price_min')
+                               )
+        context['reviews'] = (self.object.reviews
+                              .filter(is_approved=True)
+                              .order_by('-created_at')[:5]
+                              )
+        return context
     
 class CarVariantDetailView(DetailView):
     """
