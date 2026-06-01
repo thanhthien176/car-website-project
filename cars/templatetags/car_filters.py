@@ -27,9 +27,21 @@ def star_range(rating):
     Usage: {% for i in car.avg_rating|star_range %}⭐{% endfor %}
     """
     try:
-        return range(round(float(rating)))
+        rating = float(rating)
+        
+        stars = []
+        
+        for i in range(1,6):
+            if rating >= i:
+                stars.append("bi-star-fill")
+            elif rating >= i - 0.5:
+                stars.append("bi-star-half")
+            else:
+                stars.append("bi-star")
+            
+        return stars                
     except (ValueError, TypeError):
-        return range(0)
+        return []
     
 @register.simple_tag(takes_context=True)
 def active_url(context, url_name):
