@@ -50,6 +50,22 @@ argon2 = ["argon2-cffi (>=23.1.0)"]
 bcrypt = ["bcrypt (>=4.1.1)"]
 
 [[package]]
+name = "django-htmx"
+version = "1.27.0"
+description = "Extensions for using Django with htmx."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "django_htmx-1.27.0-py3-none-any.whl", hash = "sha256:13e1e13b87d39b57f95aae6e4987cb3df056d0b1373a41f4a94504a00298ffd8"},
+    {file = "django_htmx-1.27.0.tar.gz", hash = "sha256:036e5da801bfdf5f1ca815f21592cfb9f004a898f330c842f15e55c70e301a75"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6"
+django = ">=4.2"
+
+[[package]]
 name = "django-stubs"
 version = "6.0.3"
 description = "Mypy stubs for Django"
@@ -434,4 +450,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "2e9085ad80b07311c4923e1d171a7d5638301ea6d6d25c5f986a4dcd9c31390f"
+content-hash = "5593763442a9fa58bb3060e3a415b12fb8e96940e134ae373deafab8e62f3620"

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Đánh giá {{ car }}| CarCompare {% endblock title %}
+
+{% block content %}
+<div class="container py-4" style="max-width:700px;">
+    <h2>Đánh giá <strong>{{ car }}</strong></h2>
+
+    <form method="post"
+          hx-post="{% url 'cars:review_submit' slug=car.slug %}"
+          hx-target="#review-result"
+          hx-swap="outerHTML">
+        {% csrf_token %}        
+        <div id="review-result">
+
+            <!-- ★ Star Rating --- seprately rendered -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Đánh giá của bạn</label>
+                <div class="star-rating">
+                    {% for value, label in form.rating.field.choices %}
+                        <input type="radio"
+                               id="star{{ value }}"
+                               name="rating"
+                               value="{{ value }}"
+                               class="star-radio"
+                               {% if form.rating.value == value|stringformat:"s" %}checked{% endif %}><label for="star{{value}}" title="{{ label }}">&#9733;</label>
+                    {% endfor %}
+                </div>
+                {% if form.rating.errors %}
+                    <div class="text-danger small">{{ form.rating.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            {% for field in form %}
+                {% if field.name != 'rating' %}
+                    <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                {% endif %}                
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

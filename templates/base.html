@@ -72,6 +72,34 @@
 
     {# Bootstrap JS bundle (includes Popper) #}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
+    <script>
+    // Star rating — highlight on click and hover
+    document.querySelectorAll('.star-rating').forEach(container => {
+    const labels = [...container.querySelectorAll('label')];
+    const inputs = [...container.querySelectorAll('input[type=radio]')];
+
+    function highlight(index) {
+        labels.forEach((l, i) => {
+        l.style.color = i <= index ? '#ffc107' : '#ccc';
+        });
+    }
+
+    function reset() {
+        const checked = inputs.findIndex(i => i.checked);
+        if (checked >= 0) highlight(checked); 
+        else labels.forEach(l => l.style.color = '#ccc');
+    }
+
+    labels.forEach((label, i) => {
+        label.addEventListener('mouseenter', () => highlight(i));
+        label.addEventListener('mouseleave', reset);
+        label.addEventListener('click', () => highlight(i));
+    });
+
+    reset(); // init state
+    });
+    </script>
     {% block extra_js %}{% endblock %}
 
 </body>
