@@ -50,7 +50,7 @@
     <section>
         <h2 class="mb-3">Xe mới cập nhật</h2>
         <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-            {% for variant in lastest_variant %}
+            {% for variant in lastest_variants %}
             <div class="col">
                 <div class="card h-100 car-card shadow-sm">
                     <div class="card-body">
@@ -87,17 +87,19 @@
         <div class="row row-cols-1 row-cols-md-4 g-3">
             {% for car in top_rated  %}
             <div class="col">
-                <div class="card h-100 car-card">
-                    <div class="card-body">
-                        <h6 class="card-title">{{ car }}</h6>
-                        <span class="stars">
-                            {% for star in car.avg_rating|star_range %}
-                                <i class="bi {{star}} text-warning small"></i>
-                            {% endfor %}
-                        </span>
-                        <span class="text-muted small">{{ car.avg_rating }}</span>
+                <a href="{{ car.get_absolute_url }}" class="text-decoration-none">
+                    <div class="card h-100 car-card">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ car }}</h6>
+                            <span class="stars">
+                                {% for star in car.avg_rating|star_range %}
+                                    <i class="bi {{star}} text-warning small"></i>
+                                {% endfor %}
+                            </span>
+                            <span class="text-muted small">{{ car.avg_rating }}</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             {% endfor %}
         </div>

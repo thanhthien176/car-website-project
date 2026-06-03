@@ -1,0 +1,95 @@
+{% load static car_filters %}
+
+{% if comparison_cars %}
+<div id="comparison-tray"
+     class="comparison-tray">
+    
+    <div class="container-xl">
+        <div class="d-flex align-items-center gap-3">
+
+            {# Header label #}
+            <div class="d-flex align-items-center gap-2 me-2" style="white-space: nowrap;">
+                <i class="bi bi-git" style="font-size:16px; color:#0d6efd;"></i>
+                <span style="font-weight:500; font-size:13px;">So sánh xe</span>
+                <span class="badge text-bg-primary" style="font-size: 11px;">
+                    {{ total }}/3
+                </span>
+            </div>
+
+            {# Car slots #}
+            <div class="d-flex gap-2 flex-column-1">
+                {% for variant in comparison_cars  %}
+                <div class="d-flex align-items-center gap-2 px-2 py-1 flex-grow-1"
+                     style="background:var(--bs-secondary-bg);
+                            border-radius:var(--bs-border-radius);
+                            max-width:220px;min-width:0">
+
+                    {# Thumbnail #}
+                    <div class="thumbnail-comparison">
+                        {% with img=variant.primary_image %}
+                            {% if img %}
+                                <img src="{{ img }}" alt="{{ variant }}"
+                                style="width: 100%; height=100%; object-fit:cover;">
+                            {% else %}
+                                <i class="bi bi-car-front" style="font-size:20px;color:var(--bs-secondary-color)"></i>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+
+                     {# Name + price #}
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-size:12px;font-weight:500;
+                                    white-space:nowrap;overflow:hidden;
+                                    text-overflow:ellipsis">
+                            {{ variant }}
+                        </div>
+                        <div style="font-size:11px; color:#dc3545;">
+                            {{ variant.price_min|million_vnd }}
+                        </div>
+                    </div>
+
+                    {# Remove button #}
+                    <button class="remove-button"
+                            aria-label="Xóa {{ variant }}"
+                            hx-post="{% url 'cars:comparison_remove' variant_pk=variant.pk %}"
+                            hx-target="#comparison-tray"
+                            hx-swap="outerHTML">
+                        <i class="bi bi-x-lg" style="font-size:13px"></i>
+                    </button>
+
+                </div>
+                {% endfor %}
+
+                {# Empty slots #}
+                {% for i in empty_slots %}
+                <div class="d-flex align-items-center justify-content-center flex-grow-1 empty-slots">
+                    <span style="font-size:12px;color:var(--bs-secondary-color)">
+                        <i class="bi bi-plus"></i> Thêm xe
+                    </span>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            {# CTA button #}
+            {% if total >= 2 %}
+            <a href="{% url 'cars:comparison_page' %}"
+               class="btn btn-primary btn-sm"
+               style="white-space:nowrap;">
+                Xem so sánh <i class="bi bi-arrow-right"></i>
+            </a>
+            {% else %}
+            <button class="btn btn-sm btn-outline-secondary" disabled
+                    style="white-space:nowrap; font-size:12px;">
+                Cần ≥ 2 xe
+            </button>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% else %}
+{# Empty tray — render empty div so HTMX have target #}
+<div id="comparison-tray"></div>
+{% endif %}

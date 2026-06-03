@@ -70,10 +70,15 @@
             </p>
 
             {# Car grid #}
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4" >
                 {% for model in car_models %}
                 <div class="col">
-                    <div class="card h-100 shadow-sm car-card">
+                    <div class="card h-100 shadow-sm car-card"
+                         :class="{ 'z-3': open }" 
+                         style="position: relative;"
+                         x-data="{ 
+                            open: false, 
+                         }">
 
                         {% if model.thumbnail %}
                         <img src="{{ model.thumbnail.url }}" alt="{{ model }}"
@@ -112,7 +117,38 @@
                                 class="btn btn-outline-secondary btn-sm mt-auto">
                                 Xem chi tiết
                             </a>
+
+                            {# Picker trigger button #}
+                            <button class="btn btn-sm w-100 mt-2"
+                                    @click="open = !open"
+                                    style="background:var(--bs-primary-bg-subtle);
+                                           color:var(--bs-primary-text-emphasis);
+                                           border:1px solid var(--bs-primary-border-subtle);
+                                           font-size:12px"
+                                    hx-get="{% url 'cars:variant_picker' slug=model.slug %}"
+                                    hx-target="#picker-{{ model.slug }}"
+                                    hx-swap="innerHTML"
+                                    hx-trigger="click[!document.querySelector('#picker-{{ model.slug }}">
+                                <i class="bi bi-git"></i> 
+                                <span x-text="open ? 'Ẩn phiên bản ▴' : 'Chọn phiên bản so sánh ▾' "></span>
+                            </button>               
                         </div>
+                    
+                        {# Picker dropdown — Alpine display control #}
+                        <div id="picker-{{ model.slug }}" 
+                            x-show="open"
+                            x-transition: enter="transition ease-out duration-200"
+                            x-transition: enter-start="opacity-0 translate-y-1"
+                            x-transition: enter-end="opacity-100 translate-y-0"
+                            x-transition: leave="transition ease-in duration-150"
+                            x-transition: leave-start="opacity-100"
+                            x-transition: leave-end="opacity-0"
+                            @click.outside="open = false"
+                            class="card shadow-lg p-3"
+                            style="position:absolute;top:100%;left:0;right:0;
+                                    z-index:999;margin-top:4px;">
+                        </div>
+                        </template>
                     </div>
                 </div>
                 {% empty %}
@@ -166,4 +202,12 @@
 </div>
 
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+   
+</script>
+{% endblock extra_js %}
+
+
 
