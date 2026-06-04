@@ -10,7 +10,7 @@ from cars.forms import ReviewForm
    
     
 class ReviewSubmitView(FormView):
-    template_name = 'cars/review_form.html'
+    template_name = 'cars/forms/review_form.html'
     form_class = ReviewForm
     
     def get_car(self):

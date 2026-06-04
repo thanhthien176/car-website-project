@@ -12,6 +12,6 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         selector = CarSelector()
         context['featured_brands'] = selector.get_featured_brands()
-        context['latest_variants'] = selector.get_latest_variants()
+        context['lastest_variants'] = selector.get_latest_variants()
         context['top_rated'] = selector.get_top_rated_models()
         return context

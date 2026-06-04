@@ -11,7 +11,7 @@ class BrandListView(ListView):
     Annotates each brand with model_count to avoid N+1 queries.
     """
     model = Brand
-    template_name = 'cars/brand_list.html'
+    template_name = 'cars/brands/brand_list.html'
     context_object_name = 'brands'
     
     def get_queryset(self) -> QuerySet:
@@ -28,7 +28,7 @@ class BrandDetailView(DetailView):
     Slug-based lookup for SEO-friendly URLs.
     """
     model = Brand
-    template_name = 'cars/brand_detail.html'
+    template_name = 'cars/brands/brand_detail.html'
     context_object_name = 'brand'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'

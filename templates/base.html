@@ -17,11 +17,13 @@
 
     {# Custom css #}
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    <script src="//unpkg.com/alpinejs" defer></script>
     
     {% block style %}{% endblock style %}
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'cars:home' %}">
@@ -62,6 +64,13 @@
     {# Main content #}
     <main class="container my-4">
         {% block content %}{% endblock %}
+
+        {#Comparison tray — load session state when page started #}
+        <div id="comparison-tray"
+             hx-get="{% url 'cars:comparison_tray' %}"
+             hx-trigger="load"
+             hx-swap="outerHTML">
+        </div>
     </main>
 
     <footer class="bg-dark text-secondary text-center py-4 mt-5">

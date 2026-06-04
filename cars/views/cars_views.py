@@ -11,7 +11,7 @@ class CarModelListView(ListView):
         ListView (_type_): _description_
     """
     model = CarModel
-    template_name = "cars/car_list.html"
+    template_name = "cars/car_models/car_list.html"
     context_object_name = "car_models"
     paginate_by = 12
     
@@ -45,7 +45,7 @@ class CarModelDetailView(DetailView):
     This is the "model page" - user picks a variant from here.
     """
     model = CarModel
-    template_name = "cars/car_detail.html"
+    template_name = "cars/car_models/car_detail.html"
     context_object_name = "car_model"
     slug_url_kwarg = "slug"
     
@@ -74,7 +74,7 @@ class CarVariantDetailView(DetailView):
     Prefetches all related specs and images.
     """
     model = CarVariant
-    template_name = 'cars/variant_detail.html'
+    template_name = 'cars/variants/variant_detail.html'
     context_object_name = 'variant'
     slug_url_kwarg = 'slug'
     
