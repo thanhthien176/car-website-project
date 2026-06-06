@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from cars.models import Brand, CarModel, CarVariant
 
 class CarSelector:
@@ -38,3 +38,41 @@ class CarSelector:
                 .select_related('brand')
                 .order_by('-avg_rating')[:limit]
                 )
+        
+    def search_car_models(self, query:str, qs=None):
+        """
+        Search active CarModels accross mutiple text fields.
+        User OR logic: match any field -> include in results.
+        
+        .distinct() is required because the JOIN on car_model__body_type or car_model__car_class
+        can produce duplicate rows when multiple field match
+
+        Args:
+            query (str): the key is what user want to search
+        """
+        if qs is None:
+            qs = CarModel.objects.select_related("brand", "body_type", "car_class")
+        
+        if not query or not query.strip():
+            return qs
+        
+        q = query.strip()
+        return (
+            qs.filter(
+                Q(name__icontains=q) |
+                Q(brand__name__icontains=q) |
+                Q(description__icontains=q) |
+                Q(body_type__name__icontains=q) |
+                Q(car_class__name__icontains=q) |
+                Q(variants__variant_name__icontains=q, variants__is_active=True)            
+            )
+            .select_related(
+                'brand',
+                'body_type',
+                'car_class'
+            )
+            .prefetch_related('variants', 'variants__images')
+            .distinct()
+            .order_by('brand__name', 'name')
+        )
+        

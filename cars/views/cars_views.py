@@ -1,8 +1,12 @@
 from typing import Any
 
 from django.db.models import QuerySet, Count
+from django.http.response import HttpResponse
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView
+
 from ..models import CarModel, CarVariant, Brand, BodyType
+from cars.services.car_selector import CarSelector
 
 class CarModelListView(ListView):
     """list car models, supports optional ?brand=<slug> filter
@@ -18,7 +22,6 @@ class CarModelListView(ListView):
     def get_queryset(self) -> QuerySet:
         qs = (CarModel.objects
               .select_related("brand", "body_type", "car_class")
-              .annotate(variant_count=Count('variants'))
               .order_by("brand__name", "name")
               )
         brand_slug = self.request.GET.get('brand')
@@ -27,7 +30,16 @@ class CarModelListView(ListView):
             qs = qs.filter(brand__slug=brand_slug)
         if body_slug:
             qs = qs.filter(body_type__slug=body_slug)
-        return qs
+        q = self.request.GET.get('q', '').strip()
+        if q:
+            qs = CarSelector().search_car_models(q, qs=qs)
+            
+        return qs.annotate(variant_count=Count('variants', distinct=True))
+    
+    def render_to_response(self, context: dict[str, Any], **response_kwargs: Any):
+        if self.request.headers.get("HX-Request"):
+            return render(self.request, 'cars/car_models/_car_grid.html', context )
+        return super().render_to_response(context, **response_kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -37,6 +49,7 @@ class CarModelListView(ListView):
         # Preserve active filter state for template
         context['current_brand'] = self.request.GET.get('brand', '')
         context['current_body'] = self.request.GET.get('body', '')
+        context['search_query'] = self.request.GET.get('q', '')
         return context
     
 class CarModelDetailView(DetailView):

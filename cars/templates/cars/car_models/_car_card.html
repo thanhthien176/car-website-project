@@ -1,0 +1,52 @@
+{% load static car_filters %}
+
+<div class="card h-100 shadow-sm car-card"
+        :class="{ 'z-3': open }" 
+        style="position: relative;"
+        x-data="{ 
+        open: false, 
+        }">
+
+    {% if model.thumbnail %}
+    <img src="{{ model.thumbnail.url }}" alt="{{ model }}"
+        class="card-img-top" style="height:160px; object-fit:cover;">
+    {% else %}
+    <div class="bg-light d-flex align-items-center justify-content-center"
+        style="height: 160px;">
+        <i class="bi bi-car-front fs-1 text-secondary"></i>
+    </div>
+    {% endif %}
+
+    <div class="card-body d-flex flex-column">
+        <p class="text-muted small mb-1">{{ model.brand.name }}</p>
+        <h6 class="card-title fw-bold mb-2">{{ model }}</h6>
+
+        {# Star #}
+        <div class="mb-2">
+            {% for star in model.avg_rating|star_range %}
+            <i class="bi {{star}} text-warning" style="font-size:0.75rem;"></i>
+            {% empty %}
+            <span class="text-muted" style="font-size:0.75rem;">Chưa có đánh giá</span>
+            {% endfor %}
+        </div>
+
+        {# Badges #}
+        <div class="mb-3">
+            {% if model.body_type %}
+                <span class="badge bg-secondary">{{ model.body_type }}</span>
+            {% endif %}
+            <span class="badge bg-light text-dark border">
+                {{ model.variant_count }} phiên bản
+            </span>
+        </div>
+
+        <a href="{{ model.get_absolute_url }}"
+            class="btn btn-outline-secondary btn-sm mt-auto">
+            Xem chi tiết
+        </a>
+
+        {% include "cars/utils/_picker_button.html" %}              
+    </div>
+
+    {% include "cars/utils/_picker_dropdown.html" %}
+</div>
