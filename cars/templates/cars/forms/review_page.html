@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Đánh giá {{ car }}| CarCompare {% endblock title %}
+
+{% block content %}
+    {% include "cars/forms/_review_form.html" %}
+
+{% endblock content %}

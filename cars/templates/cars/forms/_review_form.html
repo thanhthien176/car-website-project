@@ -1,16 +1,10 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}Đánh giá {{ car }}| CarCompare {% endblock title %}
-
-{% block content %}
 <div class="container py-4" style="max-width:700px;">
     <h2>Đánh giá <strong>{{ car }}</strong></h2>
 
     <form method="post"
-          hx-post="{% url 'cars:review_submit' slug=car.slug %}"
-          hx-target="#review-result"
-          hx-swap="outerHTML">
+          hx-post="{% url 'cars:review_submit' slug=car_model.slug %}"
+          hx-target="#review-form-container"
+          hx-swap="innerHTML">
         {% csrf_token %}        
         <div id="review-result">
 
@@ -49,5 +43,3 @@
         </div>
     </form>
 </div>
-
-{% endblock content %}

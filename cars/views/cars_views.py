@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
 from ..models import CarModel, CarVariant, Brand, BodyType
+from cars.forms import ReviewForm
 from cars.services.car_selector import CarSelector
 
 class CarModelListView(ListView):
@@ -75,6 +76,7 @@ class CarModelDetailView(DetailView):
                                .prefetch_related('images')
                                .order_by('price_min')
                                )
+        context['form'] = ReviewForm()
         context['reviews'] = (self.object.reviews
                               .filter(is_approved=True)
                               .order_by('-created_at')[:5]

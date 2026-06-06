@@ -7,10 +7,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from cars.models import CarModel
 from cars.forms import ReviewForm
 
-   
-    
 class ReviewSubmitView(FormView):
-    template_name = 'cars/forms/review_form.html'
+    template_name = 'cars/forms/review_page.html'
     form_class = ReviewForm
     
     def get_car(self):
@@ -23,7 +21,7 @@ class ReviewSubmitView(FormView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['car'] = self.get_car()
+        context['car_model'] = self.get_car()
         return context
     
     def form_valid(self, form):
