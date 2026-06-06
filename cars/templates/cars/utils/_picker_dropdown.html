@@ -1,0 +1,14 @@
+{# Picker dropdown — Alpine display control #}
+<div id="picker-{{ model.slug }}" 
+    x-show="open"
+    x-transition: enter="transition ease-out duration-200"
+    x-transition: enter-start="opacity-0 translate-y-1"
+    x-transition: enter-end="opacity-100 translate-y-0"
+    x-transition: leave="transition ease-in duration-150"
+    x-transition: leave-start="opacity-100"
+    x-transition: leave-end="opacity-0"
+    @click.outside="open = false"
+    class="card shadow-lg p-3"
+    style="position:absolute;top:100%;left:0;right:0;
+            z-index:999;margin-top:4px;">
+</div>

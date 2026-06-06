@@ -1,0 +1,14 @@
+{# Picker trigger button #}
+<button class="btn btn-sm w-100 mt-2"
+        @click="open = !open"
+        style="background:var(--bs-primary-bg-subtle);
+                color:var(--bs-primary-text-emphasis);
+                border:1px solid var(--bs-primary-border-subtle);
+                font-size:12px"
+        hx-get="{% url 'cars:variant_picker' slug=model.slug %}"
+        hx-target="#picker-{{ model.slug }}"
+        hx-swap="innerHTML"
+        hx-trigger="click[!document.querySelector('#picker-{{ model.slug }}">
+    <i class="bi bi-git"></i> 
+    <span x-text="open ? 'Ẩn phiên bản ▴' : 'Chọn phiên bản so sánh ▾' "></span>
+</button> 
