@@ -4,6 +4,7 @@
      style="background:var(--bs-body-bg);border:1px solid var(--bs-border-color);
             border-radius:var(--bs-border-radius-lg);position:relative"
      id="picker-{{ car_model.slug }}"
+     x-data="{ added: {{ variant.is_in_comparison|yesno:'true,false'|default:'false'}}, adding:false}"
      data-loaded="true">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -21,15 +22,17 @@
     {% if variants %}
         <div class="d-flex flex-column gap-2">
             {% for variant in variants %}
-            <div class="d-flex justify-content-between align-items-center px-3 py-2"
+            <div class="d-flex justify-content-between align-items-center px-3 py-2 w-100"
                  style="background:var(--bs-secondary-bg);border-radius:var(--bs-border-radius)">
 
                 <div>
                     <div style="font-size:13px;font-weight:500;">{{ variant.variant_name }}</div>
                     <div style="font-size:11px;color:var(--bs-secondary-color)">
+                        <span class="badge bg-secondary">
                         {{ variant.get_fuel_type_display }}
+                        </span>
                         <span style="color:#dc3545">
-                            {{ variant.price_min|million_vnd }} - {{ variant.price_max|million_vnd}}
+                            {{ variant.price_min|million_vnd }}
                         </span>
                     </div>
                 </div>
@@ -45,11 +48,25 @@
                     Đã đủ
                 </button>
                 {% else %}
-                <button class="btn btn-sm btn-primary" style="font-size:12px"
+                <button class="btn btn-sm" style="font-size:12px"
+                        :class="added ? 'btn-outline-secondary' : 'btn-primary' "
+                        :disabled="added || adding "
+                        @click="adding = true"
                         hx-post="{% url 'cars:comparison_add' variant_pk=variant.pk %}"
                         hx-target="#comparison-tray"
-                        hx-swap="outerHTML">
-                    <i class="bi bi-plus-lg"></i> Thêm
+                        hx-swap="outerHTML"
+                        @htmx:after-request="if($event.detail.successful) { added = true; adding = false; }">
+                    <template x-if="!added">
+                        <span>
+                        <i class="bi bi-plus-lg"></i> Thêm
+                        </span>
+                    </template>
+                    <template x-if="added">
+                        <span>
+                        <i class="bi bi-check-lg"></i> Đã thêm
+                        </span>
+                    </template>
+                        
                 </button>
                 {% endif %}
             </div>

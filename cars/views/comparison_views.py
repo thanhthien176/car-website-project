@@ -100,6 +100,9 @@ class VariantPickerView(View):
         comparison = _get_or_create_comparison(request)
         added_pks = set(comparison.cars.values_list('pk', flat=True))
         
+        for variant in variants:
+            variant.is_in_comparison = variant.pk in added_pks
+        
         return render(request, 'cars/comparison/_variant_picker.html', {
             'car_model': car_model,
             'variants': variants,
