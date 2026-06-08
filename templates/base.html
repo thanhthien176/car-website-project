@@ -92,7 +92,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
     <script>
-    // Star rating — highlight on click and hover
+    {% comment %} // Star rating — highlight on click and hover
     document.querySelectorAll('.star-rating').forEach(container => {
     const labels = [...container.querySelectorAll('label')];
     const inputs = [...container.querySelectorAll('input[type=radio]')];
@@ -116,7 +116,7 @@
     });
 
     reset(); // init state
-    });
+    }); {% endcomment %}
     </script>
     {% block extra_js %}{% endblock %}
 

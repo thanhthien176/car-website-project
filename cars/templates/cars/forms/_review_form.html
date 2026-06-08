@@ -1,5 +1,5 @@
 <div class="container py-4" style="max-width:700px;">
-    <h2>Đánh giá <strong>{{ car }}</strong></h2>
+    <h2>Cảm nhận của bạn về dòng xe này<strong>{{ car }}</strong></h2>
 
     <form method="post"
           hx-post="{% url 'cars:review_submit' slug=car_model.slug %}"
@@ -9,22 +9,7 @@
         <div id="review-result">
 
             <!-- ★ Star Rating --- seprately rendered -->
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Đánh giá của bạn</label>
-                <div class="star-rating">
-                    {% for value, label in form.rating.field.choices %}
-                        <input type="radio"
-                               id="star{{ value }}"
-                               name="rating"
-                               value="{{ value }}"
-                               class="star-radio"
-                               {% if form.rating.value == value|stringformat:"s" %}checked{% endif %}><label for="star{{value}}" title="{{ label }}">&#9733;</label>
-                    {% endfor %}
-                </div>
-                {% if form.rating.errors %}
-                    <div class="text-danger small">{{ form.rating.errors.0 }}</div>
-                {% endif %}
-            </div>
+            {% include "cars/utils/_star_rating.html" %}
 
             {% for field in form %}
                 {% if field.name != 'rating' %}

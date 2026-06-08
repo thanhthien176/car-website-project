@@ -1,0 +1,40 @@
+<div class="mb-4" 
+     x-data="{ 
+        rating: {{ form.rating.value|default:0 }}, 
+        hoverRating: 0 
+     }">
+    <label class="form-label fw-semibold">Đánh giá của bạn</label>
+    
+    <style>
+        .star-radio { display: none; }
+        .star-label { cursor: pointer; font-size: 2rem; transition: color 0.2s; }
+    </style>
+
+    <div class="star-rating d-flex gap-1"
+        >
+        
+        {% for value, label in form.rating.field.choices %}
+            <input type="radio"
+                   id="star{{ value }}"
+                   name="rating"
+                   value="{{ value }}"
+                   class="star-radio"
+                   x-model="rating"
+                   {% if form.rating.value == value|stringformat:"s" %}checked{% endif %}>
+            
+            <label for="star{{ value }}" 
+                   title="{{ label }}"
+                   class="star-label"
+                   @mouseenter="hoverRating = {{ value }}"
+                   @mouseleave="hoverRating = 0"
+                   @click="rating = {{ value }}"
+                   :style="(hoverRating >= {{ value }} || (!hoverRating && rating >= {{ value }})) ? 'color: #ffc107' : 'color: #ccc'">
+                &#9733;
+            </label>
+        {% endfor %}
+    </div>
+
+    {% if form.rating.errors %}
+        <div class="text-danger small">{{ form.rating.errors.0 }}</div>
+    {% endif %}
+</div>
