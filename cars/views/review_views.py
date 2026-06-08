@@ -34,8 +34,11 @@ class ReviewSubmitView(FormView):
         # HTMX request? Return HTML fragment instead of redirect
         if self.request.headers.get('HX-Request'):
             return HttpResponse(
-                '<div class="alert alert-success">'
-                'Cảm ơn! Đánh giá của bạn sẽ giúp ích cho nhiều người</div>'
+                """<div class="alert alert-warning text-center py-4">
+                    <i class="bi bi-clock-history fs-3 d-block mb-2"></i>
+                    <h5>Đã ghi nhận đánh giá của bạn!</h5>
+                    <p class="text-muted mb-0">Đánh giá đang được gửi tới ban quản trị kiểm duyệt trước khi hiển thị công khai.</p>
+                </div>"""
             ) 
         
         return HttpResponseRedirect(success_url)

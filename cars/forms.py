@@ -1,3 +1,5 @@
+from cProfile import label
+
 from django import forms
 from .models import Review
 
@@ -13,10 +15,25 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['author_name', 'rating', 'title', 'content', 'pros', 'cons']
+        labels = {
+            'author_name': 'Email',
+            'title': 'Tiêu đề ',
+            'content': 'Nội dung',
+            'pros': 'Ưu điểm',
+            'cons': 'Nhược điểm'
+        }
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 4}),
-            'pros': forms.Textarea(attrs={'rows': 3}),
-            'cons': forms.Textarea(attrs={'rows': 3})
+            'content': forms.Textarea(attrs={
+                'rows': 4,
+                'placeholder': 'Chia sẻ trải nghiệm thực tế của bạn với dòng xe này',
+                }),
+            'pros': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Điểm bạn thích ở dòng xe này',
+                }),
+            'cons': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Điểm bạn không thích ở dòng xe này',})
         }
         
     def __init__(self, *args, **kwargs):
