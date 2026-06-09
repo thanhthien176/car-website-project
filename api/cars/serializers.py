@@ -24,11 +24,14 @@ class BrandSerializers(serializers.ModelSerializer):
         ]
         read_only_fields = ['slug']
         
-    def get_car_model_count(self, obj):
-        """
-        Return the number car_models for this brand
-        """
-        return obj.car_models.annotate(car_model_count=Count('car_models'))
+class BrandMinimalSerializers(serializers.ModelSerializer):
+    """Minimal brand info — for nesting inside CarModelSerializer."""
+    
+    class Meta:
+        model = Brand
+        fields = ['id', 'name', 'slug', 'logo', 'website', 'country_of_origin']
+        
+        
 
 
 class CarModelSerializers(serializers.ModelSerializer):
@@ -38,7 +41,7 @@ class CarModelSerializers(serializers.ModelSerializer):
     in the ViewSet queryset to avoid N+1.
     Expects annotate: variant_count=Count('variants').
     """
-    brand = BrandSerializers()
+    brand = BrandMinimalSerializers(read_only=True)
     variant_count = serializers.IntegerField(read_only=True, default=0)
     
     class Meta:
@@ -50,12 +53,18 @@ class CarModelSerializers(serializers.ModelSerializer):
         ]
         read_only_fields = ['slug', 'avg_rating']
         
-    def get_variant_count(self, obj):
-        """
-        Return the number of variants for this car model
-        """
-        return obj.objects.annotate(variant_count=Count('variants'))
+class CarModelMinimalSerializers(serializers.ModelSerializer):
+    """Minimal car model info — for nesting inside CarVariantSerializer."""
+    brand = BrandMinimalSerializers(read_only=True)
+    body_type_name = serializers.CharField(source='body_type.name', read_only=True)
     
+    class Meta:
+        model = CarModel
+        fields = [
+            'id', 'name', 'slug', 'brand',
+            'body_type_name', 'thumbnail', 'avg_rating',
+        ]
+        
 class CarVariantSerializers(serializers.ModelSerializer):
     """ 
      Serializer for CarVariant.
@@ -66,11 +75,7 @@ class CarVariantSerializers(serializers.ModelSerializer):
     Requires: select_related('car_model__brand', 'car_model__body_type')
     """
     
-    car_model = CarModelSerializers(read_only=True)
-    
-    # Flattened field: read nested attribute via dot
-    # source='car_model.brand.name' → DRF traverse each attribute
-    brand_name = serializers.CharField(source='car_model.brand.name', read_only=True)
+    car_model = CarModelMinimalSerializers(read_only=True)  
     
     # Model properties — DRF reads like a normal attribute
     price_range = serializers.CharField(read_only=True)
@@ -79,10 +84,8 @@ class CarVariantSerializers(serializers.ModelSerializer):
     class Meta:
         model = CarVariant
         fields = [
-            'id', 'variant_name', 'slug',
-            'car_model', 'brand_name',
-            'fuel_type', 'price_min', 'price_max', 'price_range',
-            'is_active', 'primary_image',
+            'id', 'variant_name', 'slug', 'car_model', 'fuel_type', 
+            'price_min', 'price_max', 'price_range','is_active', 'primary_image',
         ]
 
         read_only_fields = ['slug']
