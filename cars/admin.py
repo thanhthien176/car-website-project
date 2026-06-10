@@ -6,7 +6,7 @@ from django.http import HttpRequest, HttpResponse
 
 
 from .models import (
-    Brand, CarModel, CarVariant, CarImage,
+    Brand, CarModel, CarVariant, CarImage, VariantImage,
     DimensionSpecification, EngineSpecification, PerformanceSpecification,
     FuelConsumptionSpecification, ExteriorSpecification, InteriorSpecification,
     SeatSpecification, ComfortSpecification, SafetySpecification,
@@ -60,6 +60,11 @@ export_cars_csv.short_description = "Export selected variants to CSV"
 class CarImageInline(admin.TabularInline):
     model = CarImage
     extra = 3
+    fields = ['image', 'caption', 'is_primary', 'order']
+    
+class VariantImageInline(admin.TabularInline):
+    model = VariantImage
+    extra = 2
     fields = ['image', 'caption', 'is_primary', 'order']
     
     
@@ -190,6 +195,10 @@ class CarModelAdmin(admin.ModelAdmin):
     search_fields = ['name', 'brand__name']
     prepopulated_fields = {'slug': ('name',)}
     readonly_fields = ['avg_rating']
+    
+    inlines = [
+        CarImageInline,
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -228,7 +237,7 @@ class CarVariantAdmin(admin.ModelAdmin):
     actions = [export_cars_csv] 
 
     inlines = [ 
-    CarImageInline, 
+    VariantImageInline, 
     DimensionSpecInline, 
     EngineSpecInline, 
     PerformanceSpecInline, 

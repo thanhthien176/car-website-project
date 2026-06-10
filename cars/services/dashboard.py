@@ -131,7 +131,7 @@ class AdminDashboardSelector:
         missing_safety = CarVariant.objects.filter(safety__isnull=True).count()
         missing_dimension= CarVariant.objects.filter(dimension__isnull=True).count()
         missing_performance = CarVariant.objects.filter(performance__isnull=True).count()
-        missing_image = CarVariant.objects.filter(images__isnull=True).count()
+        missing_image = CarVariant.objects.filter(variant_images__isnull=True).count()
         
         completeness = [
             {'label': 'Có thông số động cơ',  'done': total_variants - missing_engine,     'total': total_variants},

@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.db.models import Avg
 from django.core.cache import cache
 
-from .models import Brand, CarImage, CarModel, Review, CarVariant
+from .models import Brand, CarImage, CarModel, Review, CarVariant, VariantImage
 from .utils.image_utils import convert_to_webp
 import os
 
@@ -22,6 +22,7 @@ _WEBP_REGISTRY = [
     (Brand,    "logo",        "logo",        _LOGO_MAX_SIZE),
     (CarModel, "thumbnail",   "thumbnail",   _THUMBNAIL_MAX_SIZE),
     (CarImage, "image",       "image",       _GALLERY_MAX_SIZE),
+    (VariantImage, "variant_image", "variant_image", _GALLERY_MAX_SIZE)
 ]
 
 @receiver([post_save, post_delete], sender=None)
@@ -66,6 +67,7 @@ def _delete_image_field(instance) -> None:
 @receiver(post_delete, sender=Brand)
 @receiver(post_delete, sender=CarModel)
 @receiver(post_delete, sender=CarImage)
+@receiver(post_delete, sender=VariantImage)
 def delete_image_file(sender, instance, **kwargs):
     _delete_image_field(instance)
 
@@ -101,6 +103,17 @@ def auto_delete_image_on_change(sender, instance, **kwargs):
         return
     if old_image and old_image != instance.image:
         old_image.delete(save=False)
+        
+@receiver(pre_save, sender=VariantImage)
+def auto_delete_image_on_change(sender, instance, **kwargs):
+    if not instance.pk:
+        return
+    try:
+        old_image = VariantImage.objects.get(pk=instance.pk).image
+    except VariantImage.DoesNotExist:
+        return
+    if old_image and old_image != instance.image:
+        old_image.delete(save=False)
 
 # ---------------------------------------------------------------------------
 # Convert uploaded images to WebP on save
@@ -111,7 +124,7 @@ def auto_delete_image_on_change(sender, instance, **kwargs):
 
 def _make_webp_handler(field_name:str, update_field:str, max_size:tuple):
     def handler(sender, instance, **kwargs):
-        if kwargs.get("update_field") == frozenset({update_field}):
+        if kwargs.get("update_fields") == frozenset({update_field}):
             return
         if _replace_with_webp(instance, field_name, max_size):
             sender.objects.filter(pk=instance.pk).update(

@@ -6,14 +6,14 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from cars.models import CarImage
-from helpers.helper_models import make_variant
+from helpers.helper_models import make_car_model
 
 class CarImageTest(TestCase):
     def setUp(self) -> None:
-        self.variant = make_variant()
+        self.car_model = make_car_model()
         
     def _make_image(self, is_primary=False, order=0):
-        img = CarImage(car=self.variant, is_primary=is_primary, order=order)
+        img = CarImage(car=self.car_model, is_primary=is_primary, order=order)
         img.image.name = f"car/gallery/test-{order}.webp"
         img.save()
         return img
@@ -36,7 +36,7 @@ class CarImageTest(TestCase):
         self._make_image(is_primary=False, order=1)
         self._make_image(is_primary=False, order=3)
         self._make_image(is_primary=False, order=2)
-        orders=list(CarImage.objects.filter(car=self.variant).values_list("order", flat=True))
+        orders=list(CarImage.objects.filter(car=self.car_model).values_list("order", flat=True))
         self.assertEqual(orders, [1,2,3])
         
         

@@ -71,9 +71,9 @@ class CarSelector:
             .select_related(
                 'brand',
                 'body_type',
-                'car_class'
+                'car_class',
             )
-            .prefetch_related('variants', 'variants__images')
+            .prefetch_related('variants', 'images')
             .distinct()
             .order_by('brand__name', 'name')
         )
@@ -124,6 +124,9 @@ class CarSelector:
             params.get('max_price')
         )
         
+        if min_price is None and max_price is None:
+            return qs
+        
         filters: dict[str, Any] = {
             "variants__is_active": True
         }
@@ -134,7 +137,7 @@ class CarSelector:
         if max_price is not None:
             filters["variants__price_min__lte"] = max_price * 1_000_000
             
-        return qs.filter(**filters)
+        return qs.filter(**filters).distinct()
     
     def _filter_engine(self, qs, params):
         key = params.get('engine')
