@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 
 from cars.models import Brand, CarModel, CarVariant
+from .filters import CarVariantFilter
 from .serializers import BrandSerializers, CarModelSerializers, CarVariantSerializers
 
 class BrandViewSet(viewsets.ReadOnlyModelViewSet):
@@ -45,7 +46,8 @@ class CarModelViewSet(viewsets.ReadOnlyModelViewSet):
 class CarVariantViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CarVariantSerializers
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['fuel_type', 'is_active', 'car_model__brand__slug']
+    # filterset_fields = ['fuel_type', 'is_active', 'car_model__brand__slug']
+    filterset_class = CarVariantFilter
     search_fields = ['variant_name', 'car_model__name', 'car_mode__brand__name']
     ordering_fields = ['price_min', 'price_max', 'variant_name']
     ordering = ['car_model__brand__name', 'variant_name']

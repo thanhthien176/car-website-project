@@ -43,12 +43,13 @@ class CarModelSerializers(serializers.ModelSerializer):
     """
     brand = BrandMinimalSerializers(read_only=True)
     variant_count = serializers.IntegerField(read_only=True, default=0)
+    body_type_name = serializers.CharField(source='body_type.name', read_only=True)
     
     class Meta:
         model = CarModel
         fields = [
             'id', 'name', 'slug', 'brand',
-            'body_type', 'model_year', 'avg_rating',
+            'body_type_name', 'model_year', 'avg_rating',
             'variant_count',
         ]
         read_only_fields = ['slug', 'avg_rating']
