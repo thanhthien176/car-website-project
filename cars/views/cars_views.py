@@ -46,11 +46,19 @@ class CarModelListView(ListView):
         return super().render_to_response(context, **response_kwargs)
     
     def get_context_data(self, **kwargs):
+        filters = {
+            'brand': self.request.GET.get('brand'),
+            'body': self.request.GET.get('body'),
+            'min_price': self.request.GET.get('min_price'),
+            'max_price': self.request.GET.get('max_price')
+        }
         context = super().get_context_data(**kwargs)
         # Sidebar data
         context['all_brands'] = Brand.objects.filter(is_active=True).order_by('name')
         context['all_body_types'] = BodyType.objects.all().order_by('name')
+        
         # Preserve active filter state for template
+        context['has_filters'] = any(filters.values())
         context['current_brand'] = self.request.GET.get('brand', '')
         context['current_body'] = self.request.GET.get('body', '')
         context['search_query'] = self.request.GET.get('q', '')
@@ -69,14 +77,15 @@ class CarModelDetailView(DetailView):
     def get_queryset(self) -> QuerySet:
         return (
             CarModel.objects
-            .select_related('brand', 'body_type', 'car_class')
+            .select_related('brand', 'body_type', 'car_class',)
+            .prefetch_related('images')
         )
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['variants'] = (self.object.variants
                                .filter(is_active=True)
-                               .prefetch_related('images')
+                               .prefetch_related('variant_images')
                                .order_by('price_min')
                                )
         context['form'] = ReviewForm()
@@ -105,11 +114,11 @@ class CarVariantDetailView(DetailView):
                     'car_model__car_class',
                 )
                 .prefetch_related(
-                    'images',
+                    'variant_images',
                     'engine',
                     'dimension',
                     'safety',
-                    'car_model__reviews'
+                    'car_model__reviews',
                 )            
         )
         
