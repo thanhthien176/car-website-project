@@ -1,0 +1,38 @@
+<label class="form-label fw-semibold small text-uppercase text-muted">
+    Khoảng giá (triệu VNĐ)
+</label>
+
+<div class="row g-2 mb-3">
+
+    <div class="col-6">
+        <input
+            type="number"
+            name="min_price"
+            placeholder="Từ"
+            value="{{ current_min_price }}"
+            class="form-control form-control-sm"
+            hx-trigger="keyup changed delay:400ms"
+            hx-get="{% url 'cars:car_list' %}"
+            hx-include="#filter-form"
+            hx-target="#car-grid-container"
+            hx-push-url="true"
+        >
+    </div>
+
+    <div class="col-6">
+        <input
+            type="number"
+            name="max_price"
+            placeholder="Đến"
+            value="{{ current_max_price }}"
+            class="form-control form-control-sm"
+            hx-trigger="keyup changed delay:400ms"
+            hx-get="{% url 'cars:car_list' %}"
+            hx-include="#filter-form"
+            hx-target="#car-grid-container"
+            hx-push-url="true"
+
+        >
+    </div>
+
+</div>

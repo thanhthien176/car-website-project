@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.db.models import Count, Q
 from cars.models import Brand, CarModel, CarVariant
 
@@ -75,4 +77,76 @@ class CarSelector:
             .distinct()
             .order_by('brand__name', 'name')
         )
+        
+        
+    def apply_filters(self, qs, params):
+        qs = self._filter_brand(qs, params)
+        qs = self._filter_body(qs, params)
+        qs = self._filter_fuel(qs, params)
+        qs = self._filter_price(qs, params)
+        qs = self._filter_engine(qs, params)
+        
+        return qs
+    
+    def _filter_brand(self, qs, params):
+        brand = params.get('brand')
+        
+        if brand:
+            qs = qs.filter(
+                brand__slug=brand
+            )
+        return qs
+    
+    def _filter_body(self, qs, params):
+        body = params.get('body')
+        
+        if body:
+            qs = qs.filter(
+                body_type__slug=body
+            )
+        return qs
+    
+    def _filter_fuel(self, qs, params):
+        fuel = params.get('fuel')
+        
+        if fuel:
+            qs = qs.filter(
+                variants__fuel_type=fuel,
+                variants__is_active=True,
+            )
+        return qs
+    
+    def _filter_price(self, qs, params):
+        min_price = self._to_int(
+            params.get('min_price')
+        )
+        max_price = self._to_int(
+            params.get('max_price')
+        )
+        
+        filters: dict[str, Any] = {
+            "variants__is_active": True
+        }
+        
+        if min_price is not None:
+            filters["variants__price_min__gte"] = min_price * 1_000_000
+        
+        if max_price is not None:
+            filters["variants__price_min__lte"] = max_price * 1_000_000
+            
+        return qs.filter(**filters)
+    
+    def _filter_engine(self, qs, params):
+        key = params.get('engine')
+        
+        if key:
+            pass
+        
+        return qs
+    
+    def _to_int(self, value):
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
         

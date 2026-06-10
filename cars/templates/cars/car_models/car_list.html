@@ -16,42 +16,34 @@
                 </div>
                 <div class="card-body">
                     {# Filter form — GET method để URL giữ params #}
-                    <form method="get" action="{% url 'cars:car_list' %}" id="filter-form">
-                        {# Brand filter #}
+                    <form   method="get" 
+                            id="filter-form"
+                            hx-get="{% url 'cars:car_list' %}"
+                            hx-target="#car-grid-container"
+                            hx-swap="innerHTML"
+                            hx-push-url="true">
+
                         <label class="form-label fw-semibold small text-uppercase text-muted">
                             Tìm xe
                         </label>
                         {% include "cars/utils/_search_bar.html" %}
 
+                        {# Brand filter #}
                         <label class="form-label fw-semibold small text-uppercase text-muted" >
                             Hãng xe
                         </label>
-                        <select name="brand" class="form-select form-select-sm mb-3" 
-                            onchange="this.form.submit()">
-                            <option value="">Tất cả các hãng</option>
-                            {% for brand in all_brands %}
-                                <option value="{{ brand.slug }}"
-                                    {% if brand.slug == current_brand %}selected{% endif %}>
-                                    {{ brand.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                        
+                        {% include "cars/utils/_filter_brands.html" %}
 
                         {# Body type filter #}
                         <label class="form-label fw-semibold small text-uppercase text-muted">
                             Kiểu xe
                         </label>
-                        <select name="body" class="form-select form-select-sm mb-3"
-                                onchange="this.form.submit()">
-                            <option value="">Tất cả các kiểu</option>
-                            {% for body in all_body_types %}
-                            <option value="{{ body.slug }}"
-                                {% if body.slug == current_body %}selected{% endif %}>
-                                {{ body.name}}
-                            </option>
-                            {% endfor %}
+                        
+                        {% include "cars/utils/_filter_body.html" %}
 
-                        </select>
+                        {# Filter by price #}
+                        {% include "cars/utils/_filter_price.html" %}
 
                         {# Clear filters — Only show when filter #}
                         {% if current_brand or current_body %}

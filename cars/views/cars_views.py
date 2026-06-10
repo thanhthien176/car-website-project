@@ -25,15 +25,18 @@ class CarModelListView(ListView):
               .select_related("brand", "body_type", "car_class")
               .order_by("brand__name", "name")
               )
-        brand_slug = self.request.GET.get('brand')
-        body_slug = self.request.GET.get('body')
-        if brand_slug:
-            qs = qs.filter(brand__slug=brand_slug)
-        if body_slug:
-            qs = qs.filter(body_type__slug=body_slug)
+        
         q = self.request.GET.get('q', '').strip()
+        
+        selector = CarSelector()
         if q:
-            qs = CarSelector().search_car_models(q, qs=qs)
+            qs = selector.search_car_models(q, qs=qs)
+            
+        qs = selector.apply_filters(
+            qs,
+            self.request.GET
+        )
+            
             
         return qs.annotate(variant_count=Count('variants', distinct=True))
     

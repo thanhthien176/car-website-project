@@ -1,0 +1,16 @@
+<select name="brand" class="form-select form-select-sm mb-3" 
+    onchange="this.form.submit()"
+    hx-trigger="change"
+    hx-get="{% url 'cars:car_list' %}"
+    hx-include="#filter-form"
+    hx-target="#car-grid-container"
+    hx-push-url="true"
+    >
+    <option value="">Tất cả các hãng</option>
+    {% for brand in all_brands %}
+        <option value="{{ brand.slug }}"
+            {% if brand.slug == current_brand %}selected{% endif %}>
+            {{ brand.name }}
+        </option>
+    {% endfor %}
+</select>

@@ -5,7 +5,7 @@
     value="{{ search_query }}"
     class="form-control mb-3"
     placeholder="Tìm xe..."
-    hx-on::before-request="console.log('HTMX request')"
+    {% comment %} hx-on::before-request="console.log('HTMX request')" {% endcomment %}
     hx-get="{% url 'cars:car_list' %}"
     hx-trigger="keyup changed delay:400ms, search"
     hx-target="#car-grid-container"
