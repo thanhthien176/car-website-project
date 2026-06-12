@@ -29,7 +29,7 @@ class CarSelector:
         return (CarVariant.objects
                 .filter(is_active=True)
                 .select_related('car_model__brand', 'car_model__body_type')
-                .prefetch_related('images')
+                .prefetch_related('variant_images')
                 .order_by('-id')[:limit]
                 )
         

@@ -1,6 +1,7 @@
 import logging
 import io
 import os
+import requests
 
 from PIL import Image, ImageOps, UnidentifiedImageError
 from django.core.files.base import ContentFile
@@ -69,6 +70,8 @@ def convert_to_webp(image_field, quality=85, max_size=None):
     name, ext = os.path.splitext(image_field.name)
     new_name = f"{name}.webp"
     return ContentFile(output.read(), name=new_name)
+
+
     
     
     

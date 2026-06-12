@@ -24,7 +24,7 @@ def _render_tray(request, comparison, status):
     """Render comparison tray fragment để HTMX swap vào DOM."""
     cars = comparison.cars.select_related(
         'car_model__brand'
-    ).prefetch_related('images')
+    ).prefetch_related('variant_images')
     total = cars.count()
     
     return render(request, "cars/comparison/_comparison_tray.html", {
@@ -33,7 +33,8 @@ def _render_tray(request, comparison, status):
         'can_add': comparison.can_add_car(),
         'total': total,
         'empty_slots': range(3-total),
-    })
+    }
+    )
     
 class ComparisonPageView(TemplateView):
     template_name = 'cars/comparison/comparison_page.html'
@@ -49,7 +50,7 @@ class ComparisonPageView(TemplateView):
                 'car_model__car_class'
             )
             .prefetch_related(
-                'images', 'engine', 'dimension', 'safety'
+                'variant_images', 'engine', 'dimension', 'safety'
             )
         )
         return context

@@ -22,21 +22,21 @@ migrate:
 superuser:
 	poetry run python manage.py createsuperuser
 
-test:
+pytest:
 	poetry run pytest
 
 # example: make test-path path=cars/tests/test_models.py
-test-path:
+pytest-path:
 	poetry run pytest ${path}
 
 shell:
 	poetry run python manage.py shell
 
-all_test:
+test_django:
 	python manage.py test -v 2
 
 # example: path=cars.tests.test_views
-part_test:
+part_test_dj:
 	python manage.py test ${path} -v 2
 
 part_test_keepdb:
