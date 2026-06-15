@@ -1,5 +1,19 @@
+from random import choice
+
 import django_filters
-from cars.models import CarVariant
+from cars.models import CarVariant, CarModel
+
+class CarModelFilter(django_filters.FilterSet):
+    brand = django_filters.CharFilter(
+        field_name='brand__slug',
+        lookup_expr='exact',
+        label='Brand slug',
+    )
+    body=django_filters.CharFilter(
+        field_name='body_type__slug',
+        lookup_expr='exact',
+        label='Body type slug'
+    )
 
 class CarVariantFilter(django_filters.FilterSet):
     """
@@ -19,11 +33,17 @@ class CarVariantFilter(django_filters.FilterSet):
         label='Brand slug',
     )
     
-    body_type = django_filters.CharFilter(
+    body = django_filters.CharFilter(
         field_name='car_model__body_type__slug',
         lookup_expr='exact',
         label='Body Type slug',
     )
+    
+    fuel_type = django_filters.ChoiceFilter(
+        choices=CarVariant.FUEL_TYPE_CHOICES
+    )
+    
+    
     # Price range: gte / lte instead of exact
     price_min = django_filters.NumberFilter(
         field_name='price_min',
