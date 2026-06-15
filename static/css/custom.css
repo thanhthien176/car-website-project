@@ -1,0 +1,94 @@
+/* CarCompare custom styles — dùng khi Bootstrap không đủ */
+
+/* Star rating color */
+.stars {
+    color: #f4a261;
+    letter-spacing: 2px;
+}
+
+/* Price highlight */
+.price-tag {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Card hover effect */
+.car-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.car-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+
+/* Brand logo container */
+.brand-logo {
+    height: 60px;
+    object-fit: contain;
+}
+
+/* Navbar brand */
+.navbar-brand .brand-icon {
+    font-size: 1.4rem;
+}
+
+/* ===== Star Rating ===== */
+.star-rating {
+  display: flex;
+  gap: 4px;
+}
+
+.star-rating .star-radio {
+  display: none !important;
+}
+
+.star-rating label {
+  font-size: 2.5rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  line-height: 1;
+}
+
+
+.comparison-tray {
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:1050;
+    background:var(--bs-body-bg);
+    border-top:1px solid var(--bs-border-color);
+    box-shadow:0 -4px 16px rgba(0,0,0,0.08);
+    padding:12px 24px;
+}
+
+.thumbnail-comparison {
+    width:40px;
+    height:40px;
+    flex-shrink:0;
+    background:var(--bs-tertiary-bg);
+    border-radius:var(--bs-border-radius);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.remove-button {
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--bs-secondary-color);
+    padding:2px;
+    flex-shrink:0;
+    line-height:1;
+}
+
+.empty-slots {
+    padding:8px 12px;
+    border:1px dashed var(--bs-border-color);
+    border-radius:var(--bs-border-radius);
+    max-width:220px;
+    min-width:0;
+}
