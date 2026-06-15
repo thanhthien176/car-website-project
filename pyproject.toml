@@ -1,7 +1,7 @@
 [project]
 name = "projectcarweb"
 version = "0.1.0"
-description = ""
+description = "A Django-powered vehicle catalog platform with REST APIs, reviews, comparison tools, image processing, and automated testing."
 authors = [
     {name = "thiennt176",email = "thanhthien176@gmail.com"}
 ]
