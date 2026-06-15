@@ -2,6 +2,7 @@ import logging
 import io
 import os
 import requests
+import uuid
 
 from PIL import Image, ImageOps, UnidentifiedImageError
 from django.core.files.base import ContentFile
@@ -23,16 +24,27 @@ def convert_to_webp(image_field, quality=85, max_size=None):
     
     try:
         img: Image.Image = Image.open(image_field)
+        
+        return _image_to_webp(
+            img,
+            quality,
+            max_size,
+        )
     except (UnidentifiedImageError, OSError) as exc:
         logger.warning("convert_to_webp: could not open image '%s': %s", image_field.name, exc)
         return None
     
-    
-    # --- Correct EXIF orientation ------------------------------------------------
+
+def _image_to_webp(
+    img: Image.Image,
+    quality: int = 85,
+    max_size=None,
+):
+    filename = uuid.uuid4().hex
     try:
         img = ImageOps.exif_transpose(img)
     except Exception:
-        pass  # Non-fatal; proceed with original orientation.
+        pass
     
     # Covert into RGBA if needed (png has transparency)
     # RGBA is well supported with WebP
@@ -44,7 +56,7 @@ def convert_to_webp(image_field, quality=85, max_size=None):
     if max_size:
         img.thumbnail(max_size, Image.Resampling.LANCZOS)
         
-    # save into WebP
+     # save into WebP
     output = io.BytesIO()
     save_kwargs = {
         "format": "WEBP",
@@ -58,20 +70,107 @@ def convert_to_webp(image_field, quality=85, max_size=None):
         # lossless=False keeps the alpha channel while still applying lossy
         # compression to the RGB data — best balance for photos-with-alpha.
         save_kwargs["lossless"] = False
-    
+        
     try:
         img.save(output, **save_kwargs)
     except Exception as exc:
-        logger.warning("convert_to_webp: could not encode '%s' to WebP: %s", image_field.name, exc)
+        logger.warning("Failed to encode image to WebP %s", exc)
         return None
     
     output.seek(0)
-    
-    name, ext = os.path.splitext(image_field.name)
+        
+    name = os.path.splitext(filename)[0]
     new_name = f"{name}.webp"
     return ContentFile(output.read(), name=new_name)
 
+    
 
+def download_image(url: str, timeout: int=20)-> bytes|None:
+    try:
+        response = requests.get(
+            url,
+            timeout=timeout,
+            headers={
+                "User-Agent": "Mozilla/5.0",
+            }
+        )
+        response.raise_for_status()
+        
+        return response.content
+    except Exception as exc:
+        logger.warning(
+            "Failed to download from %s: %s",
+            url,
+            exc
+        )
+        return None
+    
+def image_byte_to_webp(
+    image_bytes: bytes,
+    quality=85,
+    max_size=None,
+):
+    try:
+        img = Image.open(
+            io.BytesIO(image_bytes)
+        )
+        
+        return _image_to_webp(
+            img,
+            quality,
+            max_size,
+        )
+    
+    except (UnidentifiedImageError,OSError,) as exc:
+        logger.warning("Failed to open downloaded image bytes %s", exc)
+        return None
+        
+    
+def download_and_convert_webp(
+    url: str,
+    quality=85,
+    max_size=None,
+):
+    image_bytes = download_image(url)
+    
+    if not image_bytes:
+        return None
+    
+    return image_byte_to_webp(
+        image_bytes,
+        quality,
+        max_size,
+    )
+
+###
+def save_remote_image_to_field(
+    instance,
+    field_name: str,
+    url: str,
+    max_size=None,
+):
+    webp = download_and_convert_webp(
+        url,
+        max_size=max_size
+    )
+    
+    if not webp:
+        return False
+    
+    field = getattr(instance, field_name, None)
+    
+    if field is None:
+        raise ValueError(
+            f"{instance.__class__.__name__} has no field '{field_name}'"
+        )
+    
+    field.save(
+        webp.name,
+        webp,
+        save=False
+    )
+    
+    return True
     
     
     
