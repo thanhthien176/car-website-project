@@ -228,9 +228,9 @@ class CarVariantAdmin(admin.ModelAdmin):
 
     ]
 
-    search_fields = ['variant_name', 'car_model__name', 'car_model__brand__name']
+    search_fields = ['name', 'car_model__name', 'car_model__brand__name']
 
-    prepopulated_fields = {'slug': ('variant_name',)}
+    prepopulated_fields = {'slug': ('name',)}
 
     list_editable = ['is_active']
     

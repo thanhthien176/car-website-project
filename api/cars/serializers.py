@@ -85,7 +85,7 @@ class CarVariantSerializers(serializers.ModelSerializer):
     class Meta:
         model = CarVariant
         fields = [
-            'id', 'variant_name', 'slug', 'car_model', 'fuel_type', 
+            'id', 'name', 'slug', 'car_model', 'fuel_type', 
             'price_min', 'price_max', 'price_range','is_active', 'primary_image',
         ]
 

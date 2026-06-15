@@ -158,8 +158,13 @@ class CarVariant(SEOMetaData, models.Model):
     
     # Basic Information
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="variants")
-    variant_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=300, unique=True, blank=True)
+    
+    # Change
+    @property
+    def variant_name(self):
+        return self.name
     
     # classification
     fuel_type = models.CharField(max_length=20, choices=FUEL_TYPE_CHOICES)    
@@ -173,7 +178,7 @@ class CarVariant(SEOMetaData, models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['car_model', 'variant_name'],
+                fields=['car_model', 'name'],
                 name="unique_car_variant"
             )
         ]
@@ -187,7 +192,7 @@ class CarVariant(SEOMetaData, models.Model):
         
     def get_meta_title(self):
         return (self.seo_title 
-                or f"Giá xe {self.car_model} {self.variant_name} mới nhất"
+                or f"Giá xe {self.car_model} {self.name} mới nhất"
                 f"| WebsiteCar"
         )
     
@@ -196,13 +201,13 @@ class CarVariant(SEOMetaData, models.Model):
             return self.seo_description
         
         return (
-            f"Đánh giá {self.variant_name}, động cơ {self.fuel_type},"
+            f"Đánh giá {self.name}, động cơ {self.fuel_type},"
             f"giá từ {self.price_range}. Xem chi tiết thông số kỹ thuật tại đây."
             )
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(f"{self.car_model}-{self.variant_name}")
+            base_slug = slugify(f"{self.car_model}-{self.name}")
             new_slug = base_slug
             count = 1
             while CarVariant.objects.filter(slug=new_slug).exists():
@@ -229,7 +234,7 @@ class CarVariant(SEOMetaData, models.Model):
         return fallback.image.url if fallback else None
         
     def __str__(self):
-        return f"{self.car_model} {self.variant_name}"
+        return f"{self.car_model} {self.name}"
     
     def get_absolute_url(self):
         return reverse("cars:variant_detail", kwargs={"slug": self.slug})

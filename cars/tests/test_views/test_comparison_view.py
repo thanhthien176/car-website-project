@@ -10,10 +10,10 @@ from cars.models import Comparison
 class AddToComparisonViewTest(TestCase):
     def setUp(self) -> None:
         self.car_model = make_car_model()
-        self.v1 = make_variant(car_model=self.car_model, variant_name='2.0G')
-        self.v2 = make_variant(car_model=self.car_model, variant_name='2.5G')
-        self.v3 = make_variant(car_model=self.car_model, variant_name='3.0G')
-        self.v4 = make_variant(car_model=self.car_model, variant_name='3.5G')
+        self.v1 = make_variant(car_model=self.car_model, name='2.0G')
+        self.v2 = make_variant(car_model=self.car_model, name='2.5G')
+        self.v3 = make_variant(car_model=self.car_model, name='3.0G')
+        self.v4 = make_variant(car_model=self.car_model, name='3.5G')
         
     def _add_url(self, variant_pk):
         return reverse('cars:comparison_add', kwargs={'variant_pk': variant_pk})
@@ -55,7 +55,7 @@ class AddToComparisonViewTest(TestCase):
 class RemoveFromComparisonViewTest(TestCase):
     def setUp(self) -> None:
         self.car_model = make_car_model()
-        self.v1 = make_variant(car_model=self.car_model, variant_name='2.0G')
+        self.v1 = make_variant(car_model=self.car_model, name='2.0G')
         
     def _add_url(self, variant_pk):
         return reverse('cars:comparison_add', kwargs={'variant_pk': variant_pk})

@@ -8,7 +8,7 @@ class ComparisonTest(TestCase):
         
     def _make_variants(self, count=3):
         return [
-            make_variant(car_model=self.car_model, variant_name = f"variant-{i}")
+            make_variant(car_model=self.car_model, name = f"variant-{i}")
             for i in range(count)
         ]
         
@@ -30,8 +30,8 @@ class ComparisonTest(TestCase):
         
     def test_str_with_cars(self):
         comparison = Comparison.objects.create(session_key = "cars123")
-        v1 = make_variant(car_model=self.car_model, variant_name="2.0G")
-        v2 = make_variant(car_model=self.car_model, variant_name="2.0HEV")
+        v1 = make_variant(car_model=self.car_model, name="2.0G")
+        v2 = make_variant(car_model=self.car_model, name="2.0HEV")
         comparison.cars.add(v1)
         comparison.cars.add(v2)        
         self.assertIn("2.0G", str(comparison))

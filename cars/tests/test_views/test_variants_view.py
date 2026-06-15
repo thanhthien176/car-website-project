@@ -11,7 +11,7 @@ class CarVariantDetailViewTest(TestCase):
     def setUp(self) -> None:
         self.brand = make_brand(name='Toyota')
         self.car_model = make_car_model(brand=self.brand, name='Innova')
-        self.variant = make_variant(car_model=self.car_model, variant_name='2.0G')
+        self.variant = make_variant(car_model=self.car_model, name='2.0G')
         self.url = reverse('cars:variant_detail', kwargs={'slug': self.variant.slug})
         
     def test_status_200(self):
@@ -23,7 +23,7 @@ class CarVariantDetailViewTest(TestCase):
         self.assertEqual(response.context['variant'], self.variant)
         
     def test_other_variants_excludes_self(self):
-        sibling = make_variant(car_model=self.car_model, variant_name='2.5Q')
+        sibling = make_variant(car_model=self.car_model, name='2.5Q')
         response = self.client.get(self.url)
         other_variants = response.context['other_variants']
         self.assertIn(sibling, other_variants)

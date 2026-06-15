@@ -66,7 +66,7 @@ class CarSelector:
                 Q(description__icontains=q) |
                 Q(body_type__name__icontains=q) |
                 Q(car_class__name__icontains=q) |
-                Q(variants__variant_name__icontains=q, variants__is_active=True)            
+                Q(variants__name__icontains=q, variants__is_active=True)            
             )
             .select_related(
                 'brand',

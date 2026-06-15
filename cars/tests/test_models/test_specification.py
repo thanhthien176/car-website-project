@@ -37,7 +37,7 @@ class SpecificationModelTest(TestCase):
         for choice in valid_choices:
             variant = make_variant(
                 car_model=self.variant.car_model,
-                variant_name = f"variant-{choice}"
+                name = f"variant-{choice}"
             )
             spec = EngineSpecification(
                 variant=variant,
