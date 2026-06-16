@@ -1,0 +1,14 @@
+[run]
+source = cars, api
+omit =
+    */migrations/*
+    */tests/*
+    */helpers/*
+    */apps.py
+
+[report]
+show_missing = true
+skip_covered = false
+
+[html]
+directory = htmlcov
