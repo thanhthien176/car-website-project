@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from cars.forms import ReviewForm
 from cars.models import Review
 from helpers.helper_models import make_car_model
 
@@ -35,6 +36,24 @@ class ReviewTest(TestCase):
         for rating in valid_ratings:
             r = self._make_review(rating=rating)
             self.assertEqual(r.rating, rating)
+            
+    def test_save_with_commit_false_does_not_insert_db(self):
+        form = ReviewForm(
+            data={
+                "author_name": "Tester",
+                "rating": 5,
+                "title": "Good",
+                "content": "Nice car",
+                "pros": "",
+                "cons": "",
+            }
+        )
+        self.assertTrue(form.is_valid())
+        review = form.save(commit=False)
+        
+        self.assertIsNone(review.pk)
+        self.assertFalse(review.is_approved)
+        self.assertEqual(Review.objects.count(), 0)
         
     
     
