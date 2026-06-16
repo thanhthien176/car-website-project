@@ -15,14 +15,21 @@ logger = logging.getLogger(__name__)
 _THUMBNAIL_MAX_SIZE = (1280, 1280)
 _GALLERY_MAX_SIZE = (1920, 1920)
 _LOGO_MAX_SIZE = (400, 400)
-_MODEL_TO_WATCH = [CarModel, Review, Brand, CarVariant]
+_MODEL_TO_WATCH = {CarModel, Review, Brand, CarVariant}
 
 _WEBP_REGISTRY = [
     # (Model,    field_name,    update_field,  max_size)
     (Brand,    "logo",        "logo",        _LOGO_MAX_SIZE),
     (CarModel, "thumbnail",   "thumbnail",   _THUMBNAIL_MAX_SIZE),
     (CarImage, "image",       "image",       _GALLERY_MAX_SIZE),
-    (VariantImage, "variant_image", "variant_image", _GALLERY_MAX_SIZE)
+    (VariantImage, "image", "image", _GALLERY_MAX_SIZE)
+]
+
+_DELETE_REGISTRY = [
+    (Brand, "logo"),
+    (CarModel, "thumbnail"),
+    (CarImage, "image"),
+    (VariantImage, "image"),
 ]
 
 @receiver([post_save, post_delete], sender=None)
@@ -71,49 +78,33 @@ def _delete_image_field(instance) -> None:
 def delete_image_file(sender, instance, **kwargs):
     _delete_image_field(instance)
 
-@receiver(pre_save, sender=Brand)
-def auto_delete_logo_on_change(sender, instance, **kwargs):
-    if not instance.pk:
-        return
-    try:
-        old_logo = Brand.objects.get(pk=instance.pk).logo
-    except Brand.DoesNotExist:
-        return
-    if old_logo and old_logo != instance.logo:
-        old_logo.delete(save=False)
-        
-@receiver(pre_save, sender=CarModel)
-def auto_delete_thumbnail_on_change(sender, instance, **kwargs):
-    if not instance.pk:
-        return
-    try:
-        old_image = CarModel.objects.get(pk=instance.pk).thumbnail
-    except CarModel.DoesNotExist:
-        return
-    if old_image and old_image != instance.thumbnail:
-        old_image.delete(save=False)
 
-@receiver(pre_save, sender=CarImage)
-def auto_delete_image_on_change(sender, instance, **kwargs):
+def _delete_old_file_on_change(instance, field_name):
     if not instance.pk:
         return
+    
     try:
-        old_image = CarImage.objects.get(pk=instance.pk).image
-    except CarImage.DoesNotExist:
+        old_instance = type(instance).objects.get(pk=instance.pk)
+    except type(instance).DoesNotExist:
         return
-    if old_image and old_image != instance.image:
-        old_image.delete(save=False)
+    
+    old_file = getattr(old_instance, field_name)
+    new_file = getattr(instance, field_name)
+    
+    if old_file and old_file != new_file:
+        old_file.delete(save=False)
         
-@receiver(pre_save, sender=VariantImage)
-def auto_delete_image_on_change(sender, instance, **kwargs):
-    if not instance.pk:
-        return
-    try:
-        old_image = VariantImage.objects.get(pk=instance.pk).image
-    except VariantImage.DoesNotExist:
-        return
-    if old_image and old_image != instance.image:
-        old_image.delete(save=False)
+def _make_delete_handler(field_name):
+    def handler(sender, instance, **kwargs):
+        _delete_old_file_on_change(instance, field_name)
+        
+    return handler
+
+for model, field_name in _DELETE_REGISTRY:
+    receiver(pre_save, sender=model)(
+        _make_delete_handler(field_name)
+    )
+        
 
 # ---------------------------------------------------------------------------
 # Convert uploaded images to WebP on save
