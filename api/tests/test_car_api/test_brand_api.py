@@ -4,7 +4,7 @@ from rest_framework import status
 from django.test import TestCase
 from django.urls import reverse
 
-from ..helpers.helper_models import make_brand
+from cars.tests.helpers.helper_models import make_brand
 
 
 class BrandApiListTest(TestCase):
