@@ -3,6 +3,7 @@
 
 {% block title %} {{ brand.get_seo_title }} {% endblock %}
 {% block meta_description %}{{ brand.get_seo_description }}{% endblock %}
+{% block canonical %}{{ brand.get_absolute_url }}{% endblock %}
 
 {% block extra_head %} {% endblock %}
 

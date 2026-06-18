@@ -3,6 +3,38 @@
 
 {% block title %}{{ variant.get_meta_title }}{% endblock title %}
 {% block meta_description %}{{ variant.get_meta_description }}{% endblock meta_description %}
+{% block canonical %}{{ variant.get_absolute_url }}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ variant.car_model }} {{ variant.name }}",
+  "description": "{{ variant.get_meta_description|escapejs }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ variant.car_model.brand.name }}"
+  },
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "VND",
+    "lowPrice": "{{ variant.price_min }}",
+    "highPrice": "{{ variant.price_max }}",
+    "offerCount": "1",
+    "availability": "{% if variant.is_active %}https://schema.org/InStock{% else %}https://schema.org/Discontinued{% endif %}"
+  }
+  {% if variant.car_model.avg_rating > 0 %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ variant.car_model.avg_rating }}",
+    "bestRating": "5",
+    "worstRating": "1",
+    "reviewCount": "{{ variant.car_model.reviews.count }}"
+  }{% endif %}
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -75,7 +107,7 @@
                 </a>
             </p>
 
-            <h1 class="h2 mb-3">{{ variant.variant_name }}</h1>
+            <h1 class="h2 mb-3">{{ variant.name }}</h1>
 
             {# Price #}
             <div class="p-3 bg-light rounded mb-3">
@@ -281,7 +313,7 @@
                 <div class="col-md-6">
                     <ul class="list-group list-group-flush">
                     {% for item in s.boolean_safety_items %}
-                        {% include 'cars/_safety_item.html' with label=item.short_name value=item.value help_text=item.help_text%}
+                        {% include 'cars/variants/_safety_item.html' with label=item.short_name value=item.value help_text=item.help_text%}
                     {% endfor %}
                         
                     </ul>

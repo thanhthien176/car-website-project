@@ -18,13 +18,35 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
+
+from cars.sitemaps import BrandSitemap, CarModelSitemap, CarVariantSitemap
 from cars.views.dashboard_view import admin_dashboard
+
+sitemaps = {
+    'brands': BrandSitemap,
+    'car_models': CarModelSitemap,
+    'variants': CarVariantSitemap,
+}
 
 urlpatterns = [
     path('admin/dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin/', admin.site.urls),
     path('', include('cars.urls')),
-    path('api/v1/', include('api.urls', namespace='api'))
+    path('api/v1/', include('api.urls', namespace='api')),
+    
+    
+    path('robots.txt', TemplateView.as_view(
+        template_name='robots.txt',
+        content_type='text/plain',
+        ),
+        name='robots_txt'
+    ),
+    path('sitemap.xml', 
+         sitemap,
+         {'sitemaps': sitemaps},
+         name='django.contrib.sitemaps.views.sitemap')
 ]
 
 if settings.DEBUG:

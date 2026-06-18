@@ -113,8 +113,8 @@ class CarModel(SEOMetaData, models.Model):
     def get_seo_description(self):
         return (
             self.seo_description 
-            or f"Thông tin chi tiết, thông số kỹ thuật, giá bán của"
-            f"{self.brand.name}-{self.name}"
+            or f"Thông tin chi tiết, thông số kỹ thuật, giá bán của "
+            f"{self.brand.name} {self.name}"
             )
         
     def recalculate_avg_rating(self)-> None:
@@ -201,7 +201,7 @@ class CarVariant(SEOMetaData, models.Model):
             return self.seo_description
         
         return (
-            f"Đánh giá {self.name}, động cơ {self.fuel_type},"
+            f"Đánh giá {self.name}, động cơ {self.fuel_type}, "
             f"giá từ {self.price_range}. Xem chi tiết thông số kỹ thuật tại đây."
             )
     

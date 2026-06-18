@@ -19,7 +19,7 @@ urlpatterns = [
     
     # cars
     path('cars/', CarModelListView.as_view(), name='car_list'),
-    path('cars/<slug:slug>', CarModelDetailView.as_view(), name='car_detail'),
+    path('cars/<slug:slug>/', CarModelDetailView.as_view(), name='car_detail'),
     path('cars/<slug:slug>/picker/', VariantPickerView.as_view(), name='variant_picker'),
     path('cars/<slug:slug>/picker/close/', VariantPickerCloseView.as_view(), name='variant_picker_close'),
     path('variants/<slug:slug>/', CarVariantDetailView.as_view(), name='variant_detail'),
