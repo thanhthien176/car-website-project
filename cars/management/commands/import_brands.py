@@ -32,11 +32,22 @@ class Command(BaseImportCommand):
         }
         
         if options["update"]:
-            _, was_created = Brand.objects.update_or_create(name=name, defaults=defaults)
+            brand, was_created = Brand.objects.update_or_create(name=name, defaults=defaults)
             stats["created" if was_created else "updated"] += 1
         
         else:
-            _, was_created = Brand.objects.get_or_create(name=name, defaults=defaults)
+            brand, was_created = Brand.objects.get_or_create(name=name, defaults=defaults)
             stats["created" if was_created else "skipped"] += 1
+            
+        logo_url = self._clean_str(row.get('logo_url'))
+        if logo_url and (was_created or options["update"]):
+            self._download_image(
+                brand,
+                "logo",
+                logo_url,
+                max_size=(400,400),
+            )
+            
+            brand.save(update_fields=["logo"])
     
    

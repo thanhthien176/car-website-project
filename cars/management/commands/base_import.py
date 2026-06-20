@@ -7,6 +7,8 @@ from typing import Any
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
+from cars.utils.image_utils import save_remote_image_to_field
+
 
 class BaseImportCommand(BaseCommand):
     """
@@ -157,6 +159,20 @@ class BaseImportCommand(BaseCommand):
             stats["skipped"] += 1
             return None
         return value
+    
+    def _download_image(
+        self,
+        instance,
+        field_name,
+        url,
+        max_size=None,
+    ):
+        return save_remote_image_to_field(
+            instance,
+            field_name,
+            url,
+            max_size=max_size,
+        )
 
     # ------------------------------------------------------------------
     # Analytics Terminal Report Generator
