@@ -7,13 +7,13 @@ def validate_image_size(image):
         raise ValidationError(f"The image file size is not exceed {limit_mb}MB")
     
     
+ALLOWED_EXTENSION = {".jpg", ".jpeg", ".png", ".webp"}
 
 def validate_image_extension(image):
-    allowed_extension = [".jpg", ".jpeg", ".png", ".webp"]
     ext = os.path.splitext(image.name)[1].lower()
-    if ext not in allowed_extension:
+    if ext not in ALLOWED_EXTENSION:
         
         raise ValidationError(
             f"Invalid formating: '{ext}'."
-            f"Only accept: '{", ".join(allowed_extension)}'"
+            f"Only accept: '{", ".join(ALLOWED_EXTENSION)}'"
             )
