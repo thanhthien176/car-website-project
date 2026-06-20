@@ -3,10 +3,13 @@
 from pathlib import Path
 from decouple import config
 
+from .logging_config import build_logging_config
+
 # BASE_DIR must point up 2 levels because this file is in config/settings/
 # config/settings/base.py → .parent = config/settings → .parent = config → .parent = project root
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+LOGGING = build_logging_config(BASE_DIR)
 SECRET_KEY = config('SECRET_KEY')
 
 INSTALLED_APPS = [

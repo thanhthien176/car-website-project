@@ -1,8 +1,11 @@
+import logging
 import json
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Count, Avg, Min, Max, Q, F
 from cars.models import Brand, CarModel, CarVariant, Review, CarImage, Comparison
+
+logger = logging.getLogger(__name__)
 
 class AdminDashboardSelector:
     def __init__(self):

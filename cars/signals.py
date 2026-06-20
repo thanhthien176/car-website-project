@@ -6,7 +6,6 @@ from django.core.cache import cache
 
 from .models import Brand, CarImage, CarModel, Review, CarVariant, VariantImage
 from .utils.image_utils import convert_to_webp
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +50,8 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
     webp_file = convert_to_webp(field, quality=85, max_size=max_size)
     if webp_file is None:
         logger.warning(
-            "_replace_with_webp: conversion failed for %s %s (pk=%s)",
-            type(instance).__name__, field_name, instance.pk
+            "Failed to convert %s %s (pk=%s, file=%s) to WebP",
+            type(instance).__name__, field_name, instance.pk, field.name,
             )
         return False
     # Delete the original file from storage before overwriting the field so
@@ -85,7 +84,9 @@ def _delete_old_file_on_change(instance, field_name):
     
     try:
         old_instance = type(instance).objects.get(pk=instance.pk)
+        
     except type(instance).DoesNotExist:
+        logger.warning("%s(pk=%s) no longer exist", type(instance).__name__, instance.pk)
         return
     
     old_file = getattr(old_instance, field_name)
@@ -93,6 +94,8 @@ def _delete_old_file_on_change(instance, field_name):
     
     if old_file and old_file != new_file:
         old_file.delete(save=False)
+        logger.debug("Deleted old file %s", old_file.name)
+        
         
 def _make_delete_handler(field_name):
     def handler(sender, instance, **kwargs):
@@ -121,6 +124,10 @@ def _make_webp_handler(field_name:str, update_field:str, max_size:tuple):
             sender.objects.filter(pk=instance.pk).update(
                 **{update_field: getattr(instance, field_name)}
             )
+            logger.info("Converted %s(pk=%s) field '%s' to WebP",
+                        sender.__name__, 
+                        instance.pk, 
+                        field_name)
     return handler
 
 for _model, _field_name, _update_field, _max_size in _WEBP_REGISTRY:
