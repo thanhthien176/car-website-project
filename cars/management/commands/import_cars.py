@@ -1,3 +1,4 @@
+from django.contrib.messages import success
 from django.utils.text import slugify
  
 from cars.models import Brand, BodyType, CarClass, CarModel, CarVariant
@@ -11,6 +12,7 @@ class Command(BaseImportCommand):
         "Required columns: brand_name, model_name\n"
         "Option columns: body_type, car_class, model_year, description,\n"
         "   variant_name, fuel_type, price_min, price_max, is_active"
+        "  thumbnail_url, variant_name, fuel_type, price_min, price_max, is_active" 
     )
     required_headers = {"brand_name", "model_name"}
     default_stats = {
@@ -20,6 +22,7 @@ class Command(BaseImportCommand):
         "variant_updated": 0,
         "body_type_created": 0,
         "class_created":0,
+        "thumbnail_downloaded": 0, 
         "skipped": 0,
         "errors": 0,
     }
@@ -97,6 +100,23 @@ class Command(BaseImportCommand):
             car_model.save()
             stats["model_updated"] += 1
             self.stdout.write(f" ~ CarModel updated: {car_model}")
+            
+        #=======4.b. CarModel thumbnail (optional, download from URL)========
+        thumbnail_url = self._clean_str(row.get("thumbnail_url"))
+        if thumbnail_url and (model_created or options['update']):
+            success = self._download_image(
+                car_model,
+                "thumbnail",
+                thumbnail_url,
+                max_size=(1280, 1280),
+            )
+            if success:
+                car_model.save(update_fields=["thumbnail"])
+                stats["thumbnail_downloaded"] += 1
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f" Row {row_num}: Failed to download thumbnail from {thumbnail_url} - skipped"
+                ))
 
         # ── 5. CarVariant (tuỳ chọn) ───────────────────────────────────
         variant_name = row.get("variant_name", "").strip()
@@ -114,7 +134,7 @@ class Command(BaseImportCommand):
         
         variant, variant_created = CarVariant.objects.get_or_create(
             car_model = car_model,
-            variant_name = variant_name,
+            name = variant_name,
             defaults=variant_defaults,
         )
         

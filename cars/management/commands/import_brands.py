@@ -41,13 +41,12 @@ class Command(BaseImportCommand):
             
         logo_url = self._clean_str(row.get('logo_url'))
         if logo_url and (was_created or options["update"]):
-            self._download_image(
-                brand,
-                "logo",
-                logo_url,
-                max_size=(400,400),
-            )
-            
-            brand.save(update_fields=["logo"])
+            success = self._download_image(brand, "logo", logo_url, max_size=(400,400))
+            if success:           
+                brand.save(update_fields=["logo"])
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f" [Row {row_num}] failed to download logo from {logo_url} - skipped"
+                ))
     
    
