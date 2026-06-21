@@ -11,6 +11,20 @@ SECRET_KEY = config('SECRET_KEY')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
+# Whitenoise
+MIDDLEWARE = MIDDLEWARE[:1]+['whitenoise.middleware.WhiteNoiseMiddleware'] + MIDDLEWARE[1:]
+
+INSTALLED_APPS += ['storages']
+    
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -22,6 +36,17 @@ DATABASES = {
         'CONN_MAX_AGE': 60,
     }
 }
+
+#=========S3 Storage==============
+AWS_ACCESS_KEY_ID = config('R2_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('R2_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('R2_BUCKET_NAME')
+AWS_S3_ENDPOINT_URL = config('R2_ENDPOINT_URL')
+AWS_S3_CUSTOM_DOMAIN = config('R2_PUBLIC_DOMAIN')
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_REGION_NAME = 'auto'
+AWS_QUERYSTRING_AUTH = False
+
 
 # ── Security headers ────────────────────────────────────────────────────────
 SECURE_HSTS_SECONDS = 31536000

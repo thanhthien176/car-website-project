@@ -13,14 +13,25 @@ install:
 runserver:
 	poetry run python manage.py runserver
 
+# =======migrate===========
 migrations:
 	poetry run python manage.py makemigrations
 
 migrate:
 	poetry run python manage.py migrate
 
+migrate-plan:
+	poetry run python manage.py migrate --plan
+
+backup_db:
+	pg_dump -U <db_user> -h <db_host> carcompare_db > backup_$(date +%Y%m%d_%H%M%S).sqlXac
+
+
 superuser:
 	poetry run python manage.py createsuperuser
+
+collectstatic:
+	python manage.py collectstatic --noinput --clear --settings=config.settings.production
 
 shell:
 	poetry run python manage.py shell
