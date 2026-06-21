@@ -96,8 +96,7 @@ class CarModel(SEOMetaData, models.Model):
             )
         ]
         indexes = [
-            models.Index(fields=['slug']),
-            models.Index(fields=['brand'])
+            models.Index(fields=['avg_rating'])
         ]
         ordering = ['brand__name','name', '-model_year']
         verbose_name_plural = "Car Models"
@@ -125,6 +124,16 @@ class CarModel(SEOMetaData, models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.brand.name}-{self.name}")
+            
+    @property
+    def primary_image(self):
+        img = self.images.filter(is_primary=True).first()
+        if img:
+            return img.image.url
+        fallback = self.images.first()
+        if fallback:
+            return fallback.image.url
+        return None
             
             
         super().save(*args, **kwargs)
@@ -183,7 +192,6 @@ class CarVariant(SEOMetaData, models.Model):
             )
         ]
         indexes = [
-            models.Index(fields=['slug']),
             models.Index(fields=['fuel_type']),
             models.Index(fields=['price_min'])
         ]
@@ -227,11 +235,16 @@ class CarVariant(SEOMetaData, models.Model):
     
     @property
     def primary_image(self):
+        """Return URL of primary (or first) VariantImage. Falls back to the
+        parent CarModel's primary_image if this variant has no images of
+        its own (e.g. a new variant added before photos were uploaded)."""
         img = self.variant_images.filter(is_primary=True).first()
         if img:
             return img.image.url
         fallback = self.variant_images.first()
-        return fallback.image.url if fallback else None
+        if fallback:
+            return fallback.image.url
+        return self.car_model.primary_image
         
     def __str__(self):
         return f"{self.car_model} {self.name}"
@@ -442,6 +455,9 @@ class Review(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['rating', 'is_approved'])
+        ]
         verbose_name = 'Đánh giá'
         verbose_name_plural = 'Đánh giá'
         

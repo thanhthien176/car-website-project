@@ -27,6 +27,10 @@ def make_car_model(brand=None, **kwargs) -> CarModel:
 def make_variant(car_model=None, **kwargs) -> CarVariant:
     if car_model is None:
         car_model = make_car_model()
+    
+    if "variant_name" in kwargs:
+        kwargs['name'] = kwargs.pop('variant_name')
+    
     defaults = dict(
         car_model=car_model,
         name="2.5Q",

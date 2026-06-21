@@ -1,6 +1,6 @@
 from typing import Any
 
-from django.db.models import QuerySet, Count
+from django.db.models import QuerySet, Count, Min, Max
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
@@ -22,7 +22,12 @@ class CarModelListView(ListView):
     
     def get_queryset(self) -> QuerySet:
         qs = (CarModel.objects
+              .annotate(
+                    price_min=Min("variants__price_min"),
+                    price_max=Max("variants__price_max")
+                    )
               .select_related("brand", "body_type", "car_class")
+              .prefetch_related("images")
               .order_by("brand__name", "name")
               )
         
