@@ -62,3 +62,10 @@ part_test_keepdb:
 
 test_cover:
 	pytest --cov --cov-report=term-missing
+
+#======Gunicorn======
+check_gunicorn:
+	poetry run gunicorn --config gunicorn.conf.py --check-config config.wsgi:application
+
+run_gunicorn:
+	poertry run gunicorn --config gunicorn.conf.py config.wsgi:application
