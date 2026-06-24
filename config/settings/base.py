@@ -10,7 +10,7 @@ from .logging_config import build_logging_config
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 LOGGING = build_logging_config(BASE_DIR)
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default="django-insecure-build-secret-key")
 
 INSTALLED_APPS = [
     'django.contrib.admin',

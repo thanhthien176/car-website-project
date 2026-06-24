@@ -2,37 +2,94 @@
     Khoảng giá (triệu VNĐ)
 </label>
 
-<div class="row g-2 mb-3">
+<div 
+    class="mb-3"
+    x-data="{
+        min: parseInt('{{ current_min_price|default:0 }}') || 0,
+        max: parseInt('{{ current_max_price|default:5000 }}') || 5000,
+        minLimit: 0,
+        maxLimit: 5000,
+        
+        initSlider() {
+            // Initialize noUiSlider on the #price-slider div tag
+            let slider = this.$refs.sliderContainer;
+            
+            noUiSlider.create(slider, {
+                start: [this.min, this.max], // Giá trị ban đầu
+                connect: true,              // Tô màu dải giữa 2 nút kéo
+                step: 10,                   // Mỗi bước kéo nhảy 10 đơn vị
+                range: {
+                    'min': this.minLimit,
+                    'max': this.maxLimit
+                }
+            });
 
-    <div class="col-6">
-        <input
-            type="number"
-            name="min_price"
-            placeholder="Từ"
-            value="{{ current_min_price }}"
-            class="form-control form-control-sm"
-            hx-get="{% url 'cars:car_list' %}"
-            hx-trigger="keyup changed delay:400ms"
-            hx-include="#filter-form"
-            hx-target="#car-grid-container"
-            hx-push-url="true"
-        >
+            // Event 'update': Runs continuously WHILE DRAGING to display the number in the number input box
+            slider.noUiSlider.on('update', (values, handle) => {
+                if (handle === 0) {
+                    this.min = Math.round(values[0]);
+                } else {
+                    this.max = Math.round(values[1]);
+                }
+            });
+
+            // Event 'change': Runs only WHEN RELEASE YOUR HAND -> Enable sending HTMX (Save server requests)
+            slider.noUiSlider.on('change', () => {
+                this.$nextTick(() => {
+                    $dispatch('price-filter-changed');
+                });
+            });
+
+            // Reverse synchronization: When the user types a number into the Input box, the Slider bar automatically jumps
+            this.$watch('min', value => slider.noUiSlider.set([value, null]));
+            this.$watch('max', value => slider.noUiSlider.set([null, value]));
+        }
+    }"
+    x-init="initSlider()"
+>
+    <label class="form-label fw-semibold small text-uppercase text-muted mb-2">
+        Khoảng giá (triệu VNĐ)
+    </label>
+
+    <div class="px-2 mb-4">
+        <div x-ref="sliderContainer" id="price-slider" class="slider-primary"></div>
     </div>
 
-    <div class="col-6">
-        <input
-            type="number"
-            name="max_price"
-            placeholder="Đến"
-            value="{{ current_max_price }}"
-            class="form-control form-control-sm"
-            hx-get="{% url 'cars:car_list' %}"
-            hx-trigger="keyup changed delay:400ms"
-            hx-include="#filter-form"
-            hx-target="#car-grid-container"
-            hx-push-url="true"
+    <div class="row g-2">
+        <div class="col-6">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light text-muted">Từ</span>
+                <input
+                    type="number"
+                    name="min_price"
+                    x-model.number="min"
+                    @change="$nextTick(() => $dispatch('price-filter-changed'))"
+                    class="form-control"
+                >
+            </div>
+        </div>
 
-        >
+        <div class="col-6">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light text-muted">Đến</span>
+                <input
+                    type="number"
+                    name="max_price"
+                    x-model.number="max"
+                    @change="$nextTick(() => $dispatch('price-filter-changed'))"
+                    class="form-control"
+                >
+            </div>
+        </div>
     </div>
 
+    <div 
+        hx-get="{% url 'cars:car_list' %}"
+        hx-trigger="price-filter-changed from:body delay:300ms"
+        hx-include="#filter-form"
+        hx-target="#car-grid-container"
+        hx-push-url="true"
+        style="display: none;"
+    ></div>
 </div>
+

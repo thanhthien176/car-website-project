@@ -1,4 +1,5 @@
 import multiprocessing
+import os
 
 # ---------------------------------------------------------------------------
 # Server socket
@@ -6,7 +7,7 @@ import multiprocessing
 
 # Bind to localhost only — Nginx will proxy requests to this address.
 # Never bind 0.0.0.0 in production unless Nginx is on a separate machine.
-bind = "127.0.0.1:8000"
+bind = os.environ.get("GUNICORN_BIND", "127.0.0.1:8000")
 
 # ---------------------------------------------------------------------------
 # Worker processes
