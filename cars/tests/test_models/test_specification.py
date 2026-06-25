@@ -7,7 +7,7 @@ from cars.models import (
     EngineSpecification,
     SafetySpecification
     )
-from helpers.helper_models import make_car_model, make_variant
+from cars.tests.helpers.helper_models import make_car_model, make_variant
 
 class SpecificationModelTest(TestCase):
     def setUp(self) -> None:

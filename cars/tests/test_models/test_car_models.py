@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from cars.models import CarModel
-from helpers.helper_models import make_car_model, make_brand
+from cars.tests.helpers.helper_models import make_car_model, make_brand
 
 class CarModelTest(TestCase):
     def setUp(self):
@@ -44,7 +44,7 @@ class CarModelTest(TestCase):
         
     def test_seo_description_fallback(self):
         car = make_car_model(brand=self.brand, name="Innova")
-        self.assertIn("Toyota-Innova", car.get_seo_description)
+        self.assertIn("Toyota Innova", car.get_seo_description)
         
     # ── __str__ ──────────────────────────────────────────────────────────
     def test_str(self):

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from cars.models import Comparison
-from helpers.helper_models import make_variant, make_car_model
+from cars.tests.helpers.helper_models import make_variant, make_car_model
 
 class ComparisonTest(TestCase):
     def setUp(self) -> None:

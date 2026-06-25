@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from helpers.helper_models import make_car_model, make_brand
+from cars.tests.helpers.helper_models import make_car_model, make_brand
 from cars.models import Review
 
 class AvgRatingSignalTest(TestCase):

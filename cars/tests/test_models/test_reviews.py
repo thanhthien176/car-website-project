@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from cars.forms import ReviewForm
 from cars.models import Review
-from helpers.helper_models import make_car_model
+from cars.tests.helpers.helper_models import make_car_model
 
 class ReviewTest(TestCase):
     def setUp(self) -> None:

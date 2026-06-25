@@ -2,7 +2,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from cars.models import CarVariant
-from helpers.helper_models import make_variant, make_brand, make_car_model
+from cars.tests.helpers.helper_models import make_variant, make_brand, make_car_model
 
 class CarVariantTest(TestCase):
     def setUp(self) -> None:

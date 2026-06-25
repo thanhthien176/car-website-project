@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 
 from cars.validators import validate_image_extension
-from helpers.helper_images import mock_image
+from cars.tests.helpers.helper_images import mock_image
 
 class ValidateImageExtensionTest(TestCase):
     

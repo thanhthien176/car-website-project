@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from cars.models import Brand
-from helpers.helper_models import make_brand
+from cars.tests.helpers.helper_models import make_brand
 
 class BrandModelTest(TestCase):
     def test_slug_auto_generated_on_create(self):

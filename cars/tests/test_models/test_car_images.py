@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from cars.models import CarImage
-from helpers.helper_models import make_car_model
+from cars.tests.helpers.helper_models import make_car_model
 
 class CarImageTest(TestCase):
     def setUp(self) -> None:

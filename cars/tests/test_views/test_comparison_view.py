@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from requests import session
 
-from ..helpers.helper_models import make_brand, make_car_model, make_variant
+from cars.tests.helpers.helper_models import make_brand, make_car_model, make_variant
 from cars.models import Comparison
 
 class AddToComparisonViewTest(TestCase):
