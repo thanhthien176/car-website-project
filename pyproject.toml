@@ -46,3 +46,8 @@ python_files = ["test_*.py", "*_test.py"]
 python_classes = ["*Test"]
 python_functions = ["test_*"]
 pythonpath = [".", "cars/tests"]
+
+[dependency-groups]
+dev = [
+    "bandit (>=1.9.4,<2.0.0)"
+]
