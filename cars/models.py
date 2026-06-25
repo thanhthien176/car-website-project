@@ -124,6 +124,7 @@ class CarModel(SEOMetaData, models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(f"{self.brand.name}-{self.name}")
+        super().save(*args, **kwargs)
             
     @property
     def primary_image(self):
