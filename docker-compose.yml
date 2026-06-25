@@ -40,6 +40,16 @@ services:
     depends_on:
       - web
     restart: on-failure
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: always
+
+    env_file:
+      - .env.production
+    command: "tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}"
+    depends_on:
+      - nginx
     
 
 volumes:
