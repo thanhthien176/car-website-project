@@ -24,7 +24,7 @@ jobs:
           --health-timeout 5s
           --heath-retries 5
         ports:
-          -5432:5432
+          - "5432:5432"
     
 
     env:
@@ -57,7 +57,7 @@ jobs:
         run: |
           poetry run bandit -r cars/ -11
 
-    deploy:
+    deploy_server:
       needs: test
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/main' && github.event.name == 'push'
