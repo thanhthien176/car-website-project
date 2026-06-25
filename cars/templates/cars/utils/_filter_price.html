@@ -1,7 +1,3 @@
-<label class="form-label fw-semibold small text-uppercase text-muted">
-    Khoảng giá (triệu VNĐ)
-</label>
-
 <div 
     class="mb-3"
     x-data="{
@@ -9,76 +5,64 @@
         max: parseInt('{{ current_max_price|default:5000 }}') || 5000,
         minLimit: 0,
         maxLimit: 5000,
-        
-        initSlider() {
-            // Initialize noUiSlider on the #price-slider div tag
-            let slider = this.$refs.sliderContainer;
-            
-            noUiSlider.create(slider, {
-                start: [this.min, this.max], // Giá trị ban đầu
-                connect: true,              // Tô màu dải giữa 2 nút kéo
-                step: 10,                   // Mỗi bước kéo nhảy 10 đơn vị
-                range: {
-                    'min': this.minLimit,
-                    'max': this.maxLimit
-                }
-            });
+        gap: 50,  // khoảng cách tối thiểu giữa 2 mốc, tránh min == max dính chặt
 
-            // Event 'update': Runs continuously WHILE DRAGING to display the number in the number input box
-            slider.noUiSlider.on('update', (values, handle) => {
-                if (handle === 0) {
-                    this.min = Math.round(values[0]);
-                } else {
-                    this.max = Math.round(values[1]);
-                }
-            });
-
-            // Event 'change': Runs only WHEN RELEASE YOUR HAND -> Enable sending HTMX (Save server requests)
-            slider.noUiSlider.on('change', () => {
-                this.$nextTick(() => {
-                    $dispatch('price-filter-changed');
-                });
-            });
-
-            // Reverse synchronization: When the user types a number into the Input box, the Slider bar automatically jumps
-            this.$watch('min', value => slider.noUiSlider.set([value, null]));
-            this.$watch('max', value => slider.noUiSlider.set([null, value]));
+        onMinInput() {
+            if (this.min > this.max - this.gap) {
+                this.min = this.max - this.gap;
+            }
+        },
+        onMaxInput() {
+            if (this.max < this.min + this.gap) {
+                this.max = this.min + this.gap;
+            }
+        },
+        fire() {
+            this.$nextTick(() => $dispatch('price-filter-changed'));
         }
     }"
-    x-init="initSlider()"
 >
     <label class="form-label fw-semibold small text-uppercase text-muted mb-2">
         Khoảng giá (triệu VNĐ)
     </label>
 
-    <div class="px-2 mb-4">
-        <div x-ref="sliderContainer" id="price-slider" class="slider-primary"></div>
+    {# Track + 2 overlapping range bars #}
+    <div class="range-slider position-relative mb-3" style="height: 24px;">
+        <input type="range"
+            :min="minLimit" :max="maxLimit" step="10"
+            x-model.number="min"
+            @input="onMinInput()"
+            @change="fire()"
+            class="range-thumb range-thumb-min">
+
+        <input type="range"
+            :min="minLimit" :max="maxLimit" step="10"
+            x-model.number="max"
+            @input="onMaxInput()"
+            @change="fire()"
+            class="range-thumb range-thumb-max">
+
+        {# Thanh track tô màu giữa 2 giá trị - tính % bằng inline style #}
+        <div class="range-track-fill position-absolute top-50 translate-middle-y bg-primary rounded"
+            style="height:4px; z-index:1;"
+            :style="`left: ${(min - minLimit) / (maxLimit - minLimit) * 100}%;
+                     right: ${100 - (max - minLimit) / (maxLimit - minLimit) * 100}%;`">
+        </div>
     </div>
 
     <div class="row g-2">
         <div class="col-6">
             <div class="input-group input-group-sm">
                 <span class="input-group-text bg-light text-muted">Từ</span>
-                <input
-                    type="number"
-                    name="min_price"
-                    x-model.number="min"
-                    @change="$nextTick(() => $dispatch('price-filter-changed'))"
-                    class="form-control"
-                >
+                <input type="number" name="min_price" x-model.number="min"
+                    @change="onMinInput(); fire()" class="form-control">
             </div>
         </div>
-
         <div class="col-6">
             <div class="input-group input-group-sm">
                 <span class="input-group-text bg-light text-muted">Đến</span>
-                <input
-                    type="number"
-                    name="max_price"
-                    x-model.number="max"
-                    @change="$nextTick(() => $dispatch('price-filter-changed'))"
-                    class="form-control"
-                >
+                <input type="number" name="max_price" x-model.number="max"
+                    @change="onMaxInput(); fire()" class="form-control">
             </div>
         </div>
     </div>
@@ -92,4 +76,3 @@
         style="display: none;"
     ></div>
 </div>
-

@@ -92,3 +92,41 @@
     max-width:220px;
     min-width:0;
 }
+
+/* ============Filter Price============= */
+.range-slider {
+    background-color: rgb(173, 168, 168);
+}
+.range-thumb {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    pointer-events: none; /* Tracks do not capture clicks, only thumbs do */
+    z-index: 2;
+}
+.range-thumb::-webkit-slider-thumb {
+    pointer-events: auto; /* Only the thumb (drag button) recognizes the mouse */
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #0d6efd;
+    cursor: pointer;
+}
+.range-thumb::-moz-range-thumb {
+    pointer-events: auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #0d6efd;
+    cursor: pointer;
+    border: none;
+}
+/* hide the browser's default track, keep only the thumb */
+.range-thumb::-webkit-slider-runnable-track { background: transparent; }
+.range-thumb::-moz-range-track { background: transparent; }
+
