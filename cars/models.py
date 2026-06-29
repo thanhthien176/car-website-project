@@ -37,7 +37,7 @@ class Brand(SEOMetaData, models.Model):
     logo = models.ImageField(upload_to=UploadToPath('brand','logos', slug_field='slug'), 
                              blank=True, null=True, 
                              validators=[validate_image_size, validate_image_extension])
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True)
     founded_year = models.IntegerField(blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -80,7 +80,7 @@ class CarModel(SEOMetaData, models.Model):
     slug = models.SlugField(unique=True, blank=True)
     
     model_year = models.IntegerField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True)
     
     thumbnail = models.ImageField(upload_to = UploadToPath('cars','thumbnail', slug_field='slug'), 
                                   blank=True, null=True, 
@@ -280,19 +280,19 @@ class EngineSpecification(models.Model):
     displacement = models.PositiveIntegerField(null=True, blank=True, help_text="Dung tích xi lanh(cc)")
     max_power = models.PositiveIntegerField(null=True, blank=True, help_text="Công suất tối đa(Hp)")
     max_torque = models.PositiveIntegerField(null=True, blank=True, help_text="Momen xoắn tối đa(Nm)")
-    drive_train = models.CharField(max_length=30, null=True, blank=True, help_text="Hệ số truyền động")
+    drive_train = models.CharField(max_length=30, blank=True, help_text="Hệ số truyền động")
     transmission = models.CharField(max_length=20, choices=TRANSMISSION_CHOICES)
 
 class PerformanceSpecification(models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='performance')
     
     # suspension
-    suspension_font = models.CharField(max_length=30, null=True, blank=True, help_text="Hệ thống treo trước")
-    suspension_rear = models.CharField(max_length=30, null=True, blank=True, help_text="Hệ thống treo sau")
+    suspension_font = models.CharField(max_length=30, blank=True, help_text="Hệ thống treo trước")
+    suspension_rear = models.CharField(max_length=30, blank=True, help_text="Hệ thống treo sau")
     
     # Tire & wheel
-    tire_size = models.CharField(max_length=30, null=True, blank=True, help_text="Kích thước lốp xe")
-    brake = models.CharField(max_length=30, null=True, blank=True, help_text="Phanh trước/sau(front/rear)")
+    tire_size = models.CharField(max_length=30, blank=True, help_text="Kích thước lốp xe")
+    brake = models.CharField(max_length=30, blank=True, help_text="Phanh trước/sau(front/rear)")
     
     
 class FuelConsumptionSpecification(models.Model):
@@ -307,11 +307,11 @@ class ExteriorSpecification(models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='exterior')
     
     # exterior
-    headlamp = models.CharField(max_length=30, null=True, blank=True, help_text="Đèn chiếu sáng trước")
+    headlamp = models.CharField(max_length=30, blank=True, help_text="Đèn chiếu sáng trước")
     daytime_running_light = models.BooleanField(default=False)
     auto_light_control = models.BooleanField(default=False)
-    rearlamp = models.CharField(max_length=30, null=True, blank=True, help_text="Đèn hậu")
-    foglamp = models.CharField(max_length=30, null=True, blank=True, help_text="Đèn sương mù")
+    rearlamp = models.CharField(max_length=30, blank=True, help_text="Đèn hậu")
+    foglamp = models.CharField(max_length=30, blank=True, help_text="Đèn sương mù")
     
     # Outer mirrors
     power_fold_mirror = models.BooleanField(default=False)
@@ -319,42 +319,42 @@ class ExteriorSpecification(models.Model):
     turn_signal_lamp = models.BooleanField(default=False, help_text="Tích hợp đèn báo rẽ")
     
     # wiper
-    wiper_front = models.CharField(max_length=30, null=True, blank=True, help_text="Gạt mưa trước")
-    wiper_rear = models.CharField(max_length=30, null=True, blank=True, help_text="Gạt mưa sau")
+    wiper_front = models.CharField(max_length=30, blank=True, help_text="Gạt mưa trước")
+    wiper_rear = models.CharField(max_length=30, blank=True, help_text="Gạt mưa sau")
     rear_glass_defrogger = models.BooleanField(default=False, help_text="Chức năng sấy kính sau")
     
 class InteriorSpecification(models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='interior')
     
     # Interior
-    steering_type = models.CharField(max_length=30, null=True, blank=True, help_text="Loại tay lái")
-    steering_material = models.CharField(max_length=30, null=True, blank=True, help_text="Chất liệu tay lái")
-    steering_adjust = models.CharField(max_length=30, null=True, blank=True, help_text="Điều chỉnh tay lái")
+    steering_type = models.CharField(max_length=30, blank=True, help_text="Loại tay lái")
+    steering_material = models.CharField(max_length=30, blank=True, help_text="Chất liệu tay lái")
+    steering_adjust = models.CharField(max_length=30, blank=True, help_text="Điều chỉnh tay lái")
     paddle_shifter = models.BooleanField(default=False, help_text="Lẫy chuyển số")
-    inner_mirror = models.CharField(max_length=50, null=True, blank=True, help_text="Gương chiếu hậu trong")
-    combination_metter = models.CharField(max_length=50, null=True, blank=True, help_text="Cụm đồng hồ")
-    sunroof = models.CharField(max_length=30, null=True, blank=True, help_text="Cửa sổ trời")
+    inner_mirror = models.CharField(max_length=50, blank=True, help_text="Gương chiếu hậu trong")
+    combination_metter = models.CharField(max_length=50, blank=True, help_text="Cụm đồng hồ")
+    sunroof = models.CharField(max_length=30, blank=True, help_text="Cửa sổ trời")
     
 class SeatSpecification(models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='seat')
     
     # Seat
-    seat_material = models.CharField(max_length=30, null=True, blank=True, help_text="Chất liệu bọc ghế")
-    driver_seat = models.CharField(max_length=30, null=True, blank=True, help_text="Điều chỉnh ghế lái")
-    front_passeger_seat = models.CharField(max_length=30, null=True, blank=True, help_text="Điều chỉnh ghế hành khách")
-    rear_seat = models.CharField(max_length=30, null=True, blank=True, help_text="Ghế sau")
+    seat_material = models.CharField(max_length=30, blank=True, help_text="Chất liệu bọc ghế")
+    driver_seat = models.CharField(max_length=30, blank=True, help_text="Điều chỉnh ghế lái")
+    front_passeger_seat = models.CharField(max_length=30, blank=True, help_text="Điều chỉnh ghế hành khách")
+    rear_seat = models.CharField(max_length=30, blank=True, help_text="Ghế sau")
     
 class ComfortSpecification(models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='comfort')
     
     # Utilities & Comfort
-    air_conditioner = models.CharField(max_length=20, null=True, blank=True, help_text="Hệ thống điều hòa")
+    air_conditioner = models.CharField(max_length=20, blank=True, help_text="Hệ thống điều hòa")
     rear_air_duct = models.BooleanField(default=False, help_text="Cửa gió sau")
-    display = models.CharField(max_length=30, null=True, blank=True, help_text="Màn hình giải trí")
-    number_of_speaker = models.CharField(max_length=30, null=True, blank=True, help_text="Số loa")
-    smart_connect = models.CharField(max_length=30, null=True, blank=True, help_text="Kết nối không dây")
+    display = models.CharField(max_length=30, blank=True, help_text="Màn hình giải trí")
+    number_of_speaker = models.CharField(max_length=30, blank=True, help_text="Số loa")
+    smart_connect = models.CharField(max_length=30, blank=True, help_text="Kết nối không dây")
     smart_key = models.BooleanField(default=False, help_text="Chìa khóa thông minh")
-    power_window = models.CharField(max_length=30, null=True, blank=True, help_text="Cửa sổ điều chỉnh điện")
+    power_window = models.CharField(max_length=30, blank=True, help_text="Cửa sổ điều chỉnh điện")
     power_back_door = models.BooleanField(default=False, help_text="Cốp điện")
     cruise_control = models.BooleanField(default=False, help_text="Hệ thống điều khiển hành trình")
     electric_parking_brake = models.BooleanField(default=False, help_text="Phanh tay điện tủ")
@@ -369,7 +369,7 @@ class SafetySpecification(models.Model):
     lta = models.BooleanField(default=False, help_text="Hỗ trợ giữ làn đường(lane tracing assist)")
     drcc = models.BooleanField(default=False, help_text="Hệ thống điều khiển hành trình chủ động(Dynamic radar cruise control)")
     ahb = models.BooleanField(default=False, help_text="Đèn chiếu xa tự động(Automatic high beam)")
-    parking_camera = models.CharField(max_length=30, null=True, blank=True, help_text="camera hỗ trợ đỗ xe")
+    parking_camera = models.CharField(max_length=30, blank=True, help_text="camera hỗ trợ đỗ xe")
     bsm = models.BooleanField(default=False, help_text="Hế thống cảnh báo điểm mù(Blind spot monitor)")
     rcta = models.BooleanField(default=False, help_text="Hệ thống hỗ trợ phương tiện cắt ngang phía sau(Rear cross traffic alert)")
     abs = models.BooleanField(default=False, help_text="Hệ thống chống bó cứng phanh(Anti-lock braking system)")
