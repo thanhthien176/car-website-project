@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from decouple import config
+from django.conf.global_settings import AUTH_USER_MODEL, AUTHENTICATION_BACKENDS, LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL
 
 from .logging_config import build_logging_config
 
@@ -20,9 +21,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+    'django.contrib.sites',
     'django_extensions',
     'rest_framework',
     'django_filters',
+    # allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
     # local apps
     'api',
     'cars',
@@ -38,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -80,6 +89,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# =========Set AUTH_USER_MODEL===========
+# Custom User model — must be set before any migration references User.
+# Changing this after migrations exist requires dropping the entire database.
+AUTH_USER_MODEL = 'users.User'
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -103,3 +117,35 @@ REST_FRAMEWORK = {
         'user': '1000/hour',
     },
 }
+
+
+# Encryption keys for sensitive fields (phone, cccd, address)
+# Generate ENCRYPTION_KEY with:
+# python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+ENCRYPTION_KEY = config("ENCRYPTION_KEY", default="")
+ENCRYPTION_HASH_SALT = config("ENCRYPTION_HASH_SALT", default="")
+
+# Required by django.contrib.sites
+SITE_ID = 1
+
+# ── django-allauth config ────────────────────────────────────────────────────
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django Admin
+    'django.contrib.auth.backends.ModelBackend',
+    # allauth specific authentication methods (social login, email)
+    'allauth.account.auth_backends.AuthenticationBackend',    
+]
+
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*' ]
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Xehoi360]'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+
+LOGIN_REDIRECT_URL = '/'    # After successful login → return to the homepage
+LOGOUT_REDIRECT_URL = '/'   # After logout → return to the homepage
+ACCOUNT_LOGOUT_ON_GET = True # Logout immediately after GET /accounts/logout/ without confirmation
+
+# Social account: do not create an additional email/password if you already have a social account with email
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
