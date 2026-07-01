@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
-    env_file: .env.production
+    # env_file: .env.production
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -16,7 +16,7 @@ services:
 
   web:
     image: ghcr.io/thanhthien176/car-website-project/web:latest
-    env_file: .env.production
+    # env_file: .env.production
     command: gunicorn config.wsgi:application --config gunicorn.conf.py
     volumes:
       - /var/www/projectcarweb/static:/home/appuser/app/staticfiles
