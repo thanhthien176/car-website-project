@@ -72,7 +72,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.PROJECT_PATH }}
+            cd /home/bluesky176/CarWebsite
             git pull origin main
             docker compose up -d --build
             docker compose exec -T web python manage.py migrate
