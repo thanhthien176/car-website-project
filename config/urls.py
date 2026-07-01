@@ -23,6 +23,7 @@ from django.contrib.sitemaps.views import sitemap
 
 from cars.sitemaps import BrandSitemap, CarModelSitemap, CarVariantSitemap
 from cars.views.dashboard_view import admin_dashboard
+from config.health import health
 
 sitemaps = {
     'brands': BrandSitemap,
@@ -47,7 +48,8 @@ urlpatterns = [
     path('sitemap.xml', 
          sitemap,
          {'sitemaps': sitemaps},
-         name='django.contrib.sitemaps.views.sitemap')
+         name='django.contrib.sitemaps.views.sitemap'),
+    path('health/', health),
 ]
 
 if settings.DEBUG:
