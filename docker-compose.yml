@@ -16,7 +16,8 @@ services:
 
   web:
     image: ghcr.io/thanhthien176/car-website-project/web:latest
-    # env_file: .env.production
+    env_file: 
+      - .env
     command: gunicorn config.wsgi:application --config gunicorn.conf.py
     volumes:
       - /var/www/projectcarweb/static:/home/appuser/app/staticfiles
