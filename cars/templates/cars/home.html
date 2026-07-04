@@ -6,12 +6,16 @@
 
 {% block content_root %}
 
-    <h1>Chào mừng đến với Xe Hơi 360</h1>
+    <h1>Chào mừng đến với <strong>xehoi360</strong></h1>
 
     {# Hero section #}
     <div class="p-5 mb-4 bg-dark text-white rounded-3">
-        <h1 class="display-5 fw-bold">So sánh xe hơi dễ dàng</h1>
-        <p class="col-md-8 fs-4">Tìm kiếm, so sánh thông số và giá xe từ hàng chục hãng xe uy tín.</p>
+        <h1 class="display-5 fw-bold">Khám phá thế giới xe hơi với xehoi360</h1>
+        <p class="col-md-8 fs-4">
+            Tìm kiếm lựa chọn xe hơi từ các hãng xe tại Việt Nam, 
+            so sánh thông số kỹ thuật và giá bán của các loại xe,
+            để lại đánh giá với các xe bạn đã sử dụng.
+        </p>
         <a href="{% url 'cars:car_list' %}" class="btn btn-warning btn-lg">
             Xem tất cả xe <i class="bi bi-arrow-right"></i>
         </a>
