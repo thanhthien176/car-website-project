@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% block head_title %}{% endblock head_title %} | CarCompare{% endblock %}
+
+{% block content_root %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    {% block inner %}{% endblock inner %}
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'cars:home' %}" class="text-muted text-decoration-none small">
+                    ← Về trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_body %}{% endblock %}
+{% endblock content_root %}

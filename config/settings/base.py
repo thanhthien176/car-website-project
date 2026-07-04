@@ -118,6 +118,11 @@ REST_FRAMEWORK = {
     },
 }
 
+ACCOUNT_FORMS = {
+    "login": "users.forms.CustomLoginForm",
+    "signup": "users.forms.CustomSignupForm",
+}
+
 
 # Encryption keys for sensitive fields (phone, cccd, address)
 # Generate ENCRYPTION_KEY with:
