@@ -76,9 +76,11 @@
     </nav>
 
     {# Main content #}
-    <main class="container my-4">
-        {% block content %}{% endblock %}
-
+    <main>
+        <div class="container my-4">
+            {% block content_root %}{% endblock %}
+        </div>
+        
         {#Comparison tray — load session state when page started #}
         <div id="comparison-tray"
              hx-get="{% url 'cars:comparison_tray' %}"
