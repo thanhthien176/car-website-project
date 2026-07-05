@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'cars',
     'blogs',
     'users',
+    'admin_honeypot',
 ]
 
 MIDDLEWARE = [

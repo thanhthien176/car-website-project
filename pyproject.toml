@@ -37,7 +37,8 @@ dependencies = [
     "gunicorn (>=26.0.0,<27.0.0)",
     "cryptography (>=49.0.0,<50.0.0)",
     "django-allauth (>=65.18.0,<66.0.0)",
-    "pyjwt (>=2.13.0,<3.0.0)"
+    "pyjwt (>=2.13.0,<3.0.0)",
+    "django-admin-honeypot-updated-2021 (>=1.2.0,<2.0.0)",
 ]
 
 

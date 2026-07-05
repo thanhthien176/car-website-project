@@ -32,11 +32,13 @@ sitemaps = {
 }
 
 urlpatterns = [
-    path('admin/dashboard/', admin_dashboard, name='admin_dashboard'),
-    path('admin/', admin.site.urls),
+    path('cockpit/dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('cockpit/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('users/', include('users.urls')),
     path('', include('cars.urls')),
     path('api/v1/', include('api.urls', namespace='api')),
+    path('admin', include('admin_honeypot.urls', namespace='admin_honeypot')),
     
     
     path('robots.txt', TemplateView.as_view(
