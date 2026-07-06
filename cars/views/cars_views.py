@@ -5,6 +5,8 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
+from cars.utils.helper_annotate_saved import annotate_saved
+
 from ..models import CarModel, CarVariant, Brand, BodyType
 from cars.forms import ReviewForm
 from cars.services.car_selector import CarSelector
@@ -88,11 +90,12 @@ class CarModelDetailView(DetailView):
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['variants'] = (self.object.variants
-                               .filter(is_active=True)
-                               .prefetch_related('variant_images')
-                               .order_by('price_min')
-                               )
+        qs_variants = (self.object.variants
+                        .filter(is_active=True)
+                        .prefetch_related('variant_images')
+                        .order_by('price_min'))
+        
+        context['variants'] = annotate_saved(qs_variants, self.request.user)
         context['form'] = ReviewForm()
         context['reviews'] = (self.object.reviews
                               .filter(is_approved=True)
@@ -111,7 +114,7 @@ class CarVariantDetailView(DetailView):
     slug_url_kwarg = 'slug'
     
     def get_queryset(self):
-        return ( 
+        qs = ( 
                 CarVariant.objects
                 .select_related(
                     'car_model__brand',
@@ -126,6 +129,7 @@ class CarVariantDetailView(DetailView):
                     'car_model__reviews',
                 )            
         )
+        return annotate_saved(qs, self.request.user)
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

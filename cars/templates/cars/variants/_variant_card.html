@@ -1,5 +1,8 @@
-<div class="card h-100 shadow-sm car-card">
+<div class="card h-100 shadow-sm car-card" style="position: relative;">
 
+    <div class="position-absolute top-0 end-0 m-2" style="z-index: 4;">
+            {% include "utils/_saved_car_button.html" %}
+    </div>
     {# Variant primary image #}
     {% if variant.primary_image %}
         <img src="{{ variant.primary_image }}" 

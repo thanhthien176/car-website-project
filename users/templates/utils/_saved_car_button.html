@@ -1,0 +1,28 @@
+{% if user.is_authenticated %}
+    {% if variant.is_saved %}
+        <button 
+            class="btn btn-danger btn-sm"
+            hx-post="{% url 'users:toggle_saved_car' variant_pk=variant.pk %}"
+            hx-swap="outerHTML"
+        >
+            <i class="bi bi-heart-fill"></i>
+        </button>
+    {% else %}
+        <button
+            class="btn btn-outline-primary btn-sm"
+            hx-post="{% url 'users:toggle_saved_car' variant_pk=variant.pk %}"
+            hx-swap="outerHTML"
+        >
+            <i class="bi bi-heart"></i>
+        </button>
+
+    {% endif %}
+{% else %}
+    <a 
+        href="{% url 'account_login' %}?next={{ request.path }}"
+        class="btn btn-outline-primary btn-sm"
+    >
+        <i class="bi bi-heart"></i>
+    </a>
+{% endif %}
+

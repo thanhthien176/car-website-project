@@ -28,55 +28,14 @@
     {% block style %}{% endblock style %}
     {% block extra_head %}{% endblock %}
 </head>
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'cars:home' %}">
-                <span class="brand-icon">🚗</span> xehoi360
-            </a>
-
-            {# Mobile toggle #}
-            <button class="navbar-toggler" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#mainNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            {# In car_list, this input will be invisible #}
-            {% if request.resolver_match.url_name != 'car_list' %}
-            <form action="{% url 'cars:car_list' %}" method="get" class="d-flex">
-                <input type="search" name="search" placeholder="Search..." class="form-control">
-                <button type="submit" class="btn btn-primary ms-2">
-                <i class="bi bi-search"></i>
-                </button>
-            </form>
-
-            {% endif %}
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% active_url 'home' %}"
-                           href="{% url 'cars:home' %}">
-                            <i class="bi bi-house"></i> Trang chủ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% active_url 'brand_list' %}"
-                           href="{% url 'cars:brand_list' %}">
-                            <i class="bi bi-shield-check"></i> Hãng xe
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% active_url 'car_list' %}"
-                           href="{% url 'cars:car_list' %}">
-                            <i class="bi bi-car-front"></i> Tất cả xe
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+      class="d-flex flex-column min-vh-100">
+    
+    {# nav bar #}
+    {% include "header/_nav.html" %}
 
     {# Main content #}
-    <main>
+    <main class="flex-grow-1">
         <div class="container my-4">
             {% block content_root %}{% endblock %}
         </div>
@@ -91,7 +50,7 @@
 
     <footer class="bg-dark text-secondary text-center py-4 mt-5">
         <div class="container">
-            <p>xehoi360 © 2025</p>
+            <p>xehoi360 © 2026</p>
         </div>
     </footer>
 
@@ -99,31 +58,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js"></script>
     <script>
-    {% comment %} // Star rating — highlight on click and hover
-    document.querySelectorAll('.star-rating').forEach(container => {
-    const labels = [...container.querySelectorAll('label')];
-    const inputs = [...container.querySelectorAll('input[type=radio]')];
-
-    function highlight(index) {
-        labels.forEach((l, i) => {
-        l.style.color = i <= index ? '#ffc107' : '#ccc';
-        });
-    }
-
-    function reset() {
-        const checked = inputs.findIndex(i => i.checked);
-        if (checked >= 0) highlight(checked); 
-        else labels.forEach(l => l.style.color = '#ccc');
-    }
-
-    labels.forEach((label, i) => {
-        label.addEventListener('mouseenter', () => highlight(i));
-        label.addEventListener('mouseleave', reset);
-        label.addEventListener('click', () => highlight(i));
-    });
-
-    reset(); // init state
-    }); {% endcomment %}
+    
     </script>
     {% block extra_js %}{% endblock %}
 

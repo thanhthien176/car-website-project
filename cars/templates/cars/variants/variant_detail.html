@@ -94,7 +94,11 @@
         </div>
 
         {# Right: Key info #}
-        <div class="col-md-6">
+        <div class="col-md-6" style="position: relative;">
+            <div class="position-absolute top-0 end-0 m-2" style="z-index: 4;">
+                {% include "utils/_saved_car_button.html" %}
+            </div>
+            
             <p class="text-muted mb-1">
                 <a href="{% url 'cars:brand_detail' slug=variant.car_model.brand.slug %}"
                     class="text-decoration-none">
@@ -107,7 +111,7 @@
                 </a>
             </p>
 
-            <h1 class="h2 mb-3">{{ variant.name }}</h1>
+            <h1 class="h2 mb-3">{{ variant }}</h1>
 
             {# Price #}
             <div class="p-3 bg-light rounded mb-3">

@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import TYPE_CHECKING
 from django.db import models
 from django.db.models import Avg
 from django.utils.text import slugify
@@ -184,6 +185,9 @@ class CarVariant(SEOMetaData, models.Model):
     price_max = models.DecimalField(max_digits=15, decimal_places=0)
     
     is_active = models.BooleanField(default=True)
+    
+    if TYPE_CHECKING:
+        is_saved: bool
     
     class Meta:
         constraints = [

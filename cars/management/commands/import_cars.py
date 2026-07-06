@@ -81,7 +81,7 @@ class Command(BaseImportCommand):
             "body_type": body_type,
             "car_class": car_class,
             "model_year": self._to_int(row.get("model_year"), row_num),
-            "description": self._clean_str(row.get("description")) or None,
+            "description": self._clean_str(row.get("description")) or "",
         }
         
         car_model, model_created = CarModel.objects.get_or_create(

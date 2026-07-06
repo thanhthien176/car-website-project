@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static car_filters %}
+
+{% block title %}{{ profile_user.display_name }} | xehoi360 {% endblock %}
+
+{% block content_root %}
+<div>
+    <div class="d-flex align-items-center gap-3 mb-4">
+        {% if profile_user.avatar %}
+            <img src="{{ profile_user.avatar.url }}" 
+            class="rounded-circle" width="80" height="80" 
+            alt="{{ profile_user.display_name }}">
+        {% else %}
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white"
+                 style="width: 80px; height: 80px;"
+            >
+            {{ profile_user.display_name|first|upper }}
+            </div>
+        {% endif %}
+        <div>
+            <h2 class="mb-0">{{ profile_user.display_name }}</h2>
+            {% if profile_user.province %}
+                <small class="text-muted">{{ profile_user.province }}</small>
+            {% endif %}
+        </div>
+
+        {% if request.user == profile_user %}
+            <a href="{% url 'users:profile_edit' %}"
+               class="btn btn-outline-primary btn-sm ms-auto"
+            >
+            Chỉnh sửa hồ sơ
+            </a>
+        {% endif %}
+    </div>
+
+    {% if profile_user.bio %}
+        <p>{{ profile_user.bio }}</p>
+    {% endif %}
+
+    {% if profile_user.is_saler and profile_user.saler_profile.is_verified %}
+        <div class="alert alert-info">
+            Nhân viên tư vấn tại <strong>{{ profile_user.saler_profile.showroom }}</strong>
+        </div>
+    {% endif %}
+
+    <h4 class="mt-4">Xe đã lưu</h4>
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+        {% for variant in saved_car %}
+            {% include "cars/variants/_variant_card.html" %}
+        {% empty %}
+            <p class="text-muted">Chưa có xe nào được lưu.</p>
+            
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock  %}
+

@@ -26,12 +26,14 @@ class CarSelector:
         prefetch_related: fetch reverse FK (images) in a separate query,
                           then Python-merge — avoids N+1 on M2M/reverse FK.
         """
-        return (CarVariant.objects
+        qs = (CarVariant.objects
                 .filter(is_active=True)
                 .select_related('car_model__brand', 'car_model__body_type')
                 .prefetch_related('variant_images')
                 .order_by('-id')[:limit]
                 )
+        
+        return qs
         
     def get_top_rated_models(self, limit: int = 4):
         """Return car models with highest average rating."""

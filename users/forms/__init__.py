@@ -2,6 +2,7 @@
 
 from .login_form import CustomLoginForm
 from .signup_form import CustomSignupForm
+from .profile_form import ProfileUpdateForm
 # from .password_forms import MyCustomChangePasswordForm, MyCustomResetPasswordForm
 
 # (Tùy chọn) Định nghĩa __all__ để làm sạch package (nếu muốn)
@@ -10,4 +11,6 @@ __all__ = [
     'CustomSignupForm',
     # 'MyCustomChangePasswordForm',
     # 'MyCustomResetPasswordForm',
+    
+    'ProfileUpdateForm',
 ]

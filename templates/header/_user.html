@@ -1,0 +1,29 @@
+<!-- User header -->
+<ul class="navbar-nav ms-lg-3">  
+    {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+            href="#" role="button" data-bs-toggle="dropdown">
+            {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" class="rounded-circle" width="32" height="32" alt="{{ user.display_name }}">
+            {% else %}
+            <span class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center"
+                    style="width:32px;height:32px;">
+                {{ user.display_name|first|upper }}
+            </span>
+            {% endif %}
+            <span>{{ user.display_name }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'users:profile' username=user.username %}">Hồ sơ</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:profile_edit' %}">Chỉnh sửa hồ sơ</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Đăng xuất</a></li>
+        </ul>
+        </li>
+    {% else %}
+        <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_login' %}">Đăng nhập</a>
+        </li>
+    {% endif %}
+</ul>

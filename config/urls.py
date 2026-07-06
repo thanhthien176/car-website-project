@@ -38,7 +38,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('', include('cars.urls')),
     path('api/v1/', include('api.urls', namespace='api')),
-    path('admin', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
     
     
     path('robots.txt', TemplateView.as_view(

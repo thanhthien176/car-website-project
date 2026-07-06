@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Chỉnh sửa hồ sơ | xehoi360 {% endblock %}
+
+{% block content_root %}
+<div style="max-width: 600px;">
+    <h2 class="mb-4">Chỉnh sửa hồ sơ</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if object.avatar %}
+            <div class="mb-3">
+                <img src="{{ object.avatar.url }}"
+                     class="rounded-circle" 
+                     alt="Avatar hiện tại"
+                     width="100"
+                     height="100">
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ label.id_for_label }}"
+                       class="form-label">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+
+                {% if field.errors %}
+                    <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{% url 'users:profile' username=request.user.username %}" 
+           class="btn btn-outline-secondary">
+            Cancel
+        </a>
+    </form>
+</div>
+
+{% endblock  %}
