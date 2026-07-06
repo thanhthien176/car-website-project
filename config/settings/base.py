@@ -50,6 +50,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware'
 ]
 
+MIGRATION_MODULES = {
+    "admin_honeypot": "database_patches.admin_honeypot",
+}
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
