@@ -3,7 +3,6 @@ import json
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Count, Avg, Min, Max, Q, F
-from cars.models import Brand, CarModel, CarVariant, Review, CarImage, Comparison
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +14,8 @@ class AdminDashboardSelector:
         
     def get_kpi_card(self):
         "Querying overall key performance indicators (KPI Cards)"
+        from cars.models import Brand, CarModel, CarVariant, Review, CarImage, Comparison
+        
         return {
             "total_brands": Brand.objects.filter(is_active=True).count(),
             "total_models": CarModel.objects.count(),
@@ -27,6 +28,8 @@ class AdminDashboardSelector:
         }
         
     def get_review_stats(self)->dict:
+        from cars.models import Review
+        
         avg_rating_global = Review.objects.filter(is_approved=True).aggregate(avg=Avg('rating'))['avg'] or 0
         new_reviews_7d = Review.objects.filter(created_at__gte=self.seven_day_ago).count()
         
@@ -41,6 +44,8 @@ class AdminDashboardSelector:
         }
     
     def get_fuel_type_data(self):
+        from cars.models import CarVariant
+        
         fuel_label_maps = dict(CarVariant.FUEL_TYPE_CHOICES)
         fuel_stats = (CarVariant
                       .objects
@@ -54,6 +59,8 @@ class AdminDashboardSelector:
     
     def get_body_chart_data(self):
         """Statistics of the number of vehicles by body type"""
+        from cars.models import CarVariant
+        
         body_stats = ( CarVariant.objects
                       .filter(car_model__body_type__isnull=False)
                       .annotate(body_name = F('car_model__body_type__name'))
@@ -67,6 +74,8 @@ class AdminDashboardSelector:
     
     def get_price_bracket_chart_data(self):
         """Statistics of vehicles distribution according to selling price ranges"""
+        from cars.models import CarVariant
+        
         brackets =[
             ('Dưới 500tr', Q(price_min__lt=500_000_000)),
             ('500tr-1tỷ', Q(price_min__gte=500_000_000, price_min__lt=1_000_000_000)),
@@ -84,6 +93,8 @@ class AdminDashboardSelector:
     
     def get_price_overview(self):
         """Calculate the highest, lowest, and average floor prices converted to million VND"""
+        from cars.models import CarVariant
+        
         price_stats = CarVariant.objects.filter(is_active=True).aggregate(
             min_price=Min('price_min'),
             max_price=Max('price_max'),
@@ -101,6 +112,7 @@ class AdminDashboardSelector:
         
     def get_ranking_and_tables(self):
         """Group ranking queries (Top Brand, Top Rated, Most Variant)"""
+        from cars.models import CarModel, Brand
         top_brands = (Brand.objects
                       .annotate(
                           variant_count=Count('car_models__variants'),
@@ -127,6 +139,8 @@ class AdminDashboardSelector:
         
     def get_data_completeness(self, total_variants:int):
         """Assess the percentage of technical specification completion"""
+        from cars.models import CarVariant
+        
         if not total_variants:
             return []
         
