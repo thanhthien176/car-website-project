@@ -4,6 +4,8 @@ from django.db import models
 from django.db.models import Avg
 from django.utils.text import slugify
 from django.urls import reverse
+
+from cars.services import VariantManager
 from .validators import validate_image_size, validate_image_extension
 from .utils.upload_utils import UploadToPath
 
@@ -186,6 +188,9 @@ class CarVariant(SEOMetaData, models.Model):
     
     is_active = models.BooleanField(default=True)
     
+    # objects = models.Manager.from_queryset(VariantQuerySet)()
+    objects = VariantManager()
+          
     if TYPE_CHECKING:
         is_saved: bool
     
