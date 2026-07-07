@@ -189,7 +189,7 @@ class CarVariant(SEOMetaData, models.Model):
     is_active = models.BooleanField(default=True)
     
     # objects = models.Manager.from_queryset(VariantQuerySet)()
-    objects = VariantManager()
+    objects: VariantManager = VariantManager()
           
     if TYPE_CHECKING:
         is_saved: bool

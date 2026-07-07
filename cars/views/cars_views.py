@@ -5,7 +5,6 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
-from cars.utils.helper_annotate_saved import annotate_saved
 
 from ..models import CarModel, CarVariant, Brand, BodyType
 from cars.forms import ReviewForm
@@ -92,10 +91,11 @@ class CarModelDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         qs_variants = (self.object.variants
                         .filter(is_active=True)
+                        .annotate_saved(self.request.user)
                         .prefetch_related('variant_images')
                         .order_by('price_min'))
         
-        context['variants'] = annotate_saved(qs_variants, self.request.user)
+        context['variants'] = qs_variants
         context['form'] = ReviewForm()
         context['reviews'] = (self.object.reviews
                               .filter(is_approved=True)
@@ -116,6 +116,7 @@ class CarVariantDetailView(DetailView):
     def get_queryset(self):
         qs = ( 
                 CarVariant.objects
+                .annotate_saved(self.request.user)
                 .select_related(
                     'car_model__brand',
                     'car_model__body_type',
@@ -129,7 +130,7 @@ class CarVariantDetailView(DetailView):
                     'car_model__reviews',
                 )            
         )
-        return annotate_saved(qs, self.request.user)
+        return qs
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)

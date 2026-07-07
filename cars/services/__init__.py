@@ -1,6 +1,6 @@
-from .car_selector import CarSelector
-from .dashboard import AdminDashboardSelector
-from .variant_queryset import VariantManager
+from cars.services.car_selector import CarSelector
+from cars.services.dashboard import AdminDashboardSelector
+from cars.services.variant_queryset import VariantManager
 
 __all__ = [
     'CarSelector',

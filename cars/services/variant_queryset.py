@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Case, When, Value, BooleanField, Exists, OuterRef
+from django.db.models import Value, BooleanField, Exists, OuterRef
 
 class VariantQuerySet(models.QuerySet):
     def annotate_saved(self, user):
