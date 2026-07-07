@@ -5,6 +5,7 @@ from django.db.models import Avg
 from django.core.cache import cache
 
 from .models import Brand, CarImage, CarModel, Review, CarVariant, VariantImage
+from users.models import User
 from .utils.image_utils import convert_to_webp
 
 logger = logging.getLogger(__name__)
@@ -14,6 +15,7 @@ logger = logging.getLogger(__name__)
 _THUMBNAIL_MAX_SIZE = (1280, 1280)
 _GALLERY_MAX_SIZE = (1920, 1920)
 _LOGO_MAX_SIZE = (400, 400)
+_AVATAR = (100,100)
 _MODEL_TO_WATCH = {CarModel, Review, Brand, CarVariant}
 
 _WEBP_REGISTRY = [
@@ -21,7 +23,8 @@ _WEBP_REGISTRY = [
     (Brand,    "logo",        "logo",        _LOGO_MAX_SIZE),
     (CarModel, "thumbnail",   "thumbnail",   _THUMBNAIL_MAX_SIZE),
     (CarImage, "image",       "image",       _GALLERY_MAX_SIZE),
-    (VariantImage, "image", "image", _GALLERY_MAX_SIZE)
+    (VariantImage, "image", "image", _GALLERY_MAX_SIZE),
+    (User,          "avatar",   "avatar",    _AVATAR),
 ]
 
 _DELETE_REGISTRY = [
