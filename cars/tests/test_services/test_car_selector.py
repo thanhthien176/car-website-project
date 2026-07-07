@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.test import TestCase
+from django.contrib.auth.models import AnonymousUser
 
 from cars.services.car_selector import CarSelector
 from cars.tests.helpers.helper_models import make_brand, make_variant, make_car_model
@@ -37,7 +38,7 @@ class CarSelectorQueryTest(TestCase):
             name='Old',
             is_active=False,
         )
-        result = list(self.selector.get_latest_variants())
+        result = list(self.selector.get_latest_variants(AnonymousUser()))
         slugs = [v.slug for v in result]
         self.assertIn(self.variant.slug, slugs)
         self.assertNotIn(inactive.slug, slugs)
