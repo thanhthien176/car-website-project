@@ -138,8 +138,10 @@ def _make_delete_handler(field_name):
     return handler
 
 for model, field_name in _DELETE_REGISTRY:
-    receiver(pre_save, sender=model)(
-        _make_delete_handler(field_name)
+    pre_save.connect(
+        _make_delete_handler(field_name),
+        sender=model,
+        weak=False
     )
         
 
@@ -165,9 +167,14 @@ def _make_webp_handler(field_name:str, update_field:str, max_size:tuple):
     return handler
 
 for _model, _field_name, _update_field, _max_size in _WEBP_REGISTRY:
-    receiver(pre_save, sender=_model)(
-        _make_webp_handler(_field_name, _update_field, _max_size)
+    pre_save.connect(
+        _make_webp_handler(_field_name, _update_field, _max_size),
+        sender=_model,
+        weak=False,
     )
+    # receiver(pre_save, sender=_model)(
+    #     _make_webp_handler(_field_name, _update_field, _max_size)
+    # )
         
 
         
