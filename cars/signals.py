@@ -1,4 +1,6 @@
+import os
 import logging
+from django.core.files.base import ContentFile
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.db.models import Avg
@@ -32,6 +34,7 @@ _DELETE_REGISTRY = [
     (CarModel, "thumbnail"),
     (CarImage, "image"),
     (VariantImage, "image"),
+    (User, "avatar"),
 ]
 
 @receiver([post_save, post_delete], sender=None)
@@ -47,8 +50,13 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
     The caller is responsible for saving the instance.
     """
     field = getattr(instance, field_name)
-    if not field:
+    if not field or not field.name:
         return False
+    
+    if field.name.lower().endswith(".webp"):
+        return False
+    
+    field.seek(0)
     
     webp_file = convert_to_webp(field, quality=85, max_size=max_size)
     if webp_file is None:
@@ -57,10 +65,12 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
             type(instance).__name__, field_name, instance.pk, field.name,
             )
         return False
-    # Delete the original file from storage before overwriting the field so
-    # we don't leave orphaned files behind.
-    field.delete(save=False)
-    setattr(instance, field_name, webp_file)
+    
+    # Create file name with endswith ".webp"
+    current_name = os.path.splitext(field.name)[0]
+    new_filename = f"{current_name}.webp"
+    
+    setattr(instance, field_name, ContentFile(webp_file.read(), name=new_filename))
     return True
     
 def _delete_image_field(instance) -> None:
@@ -77,6 +87,7 @@ def _delete_image_field(instance) -> None:
 @receiver(post_delete, sender=CarModel)
 @receiver(post_delete, sender=CarImage)
 @receiver(post_delete, sender=VariantImage)
+@receiver(post_delete, sender=User)
 def delete_image_file(sender, instance, **kwargs):
     _delete_image_field(instance)
 
@@ -115,7 +126,7 @@ for model, field_name in _DELETE_REGISTRY:
 # ---------------------------------------------------------------------------
 # Convert uploaded images to WebP on save
 #
-# We use post_save + update_fields so the converted file is persisted without
+# We use pre_save + update_fields so the converted file is persisted without
 # triggering another full save() cycle (and without re-firing pre_save logic).
 # ---------------------------------------------------------------------------
 
@@ -124,17 +135,17 @@ def _make_webp_handler(field_name:str, update_field:str, max_size:tuple):
         if kwargs.get("update_fields") == frozenset({update_field}):
             return
         if _replace_with_webp(instance, field_name, max_size):
-            sender.objects.filter(pk=instance.pk).update(
-                **{update_field: getattr(instance, field_name)}
-            )
+            
             logger.info("Converted %s(pk=%s) field '%s' to WebP",
                         sender.__name__, 
                         instance.pk, 
                         field_name)
+            
+        
     return handler
 
 for _model, _field_name, _update_field, _max_size in _WEBP_REGISTRY:
-    receiver(post_save, sender=_model)(
+    receiver(pre_save, sender=_model)(
         _make_webp_handler(_field_name, _update_field, _max_size)
     )
         
