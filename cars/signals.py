@@ -49,15 +49,28 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
     Returns True if the field was replaced, False otherwise.
     The caller is responsible for saving the instance.
     """
+    logger.info(
+        "Start WebP conversion: %s(pk=%s) field=%s",
+        type(instance).__name__,
+        instance.pk,
+        field_name,
+    )
     field = getattr(instance, field_name)
-    if not field or not field.name:
+    if not field:
+        logger.info("No file attached.")
+        return False
+    
+    if not field.name:
+        logger.warning("Field has no name.")
         return False
     
     if field.name.lower().endswith(".webp"):
+        logger.info("Already WebP, skip.")
         return False
     
     field.seek(0)
     
+    logger.info("Calling convert_to_webp()")
     webp_file = convert_to_webp(field, quality=85, max_size=max_size)
     if webp_file is None:
         logger.warning(
@@ -66,11 +79,18 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
             )
         return False
     
+    logger.info(
+        "Converted successfully. New file=%s Size=%d",
+        webp_file.name,
+        webp_file.size,
+    )
     # Create file name with endswith ".webp"
     current_name = os.path.splitext(field.name)[0]
     new_filename = f"{current_name}.webp"
     
+    
     setattr(instance, field_name, ContentFile(webp_file.read(), name=new_filename))
+    logger.info("Assigned new ContentFile.")
     return True
     
 def _delete_image_field(instance) -> None:
