@@ -49,7 +49,7 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
     Returns True if the field was replaced, False otherwise.
     The caller is responsible for saving the instance.
     """
-    logger.info(
+    logger.warning(
         "Start WebP conversion: %s(pk=%s) field=%s",
         type(instance).__name__,
         instance.pk,
@@ -70,7 +70,7 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
     
     field.seek(0)
     
-    logger.info("Calling convert_to_webp()")
+    logger.warning("Calling convert_to_webp()")
     webp_file = convert_to_webp(field, quality=85, max_size=max_size)
     if webp_file is None:
         logger.warning(
@@ -79,7 +79,7 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
             )
         return False
     
-    logger.info(
+    logger.warning(
         "Converted successfully. New file=%s Size=%d",
         webp_file.name,
         webp_file.size,
@@ -90,7 +90,7 @@ def _replace_with_webp(instance, field_name: str, max_size:tuple):
     
     
     setattr(instance, field_name, ContentFile(webp_file.read(), name=new_filename))
-    logger.info("Assigned new ContentFile.")
+    logger.warning("Assigned new ContentFile.")
     return True
     
 def _delete_image_field(instance) -> None:
@@ -156,7 +156,7 @@ def _make_webp_handler(field_name:str, update_field:str, max_size:tuple):
             return
         if _replace_with_webp(instance, field_name, max_size):
             
-            logger.info("Converted %s(pk=%s) field '%s' to WebP",
+            logger.warning("Converted %s(pk=%s) field '%s' to WebP",
                         sender.__name__, 
                         instance.pk, 
                         field_name)
