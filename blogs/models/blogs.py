@@ -33,7 +33,7 @@ class BlogTag(models.Model):
         ordering = ["name"]
         
     def save(self, *args, **kwargs):
-        if self.slug is None:
+        if not self.slug:
             self.slug = slugify(self.name)
             
         super().save(*args, **kwargs)
@@ -49,6 +49,8 @@ class BlogPost(ArticleBase):
     class Meta:
         verbose_name = "Blog Post"
         verbose_name_plural = "Blog Posts"
+        ordering = ["-published_at", "-created_at"]
+        
         
     def get_absolute_url(self):
         return reverse("blogs:post_detail", kwargs={"slug": self.slug})

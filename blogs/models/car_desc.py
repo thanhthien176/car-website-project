@@ -37,7 +37,7 @@ class CarDescription(ArticleBase):
         return self.variant.slug if self.variant else self.car_model.slug
     
     def save(self, *args, **kwargs):
-        if self.slug is None:
+        if not self.slug:
             target = self.variant or self.car_model
             self.slug = slugify(f"{target}-{self.title}")
             
@@ -56,10 +56,10 @@ class CarDescription(ArticleBase):
     def get_absolute_url(self):
         if self.variant:
             return reverse("cars:variant_detail", kwargs={"slug": self.variant.slug})
-        return reverse("cars:car_detail", kwargs={"pk": self.pk})
+        return reverse("cars:car_detail", kwargs={"slug": self.car_model.slug})
     
 class CarDescriptionSection(SectionBase):
-    desciption = models.ForeignKey(
+    description = models.ForeignKey(
         "CarDescription", on_delete=models.CASCADE, related_name="sections"
     )
     image = models.ImageField(

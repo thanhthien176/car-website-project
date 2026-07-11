@@ -27,7 +27,7 @@ def get_description_for_variant(variant):
         CarDescription.objects
         .filter(
             car_model = variant.car_model,
-            variant__is_null=True,
+            variant__isnull=True,
             is_primary=True,
             is_published=True,
         )

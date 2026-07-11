@@ -16,7 +16,7 @@ class BrandHistory(ArticleBase):
         verbose_name_plural = "Brand Histories"
         
     def save(self, *args, **kwargs):
-        if self.slug is None:
+        if not self.slug:
             self.slug = slugify(f"{self.brand}-history")       
         super().save(*args, **kwargs)
         
