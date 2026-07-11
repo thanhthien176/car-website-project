@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% load static car_filters %}
+
+{% block title %}Blog | xehoi360{% endblock  %}
+{% block mete_description %}{% endblock  %}
+
+{% block content_root %}
+<div class="container mb-2">
+    {% include "utils/_feature_post.html" %}
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 g-4 mb-2">
+    {% for post in posts %}
+        {% include "utils/_post_card.html" %}
+
+    {% empty %}
+        <p>Chưa có bài viết nào</p>
+    {% endfor %}
+</div>
+
+{% include "cars/utils/_pagination_nav.html" %}
+
+{% endblock  %}

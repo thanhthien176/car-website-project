@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} | CarCompare{% endblock %}
+{% block meta_description %}{{ post.sections.first.content|truncatewords:25 }}{% endblock %}
+
+{% block content_root %}
+<div class="container py-4">
+  <article>
+    <p class="mb-2">
+      <a href="{% url 'blogs:post_list' %}">← Tất cả bài viết</a>
+    </p>
+
+    {% if post.category %}
+      <span class="badge bg-secondary mb-2">{{ post.category.name }}</span>
+    {% endif %}
+
+    <h1>{{ post.title }}</h1>
+    <p class="text-muted">
+      {{ post.author.display_name }} · {{ post.published_at|date:"d/m/Y H:i" }}
+    </p>
+
+    {% for tag in post.tags.all %}
+      <span class="badge bg-light text-dark border">{{ tag.name }}</span>
+    {% endfor %}
+
+    <hr>
+
+    {% for section in post.sections.all %}
+      <section class="mb-4" style="max-width: 850px;">
+        {% if section.title %}<h2 class="h4">{{ section.title }}</h2>{% endif %}
+        {% if section.image %}
+          <img src="{{ section.image.url }}" 
+               class="img-fluid rounded mb-2 w-100 h-auto" 
+               alt="{{ section.title }}"
+               >
+        {% endif %}
+        <div>{{ section.content|linebreaks }}</div>
+      </section>
+    {% endfor %}
+  </article>
+</div>
+{% endblock %}

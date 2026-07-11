@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Lịch sử {{ history.brand.name }} | CarCompare{% endblock %}
+{% block meta_description %}Lịch sử hình thành và phát triển của hãng {{ history.brand.name }}{% endblock %}
+
+{% block content_root %}
+<div class="container py-4">
+  <p class="mb-2">
+    <a href="{% url 'cars:brand_detail' slug=history.brand.slug %}">← {{ history.brand.name }}</a>
+  </p>
+
+  <h1>{{ history.title }}</h1>
+  <p class="text-muted">Cập nhật: {{ history.updated_at|date:"d/m/Y" }}</p>
+
+  <hr>
+
+  {% for section in history.sections.all %}
+    <section class="mb-4">
+      {% if section.title %}<h2 class="h4">{{ section.title }}</h2>{% endif %}
+      {% if section.image %}
+        <img src="{{ section.image.url }}" class="img-fluid rounded mb-2" alt="{{ section.title }}">
+      {% endif %}
+      <div>{{ section.content|linebreaks }}</div>
+    </section>
+  {% empty %}
+    <p>Chưa có nội dung lịch sử cho hãng này.</p>
+  {% endfor %}
+</div>
+{% endblock %}

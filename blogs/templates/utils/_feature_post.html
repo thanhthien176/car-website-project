@@ -1,0 +1,53 @@
+<div class="row row-cols-1 row-cols-md-2 p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+    <div class="col px-0">
+    <h1 class="display-4 fst-italic">
+        {% if featured_post.title %}
+            {{ featured_post.title }}
+        {% else %}
+            Title of a longer featured blog post
+        {% endif %}
+    </h1>
+    <div class="mb-1 text-body-secondary">
+        {% if featured_post %}
+            {{ featured_post.author.display_name }} · {{ featured_post.published_at|date:"d/m/Y" }}
+        {% else %}
+            admin · 10/07/2026
+        {% endif %}
+    </div>
+    <p class="lead my-3">
+        {% if featured_post.summary %}
+            {{ featured_post.summary }}
+        {% else %}
+            Multiple lines of text that form the lede, 
+            informing new readers quickly and efficiently 
+            about what’s most interesting in this post’s contents.
+        {% endif %}
+    </p>
+    <p class="lead mb-0">
+        {% if featured_post %}
+        <a href="{% url 'blogs:post_detail' slug=featured_post.slug %}" 
+        class="text-body-emphasis fw-bold">Continue reading...</a>
+        {% else %}
+            <a href="#" 
+            class="text-body-emphasis fw-bold"
+            >
+                Continue reading...
+            </a>
+        {% endif %}
+    </p>
+    </div>
+    <div class="col p-1" style="max-width: 600px; height: 300px;">
+        {% if featured_post.sections.first.image %}
+            <img src="{{ featured_post.sections.first.image.url }}" 
+                 alt="{{ featured_post.title }}"
+                 class="w-100 h-100"
+                 style="object-fit:cover;">
+        {% else %}
+            <img src="https://images.unsplash.com/photo-1773332611476-6ec2ba68049f?q=80&w=388&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+            alt=""
+            class="w-100 h-100"
+            style="object-fit:cover;">
+        {% endif %}
+    </div>
+</div>
+

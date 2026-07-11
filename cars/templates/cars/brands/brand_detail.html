@@ -37,6 +37,13 @@
                 <i class="bi bi-globe"></i> Website
                 </a>
                 {% endif %}
+                {% if brand.history %}
+                    &nbsp;·&nbsp;
+                    <a href="{% url 'cars:brand_history' slug=brand.slug %}">
+                        <i class="bi bi-clock-history"></i> History
+                    </a>
+                {% endif %}
+                
             </p>
         </div>
     </section>

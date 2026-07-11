@@ -7,6 +7,7 @@ from cars.views.comparison_views import (ComparisonPageView, AddToComparisonView
                                          RemoveFromComparisonView, ClearComparisonView,
                                          VariantPickerCloseView, VariantPickerView,
                                          ComparisonTrayView)
+from blogs.views import BrandHistoryView
 
 app_name = 'cars'
 
@@ -16,6 +17,7 @@ urlpatterns = [
     # brands
     path('brands/', BrandListView.as_view(), name='brand_list'),
     path('brands/<slug:slug>/', BrandDetailView.as_view(), name='brand_detail'),
+    path('brands/<slug:slug>/history/', BrandHistoryView.as_view(), name="brand_history"),
     
     # cars
     path('cars/', CarModelListView.as_view(), name='car_list'),
@@ -23,7 +25,7 @@ urlpatterns = [
     path('cars/<slug:slug>/picker/', VariantPickerView.as_view(), name='variant_picker'),
     path('cars/<slug:slug>/picker/close/', VariantPickerCloseView.as_view(), name='variant_picker_close'),
     path('variants/<slug:slug>/', CarVariantDetailView.as_view(), name='variant_detail'),
-    path('cars/<slug:slug>/review', ReviewSubmitView.as_view(), name='review_submit'),
+    path('cars/<slug:slug>/review/', ReviewSubmitView.as_view(), name='review_submit'),
     
     # comparison
     path('comparison/', ComparisonPageView.as_view(), name='comparison_page'),

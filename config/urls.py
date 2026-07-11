@@ -37,6 +37,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('users/', include('users.urls')),
     path('', include('cars.urls')),
+    path('blogs/', include('blogs.urls', namespace='blogs')),
     path('api/v1/', include('api.urls', namespace='api')),
     path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
     
