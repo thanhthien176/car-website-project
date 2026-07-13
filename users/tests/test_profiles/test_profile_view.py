@@ -34,7 +34,7 @@ class ProfileViewTest(TestCase):
         saved = make_saved_car(user=self.user)
         url = reverse("users:profile", kwargs={"username": self.user.username})
         response = self.client.get(url)
-        self.assertIn(saved, response.context['saved_car'])
+        self.assertIn(saved, response.context['saved_cars'])
         
 class ProfileUpdateViewTest(TestCase):
     def setUp(self) -> None:
