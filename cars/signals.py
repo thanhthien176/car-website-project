@@ -17,16 +17,16 @@ logger = logging.getLogger(__name__)
 _THUMBNAIL_MAX_SIZE = (1280, 1280)
 _GALLERY_MAX_SIZE = (1920, 1920)
 _LOGO_MAX_SIZE = (400, 400)
-_AVATAR = (100,100)
+_AVATAR = (1280,1280)
 _MODEL_TO_WATCH = {CarModel, Review, Brand, CarVariant}
 
 _WEBP_REGISTRY = [
-    # (Model,    field_name,    update_field,  max_size)
-    (Brand,    "logo",        "logo",        _LOGO_MAX_SIZE),
-    (CarModel, "thumbnail",   "thumbnail",   _THUMBNAIL_MAX_SIZE),
-    (CarImage, "image",       "image",       _GALLERY_MAX_SIZE),
-    (VariantImage, "image", "image", _GALLERY_MAX_SIZE),
-    (User,          "avatar",   "avatar",    _AVATAR),
+    # (Model,       field_name,     update_field,   max_size)
+    (Brand,         "logo",         "logo",         _LOGO_MAX_SIZE),
+    (CarModel,      "thumbnail",    "thumbnail",    _THUMBNAIL_MAX_SIZE),
+    (CarImage,      "image",        "image",        _GALLERY_MAX_SIZE),
+    (VariantImage,  "image",        "image",        _GALLERY_MAX_SIZE),
+    (User,          "avatar",       "avatar",       _AVATAR),
 ]
 
 _DELETE_REGISTRY = [

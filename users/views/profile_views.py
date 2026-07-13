@@ -23,7 +23,7 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         # Prefetch saved cars with related variant data to avoid N+1
-        context["saved_car"] = (
+        context["saved_cars"] = (
             self.object.saved_cars
             .select_related('car__car_model__brand')
             .order_by('-saved_at')

@@ -23,13 +23,19 @@
                 <li class="nav-item">
                     <a class="nav-link {% active_url 'brand_list' %}"
                         href="{% url 'cars:brand_list' %}">
-                        <i class="bi bi-shield-check"></i> Hãng xe
+                        <i class="bi bi-shield-check"></i> Brand
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% active_url 'car_list' %}"
                         href="{% url 'cars:car_list' %}">
-                        <i class="bi bi-car-front"></i> Tất cả xe
+                        <i class="bi bi-car-front"></i> All Cars
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% active_url 'car_list' %}"
+                        href="{% url 'blogs:post_list' %}">
+                        <i class="bi bi-newspaper"></i> Blogs
                     </a>
                 </li>
 
