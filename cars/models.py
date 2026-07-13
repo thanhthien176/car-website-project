@@ -22,12 +22,18 @@ class BodyType(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True)
     
+    class Meta:
+        verbose_name_plural= "Body Types"
+    
     def __str__(self):
         return self.name
     
 class CarClass(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(unique=True)
+    
+    class Meta:
+        verbose_name_plural = "Car Classes"
     
     def __str__(self):
         return self.name    

@@ -10,7 +10,7 @@ from .models import (
     DimensionSpecification, EngineSpecification, PerformanceSpecification,
     FuelConsumptionSpecification, ExteriorSpecification, InteriorSpecification,
     SeatSpecification, ComfortSpecification, SafetySpecification,
-    Review, Comparison,
+    Review, Comparison, CarClass, BodyType,
 )
 
 # Register your models here.
@@ -183,6 +183,21 @@ class BrandAdmin(admin.ModelAdmin):
     list_filter   = ['is_active', 'country_of_origin']
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(BodyType)
+class BodyTypeAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    list_filter = ["name"]
+    search_fields = ["name"]
+    prepopulated_fields = {'slug': ('name',)}
+    
+    
+@admin.register(CarClass)
+class CarClassAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    list_filter = ["name"]
+    search_fields = ["name"]
+    prepopulated_fields = {"slug": ("name",)}
 
 # ---------------------------------------------------------------------------
 # CarModel
