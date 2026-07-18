@@ -40,6 +40,8 @@ urlpatterns = [
     path('blogs/', include('blogs.urls', namespace='blogs')),
     path('api/v1/', include('api.urls', namespace='api')),
     path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('core/', include('core.urls', namespace='core')),
+    
     
     
     path('robots.txt', TemplateView.as_view(

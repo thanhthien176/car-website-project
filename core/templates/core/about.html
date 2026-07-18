@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}About me{% endblock %}
+
+
+{% block content_root %}
+    <section id="about" class="py-5 bg-light">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col">
+                    <h2 class="fw-bolder mb-4"><strong>Xehoi360</strong> – Tìm chiếc xe thuộc về riêng bạn</h2>
+                    <p class="lead mb-4">
+                        Việc tìm kiếm một chiếc xe phù hợp chưa bao giờ là điều dễ dàng. 
+                        Mỗi người trong chúng ta đều có một phong cách sống, nhu cầu và 
+                        ngân sách riêng biệt. Lời khuyên từ số đông có thể rất tốt, 
+                        nhưng chưa chắc đã là lựa chọn hoàn hảo nhất dành cho bạn. 
+                        Bên cạnh đó, việc phải "bơi" trong biển thông tin từ hàng chục nguồn, 
+                        hàng trăm hãng xe khác nhau khiến hành trình tìm kiếm trở nên mệt mỏi 
+                        và mất thời gian.
+                    </p>
+                    <p class="lead mb-4">
+                        <strong>XeHoi360 sinh ra để thay đổi điều đó.</strong>
+                        Chúng tôi không quyết định thay bạn nên mua chiếc xe nào, 
+                        nhưng chúng tôi mang đến cho bạn một chiếc kính viễn vọng toàn cảnh. 
+                        Bằng cách tổng hợp dữ liệu thông số kỹ thuật, giá bán và phát triển 
+                        các công cụ so sánh trực quan, sinh động, XeHoi360 giúp bạn thu hẹp 
+                        khoảng cách thông tin, nhanh chóng tìm ra những lựa chọn tối ưu nhất 
+                        cho riêng mình.
+                    </p>
+                    <p class="lead mb-4">
+                        Không chỉ vậy, <strong>XeHoi360</strong> còn là nơi để cộng đồng chia sẻ 
+                        những đánh giá và trải nghiệm thực tế sau quá trình sử dụng xe. Những góc 
+                        nhìn khách quan từ chính người dùng sẽ mang đến nguồn thông tin tham khảo 
+                        đáng tin cậy, giúp mọi người có thêm cơ sở để lựa chọn chiếc xe phù hợp nhất.
+                    </p>
+
+                    
+                    <a  class="btn btn-primary btn-lg px-4 me-sm-3 my-2"
+                        href="{% url 'cars:car_list' %}">
+                        Tất cả xe
+                    </a>
+                    <a class="btn btn-outline-primary btn-lg px-4 my-2" href="{% url 'core:contact' %}">Liên Hệ</a>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+{% endblock %}

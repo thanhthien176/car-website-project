@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'blogs',
     'users',
     'admin_honeypot',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,18 @@ AUTHENTICATION_BACKENDS = [
     # allauth specific authentication methods (social login, email)
     'allauth.account.auth_backends.AuthenticationBackend',    
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*' ]
