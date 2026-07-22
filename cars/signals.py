@@ -98,7 +98,7 @@ def delete_image_file(sender, instance, **kwargs):
 
 
 def _delete_old_file_on_change(instance, field_name):
-    if not instance.pk:
+    if instance._state.adding:
         return
     
     try:
@@ -122,6 +122,15 @@ def _make_delete_handler(field_name):
         
     return handler
 
+# NOTE ON SIGNAL ORDER:
+# Django calls pre_save receivers for a given sender in the order they were
+# connected. _DELETE_REGISTRY is connected first, then _WEBP_REGISTRY below,
+# so for any given model, `_delete_old_file_on_change` always runs BEFORE
+# `_replace_with_webp`. This ordering matters: we need to compare the
+# incoming file against the *old* DB file before it gets swapped out for the
+# converted WebP version. If these two registries are ever merged or the
+# connect order changes, this ordering guarantee breaks silently.
+
 for model, field_name in _DELETE_REGISTRY:
     pre_save.connect(
         _make_delete_handler(field_name),
@@ -139,8 +148,7 @@ for model, field_name in _DELETE_REGISTRY:
 
 def _make_webp_handler(field_name:str, update_field:str, max_size:tuple):
     def handler(sender, instance, **kwargs):
-        if kwargs.get("update_fields") == frozenset({update_field}):
-            return
+
         if _replace_with_webp(instance, field_name, max_size):
             
             logger.warning("Converted %s(pk=%s) field '%s' to WebP",
@@ -151,6 +159,8 @@ def _make_webp_handler(field_name:str, update_field:str, max_size:tuple):
         
     return handler
 
+
+# See NOTE ON SIGNAL ORDER above - must connect after _DELETE_REGISTRY.
 for _model, _field_name, _update_field, _max_size in _WEBP_REGISTRY:
     pre_save.connect(
         _make_webp_handler(_field_name, _update_field, _max_size),
