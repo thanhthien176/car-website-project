@@ -48,7 +48,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    config('CSRF_TRUSTED_ORIGINS', 'http://127.0.0.1:8001')
 ]
 
 MIGRATION_MODULES = {
