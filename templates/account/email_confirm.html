@@ -1,0 +1,39 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+
+{% block head_title %}Xác nhận email{% endblock %}
+
+{% block inner %}
+<h4 class="mb-4 text-center fw-semibold">Xác nhận địa chỉ email</h4>
+
+{% if confirmation %}
+    <p class="text-center text-muted mb-4">
+        Xác nhận rằng <strong>{{ confirmation.email_address.email }}</strong>
+        là email của <strong>{{ confirmation.email_address.user }}</strong>?
+    </p>
+
+    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary w-100">Xác nhận</button>
+    </form>
+{% else %}
+    {% url 'account_email' as email_url %}
+    <div class="alert alert-warning text-center mb-4">
+        Liên kết xác nhận này không hợp lệ hoặc đã hết hạn.
+    </div>
+    <p class="text-center small text-muted">
+        Vui lòng
+        {% if user.is_authenticated %}
+            truy cập <a href="{{ email_url }}">trang quản lý email</a> để gửi lại yêu cầu xác nhận mới.
+        {% else %}
+            <a href="{% url 'account_signup' %}">đăng ký lại</a> hoặc liên hệ hỗ trợ nếu vấn đề vẫn tiếp diễn.
+        {% endif %}
+    </p>
+{% endif %}
+
+<hr class="my-4">
+
+<p class="text-center mb-0 small">
+    <a href="{% url 'account_login' %}">← Quay lại đăng nhập</a>
+</p>
+{% endblock %}

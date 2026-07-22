@@ -1,0 +1,24 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+
+{% block head_title %}Đăng xuất{% endblock %}
+
+{% block inner %}
+<h4 class="mb-4 text-center fw-semibold">Đăng xuất</h4>
+
+<p class="text-center text-muted mb-4">
+    Bạn có chắc muốn đăng xuất khỏi tài khoản không?
+</p>
+
+<form method="post" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+    {% endif %}
+
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-danger">Đăng xuất</button>
+        <a href="{% url 'cars:home' %}" class="btn btn-outline-secondary">Hủy</a>
+    </div>
+</form>
+{% endblock %}

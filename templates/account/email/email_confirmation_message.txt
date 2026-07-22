@@ -1,0 +1,11 @@
+{% load i18n %}{% autoescape off %}Xin chào,
+
+Cảm ơn bạn đã đăng ký tài khoản tại Xehoi360.
+Vui lòng bấm vào liên kết dưới đây để xác nhận địa chỉ email:
+
+{{ activate_url }}
+
+Nếu bạn không thực hiện yêu cầu này, hãy bỏ qua email này.
+
+Trân trọng,
+Xehoi360{% endautoescape %}

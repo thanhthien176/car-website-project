@@ -1,0 +1,68 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+{% load socialaccount %}
+
+{% block head_title %}Đăng ký{% endblock %}
+
+{% block inner %}
+{% get_providers as socialaccount_providers %}
+
+<h4 class="mb-4 text-center fw-semibold">Tạo tài khoản</h4>
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger py-2">
+    {% for error in form.non_field_errors %}
+        <div>{{ error }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<form method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.password1.id_for_label }}" class="form-label">Mật khẩu</label>
+        {{ form.password1 }}
+        {% for error in form.password1.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <label for="{{ form.password2.id_for_label }}" class="form-label">Nhập lại mật khẩu</label>
+        {{ form.password2 }}
+        {% for error in form.password2.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+</form>
+
+{% if socialaccount_providers %}
+<div class="text-center my-3 text-muted small">hoặc đăng ký bằng</div>
+<div class="d-grid gap-2">
+    {% for provider in socialaccount_providers %}
+        <a href="{% provider_login_url provider.id process='login' %}"
+           class="btn btn-outline-secondary d-flex align-items-center justify-content-center">
+            {{ provider.name }}
+        </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<hr class="my-4">
+
+<p class="text-center mb-0 small">
+    Đã có tài khoản?
+    <a href="{% url 'account_login' %}">Đăng nhập</a>
+</p>
+{% endblock %}

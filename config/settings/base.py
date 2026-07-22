@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.email_verification_status',
             ],
         },
     },
@@ -129,6 +130,7 @@ ACCOUNT_FORMS = {
     "signup": "users.forms.CustomSignupForm",
 }
 
+ACCOUNT_PASSWORD_CHANGE_NOTIFY = True
 
 # Encryption keys for sensitive fields (phone, cccd, address)
 # Generate ENCRYPTION_KEY with:

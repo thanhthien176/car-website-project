@@ -1,0 +1,21 @@
+{% extends "allauth/layouts/base.html" %}
+{% load i18n %}
+
+{% block head_title %}Kiểm tra email{% endblock %}
+
+{% block inner %}
+<h4 class="mb-3 text-center fw-semibold">Xác nhận email của bạn</h4>
+
+<p class="text-center text-muted mb-4">
+    Chúng tôi đã gửi một email xác nhận đến địa chỉ bạn vừa đăng ký.
+    Vui lòng kiểm tra hộp thư (kể cả mục Spam) và bấm vào liên kết để hoàn tất.
+</p>
+
+<div class="text-center">
+    <a href="{% url 'account_login' %}" class="btn btn-primary">Đăng nhập ngay</a>
+</div>
+
+<p class="text-center small text-muted mt-4 mb-0">
+    Bạn có thể đăng nhập ngay cả khi chưa xác nhận email, nhưng nên xác nhận sớm để bảo vệ tài khoản.
+</p>
+{% endblock %}
