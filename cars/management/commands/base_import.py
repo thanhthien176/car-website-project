@@ -6,6 +6,7 @@ from typing import Any
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.conf import settings
 
 from cars.utils.image_utils import save_remote_image_to_field
 
@@ -55,7 +56,7 @@ class BaseImportCommand(BaseCommand):
     # ------------------------------------------------------------------
 
     def handle(self, *args, **options):
-        csv_path = Path(options["csv_file"])
+        csv_path = settings.IMPORT_DIR / options["csv_file"]
         dry_run = options["dry_run"]
 
         if not csv_path.exists():

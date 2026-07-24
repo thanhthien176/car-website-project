@@ -98,6 +98,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+IMPORT_DIR = BASE_DIR / 'imports'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # =========Set AUTH_USER_MODEL===========
