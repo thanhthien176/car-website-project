@@ -3,10 +3,11 @@ import logging
 from django.core.files.base import ContentFile
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
-from django.db.models import Avg
 from django.core.cache import cache
 
-from .models import Brand, CarImage, CarModel, Review, CarVariant, VariantImage
+from core.cache.invalidation import ClearCacheKeys
+
+from .models import BodyType, Brand, CarImage, CarModel, Review, CarVariant, VariantImage
 from users.models import User
 from .utils.image_utils import convert_to_webp
 
@@ -184,5 +185,39 @@ def update_car_rating_on_save(sender, instance, **kwargs):
 @receiver(post_delete, sender=Review)
 def update_car_rating_on_delete(sender, instance, **kwargs):
     instance.car.recalculate_avg_rating()
+    
+#-------------------------------------------------
+# Delete cache when save or delete. Note: update
+#-------------------------------------------------
 
+@receiver([post_save, post_delete], sender=Brand)
+def clear_brand_cache(sender, instance, **kwargs):
+    ClearCacheKeys.clear_brand_cache(instance)
+    
+    
+@receiver([post_save, post_delete], sender=CarModel)
+def clear_car_model_cache(sender, instance, **kwargs):
+    ClearCacheKeys.clear_car_model_cache(instance)
+    
+    
+@receiver([post_save, post_delete], sender=CarVariant)
+def clear_variant_cache(sender, instance, **kwargs):
+    ClearCacheKeys.clear_variant_cache(instance)
+    
+@receiver([post_save, post_delete], sender=BodyType)
+def clear_body_type_cache(sender, instance, **kwargs):
+    ClearCacheKeys.clear_body_type_cache(instance)
+    
+@receiver([post_save, post_delete], sender=CarImage)
+def clear_car_image_cache(sender, instance, **kwargs):
+    ClearCacheKeys.clear_car_model_cache(instance.car)
+    
+@receiver([post_save, post_delete], sender=VariantImage)
+def clear_variant_image_cache(sender, instance, **kwargs):
+    ClearCacheKeys.clear_variant_cache(instance.variant)
+
+@receiver([post_save, post_delete], sender=Review)
+def clear_review_cache(sender, instance, **kwargs):
+    ClearCacheKeys.clear_review_cache(instance)
+      
 

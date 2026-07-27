@@ -1,14 +1,18 @@
 from typing import Any
 
-from django.db.models import QuerySet, Count, Min, Max
-from django.http.response import HttpResponse
+from django.db.models import QuerySet
+from django.core.cache import cache
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
 
-from ..models import CarModel, CarVariant, Brand, BodyType
+from cars.models import CarModel, CarVariant
 from cars.forms import ReviewForm
-from cars.services.car_selector import CarSelector
+from cars.services.car_cache_services import CarCacheService
+from cars.services.car_query_services import CarQueryService
+from cars.services.sidebar_services import SidebarService
+from cars.services.variant_query_services import VariantQueryService
+from cars.services.variant_cache_services import VariantCacheService
 
 class CarModelListView(ListView):
     """list car models, supports optional ?brand=<slug> filter
@@ -20,31 +24,18 @@ class CarModelListView(ListView):
     template_name = "cars/car_models/car_list.html"
     context_object_name = "car_models"
     paginate_by = 12
+               
     
     def get_queryset(self) -> QuerySet:
-        qs = (CarModel.objects
-              .annotate(
-                    price_min=Min("variants__price_min"),
-                    price_max=Max("variants__price_max")
-                    )
-              .select_related("brand", "body_type", "car_class")
-              .prefetch_related("images")
-              .order_by("brand__name", "name")
-              )
         
-        q = self.request.GET.get('q', '').strip()
+        if car_models := CarCacheService.get_default(self.request.GET):
+            return car_models
         
-        selector = CarSelector()
-        if q:
-            qs = selector.search_car_models(q, qs=qs)
+        qs = CarQueryService.filtered_queryset(self.request.GET)
+                
+        qs = CarCacheService.store_default(qs, self.request.GET, self.paginate_by)       
             
-        qs = selector.apply_filters(
-            qs,
-            self.request.GET
-        )
-            
-            
-        return qs.annotate(variant_count=Count('variants', distinct=True))
+        return qs
     
     def render_to_response(self, context: dict[str, Any], **response_kwargs: Any):
         if self.request.headers.get("HX-Request"):
@@ -52,19 +43,14 @@ class CarModelListView(ListView):
         return super().render_to_response(context, **response_kwargs)
     
     def get_context_data(self, **kwargs):
-        filters = {
-            'brand': self.request.GET.get('brand'),
-            'body': self.request.GET.get('body'),
-            'min_price': self.request.GET.get('min_price'),
-            'max_price': self.request.GET.get('max_price')
-        }
+        
         context = super().get_context_data(**kwargs)
         # Sidebar data
-        context['all_brands'] = Brand.objects.filter(is_active=True).order_by('name')
-        context['all_body_types'] = BodyType.objects.all().order_by('name')
+        context['all_brands'] = SidebarService.brands()
+        context['all_body_types'] = SidebarService.body_types()
         
         # Preserve active filter state for template
-        context['has_filters'] = any(filters.values())
+        context['has_filters'] = CarCacheService.has_filter(self.request.GET)
         context['current_brand'] = self.request.GET.get('brand', '')
         context['current_body'] = self.request.GET.get('body', '')
         context['search_query'] = self.request.GET.get('q', '')
@@ -81,26 +67,25 @@ class CarModelDetailView(DetailView):
     slug_url_kwarg = "slug"
     
     def get_queryset(self) -> QuerySet:
-        return (
-            CarModel.objects
-            .select_related('brand', 'body_type', 'car_class',)
-            .prefetch_related('images')
-        )
+        return CarQueryService.detail_queryset()
+    
+    def get_object(self, queryset = None) -> Any:
+        slug = self.kwargs[self.slug_url_kwarg]
+        return CarCacheService.get_detail(slug, queryset)
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        qs_variants = (self.object.variants
-                        .filter(is_active=True)
-                        .annotate_saved(self.request.user)
-                        .prefetch_related('variant_images')
-                        .order_by('price_min'))
+        if self.request.user.is_authenticated:
+            variants = list(CarQueryService.get_variants_of_car_model(self.object, self.request.user))
+        else:
+            qs = CarQueryService.get_variants_of_car_model(self.object, self.request.user)
+            variants = CarCacheService.get_variants_of_car_model(self.object, qs)
         
-        context['variants'] = qs_variants
+        context['variants'] = variants
         context['form'] = ReviewForm()
-        context['reviews'] = (self.object.reviews
-                              .filter(is_approved=True)
-                              .order_by('-created_at')[:5]
-                              )
+        
+        qs_review = CarQueryService.get_reviews_of_car_model(self.object)
+        context['reviews'] = CarCacheService.get_reviews_of_car_model(self.object, qs_review)
         return context
     
 class CarVariantDetailView(DetailView):
@@ -114,34 +99,26 @@ class CarVariantDetailView(DetailView):
     slug_url_kwarg = 'slug'
     
     def get_queryset(self):
-        qs = ( 
-                CarVariant.objects
-                .annotate_saved(self.request.user)
-                .select_related(
-                    'car_model__brand',
-                    'car_model__body_type',
-                    'car_model__car_class',
-                )
-                .prefetch_related(
-                    'variant_images',
-                    'engine',
-                    'dimension',
-                    'safety',
-                    'car_model__reviews',
-                )            
-        )
-        return qs
+        return VariantQueryService.get_variant_detail(self.request.user)
+    
+    def get_object(self, queryset=None) -> Any:
+        if queryset is None:
+            queryset = self.get_queryset()
+        slug = self.kwargs[self.slug_url_kwarg]
+        return  VariantCacheService.get_variant_detail(queryset, slug)
         
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['reviews'] = (
-            self.object.car_model.reviews
-            .filter(is_approved=True)
-            .order_by('-created_at')[:10]
-        )
-        context['other_variants'] = (
-            self.object.car_model.variants
-            .exclude(pk=self.object.pk)
-            .filter(is_active=True)
-        )
+        
+        qs = CarQueryService.get_reviews_of_car_model(self.object.car_model)
+        context['reviews'] = CarCacheService.get_reviews_of_car_model(self.object.car_model, qs)
+        
+        qs_other = (
+                    CarQueryService
+                    .get_variants_of_car_model(self.object.car_model, self.request.user)
+                    .exclude(pk=self.object.pk)
+                    )
+        context['other_variants'] = VariantCacheService.other_variant(qs_other, self.object.slug)
+            
+           
         return context

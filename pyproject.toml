@@ -39,6 +39,7 @@ dependencies = [
     "django-allauth (>=65.18.0,<66.0.0)",
     "pyjwt (>=2.13.0,<3.0.0)",
     "django-admin-honeypot-updated-2021 (>=1.2.0,<2.0.0)",
+    "django-redis (>=7.0.0,<8.0.0)",
 ]
 
 

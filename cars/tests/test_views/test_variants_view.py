@@ -1,7 +1,6 @@
-from urllib import response
-
 from django.test import TestCase
 from django.urls import reverse
+from django.core.cache import cache
 
 from cars.tests.helpers.helper_models import make_brand, make_car_model, make_variant
 from cars.models import Review
@@ -9,6 +8,7 @@ from cars.models import Review
 class CarVariantDetailViewTest(TestCase):
     
     def setUp(self) -> None:
+        cache.clear()
         self.brand = make_brand(name='Toyota')
         self.car_model = make_car_model(brand=self.brand, name='Innova')
         self.variant = make_variant(car_model=self.car_model, name='2.0G')

@@ -1,9 +1,10 @@
 from typing import Any
 
-from django.db.models import Count, QuerySet
 from django.views.generic import ListView, DetailView
+from django.core.cache import cache
 
 from cars.models import Brand
+from cars.services.brands_services import get_active_brands, get_brand_detail, get_car_models_brand
 
 class BrandListView(ListView):
     """
@@ -13,13 +14,10 @@ class BrandListView(ListView):
     model = Brand
     template_name = 'cars/brands/brand_list.html'
     context_object_name = 'brands'
-    
-    def get_queryset(self) -> QuerySet:
-        return (Brand.objects
-                .filter(is_active=True)
-                .annotate(model_count=Count('car_models', distinct=True))
-                .order_by('name')
-                )
+        
+    def get_queryset(self):
+       
+        return get_active_brands()
         
 
 class BrandDetailView(DetailView):
@@ -33,15 +31,17 @@ class BrandDetailView(DetailView):
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
     
-    def get_queryset(self) -> QuerySet:
+    
+    def get_queryset(self):
+        
         return Brand.objects.filter(is_active=True)
+    
+    def get_object(self, queryset=None) -> Any:
+        slug = self.kwargs[self.slug_url_kwarg]
+        return get_brand_detail(slug, queryset)
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['car_models']=(
-            self.object.car_models
-            .select_related('body_type', 'car_class')
-            .prefetch_related('variants')
-            .order_by('name')
-        )
+        
+        context['car_models'] = get_car_models_brand(self.object)
         return context

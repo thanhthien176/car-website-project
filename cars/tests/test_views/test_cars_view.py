@@ -1,13 +1,13 @@
-from urllib import response
-
 from django.test import TestCase
 from django.urls import reverse
+from django.core.cache import cache
 
 from cars.tests.helpers.helper_models import make_brand, make_car_model, make_variant
 
 class CarModelListViewTest(TestCase):
     
     def setUp(self) -> None:
+        cache.clear()
         self.url = reverse('cars:car_list')
         self.toyota = make_brand(name='Toyota')
         self.honda = make_brand(name='Honda')

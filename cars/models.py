@@ -126,7 +126,7 @@ class CarModel(SEOMetaData, models.Model):
             )
         
     def recalculate_avg_rating(self)-> None:
-        avg = self.reviews.filter(is_approved=True).aggregate(Avg("rating"))["rating__avg"]
+        avg = self.reviews.filter(is_approved=True).aggregate(Avg("rating"))["rating__avg"] # pyright: ignore[reportAttributeAccessIssue]
         self.avg_rating = avg or 0
         self.save(update_fields=["avg_rating"])
         
@@ -137,10 +137,10 @@ class CarModel(SEOMetaData, models.Model):
             
     @property
     def primary_image(self):
-        img = self.images.filter(is_primary=True).first()
+        img = self.images.filter(is_primary=True).first() # type: ignore
         if img:
             return img.image.url
-        fallback = self.images.first()
+        fallback = self.images.first() # type: ignore
         if fallback:
             return fallback.image.url
         return None
@@ -254,10 +254,10 @@ class CarVariant(SEOMetaData, models.Model):
         """Return URL of primary (or first) VariantImage. Falls back to the
         parent CarModel's primary_image if this variant has no images of
         its own (e.g. a new variant added before photos were uploaded)."""
-        img = self.variant_images.filter(is_primary=True).first()
+        img = self.variant_images.filter(is_primary=True).first() # type: ignore
         if img:
             return img.image.url
-        fallback = self.variant_images.first()
+        fallback = self.variant_images.first() # type: ignore
         if fallback:
             return fallback.image.url
         return self.car_model.primary_image

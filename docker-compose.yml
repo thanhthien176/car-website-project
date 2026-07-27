@@ -13,6 +13,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+  
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save 60 1
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    
+    expose:
+      - "6379"
 
   web:
     image: ghcr.io/thanhthien176/car-website-project/web:latest
@@ -23,12 +37,17 @@ services:
       - /var/www/projectcarweb/static:/home/appuser/app/staticfiles
       - /var/www/projectcarweb/media:/home/appuser/app/media
       - /var/www/projectcarweb/logs:/home/appuser/app/logs
+      - /var/www/projectcarweb/imports:/home/appuser/app/imports
+
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+  redis_data:
   

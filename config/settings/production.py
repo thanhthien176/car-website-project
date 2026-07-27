@@ -37,6 +37,27 @@ DATABASES = {
     }
 }
 
+REDIS_HOST = config("REDIS_HOST", default="redis")
+REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
+REDIS_DB = config("REDIS_DB", default=1, cast=int)
+
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": True,
+        },
+        "TIMEOUT": 300,
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache_db"
+SESSION_CACHE_ALIAS = "default"
+
 #=========S3 Storage==============
 AWS_ACCESS_KEY_ID = config('R2_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('R2_SECRET_ACCESS_KEY')

@@ -32,7 +32,7 @@ class CarSelector:
         
         qs = (CarVariant.objects
                 .filter(is_active=True)
-                .annotate_saved(user)
+                .annotate_saved(user) # type: ignore
                 .select_related('car_model__brand', 'car_model__body_type')
                 .prefetch_related('variant_images')
                 .order_by('-id')[:limit]
