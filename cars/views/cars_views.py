@@ -70,6 +70,8 @@ class CarModelDetailView(DetailView):
         return CarQueryService.detail_queryset()
     
     def get_object(self, queryset = None) -> Any:
+        if queryset is None:
+            queryset = self.get_queryset()
         slug = self.kwargs[self.slug_url_kwarg]
         return CarCacheService.get_detail(slug, queryset)
     

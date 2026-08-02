@@ -124,12 +124,15 @@ class Command(BaseImportCommand):
             return
         
         fuel_type = self._clean_fuel_type(row.get("fuel_type"), row_num)
-            
+        
+        price_min = self._to_decimal(row.get("price_min", "0"), row_num)
+        price_max = self._to_decimal(row.get("price_max", "0"), row_num)
+        
         variant_defaults = {
             "fuel_type": fuel_type,
-            "price_min": self._to_decimal(row.get("price_min", "0"), row_num),
-            "price_max": self._to_decimal(row.get("price_max", "0"), row_num),
-            "is_active": self._to_bool(row.get("is_active"), default=False),
+            "price_min": price_min,
+            "price_max": price_max if price_max else price_min,
+            "is_active": self._to_bool(row.get("is_active"), default=True),
         }
         
         variant, variant_created = CarVariant.objects.get_or_create(
