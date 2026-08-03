@@ -1,279 +1,9 @@
-from decimal import Decimal
-from typing import TYPE_CHECKING
-from django.conf.locale import de
 from django.db import models
-from django.db.models import Avg
-from django.utils.text import slugify
-from django.urls import reverse
 
-from cars.services import VariantManager
-from .validators import validate_image_size, validate_image_extension
-from .utils.upload_utils import UploadToPath
+from .car_models import CarVariant
+from .mixins import SpecificationDisplayMixin
 
-# Create your models here.
-class SEOMetaData(models.Model):
-    seo_title = models.CharField(max_length=70, blank=True, help_text="Tiêu đề hiển thị kết quả tìm kiếm(tối ưu <70 ký tự)")
-    seo_description = models.CharField(max_length=160, blank=True, help_text="Mô tả ngắn gọn về trang(tối ưu: 150-160 ký tự)")
-    seo_keyword = models.CharField(max_length=255, blank=True, help_text="Các từ khóa cách nhau bằng dấu phẩy")
-    
-    class Meta:
-        abstract = True
-        
-class BodyType(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(unique=True)
-    
-    class Meta:
-        verbose_name_plural= "Body Types"
-    
-    def __str__(self):
-        return self.name
-    
-class CarClass(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(unique=True)
-    
-    class Meta:
-        verbose_name_plural = "Car Classes"
-    
-    def __str__(self):
-        return self.name    
-
-class Brand(SEOMetaData, models.Model):
-    """Brand: Toyota, Kia, Huynda, Vinfast"""
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
-    country_of_origin = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to=UploadToPath('brand','logos', slug_field='slug'), 
-                             blank=True, null=True, 
-                             validators=[validate_image_size, validate_image_extension])
-    description = models.TextField(blank=True)
-    founded_year = models.IntegerField(blank=True, null=True)
-    website = models.URLField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        ordering = ['name']
-        verbose_name = 'Brand'
-        verbose_name_plural = 'Brands'
-    
-    @property
-    def get_seo_title(self):
-        return self.seo_title or f"Tìm hiểu các dòng xe của hãng {self.name} | WebsiteCar"
-    
-    @property
-    def get_seo_description(self):
-        return self.seo_description or f"Tìm hiểu các dòng xe của hãng {self.name} đến từ {self.country_of_origin}. Cập nhật thông số  và giá bán"
-        
-    def save(self, *args, **kwargs):
-        # Automatically generate a slug from name if it doesn't already exit.
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-        
-    def __str__(self):
-        return self.name
-    
-    def get_absolute_url(self):
-        return reverse("cars:brand_detail", kwargs={"slug": self.slug})
-    
-    
-class CarModel(SEOMetaData, models.Model):
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="car_models")
-    name = models.CharField(max_length=100)
-    
-    body_type = models.ForeignKey(BodyType, on_delete=models.SET_NULL, null=True)
-    car_class = models.ForeignKey(CarClass, on_delete=models.SET_NULL, null=True, blank=True)
-    
-    slug = models.SlugField(unique=True, blank=True)
-    
-    model_year = models.IntegerField(blank=True, null=True)
-    description = models.TextField(blank=True)
-    
-    thumbnail = models.ImageField(upload_to = UploadToPath('cars','thumbnail', slug_field='slug'), 
-                                  blank=True, null=True, 
-                                  validators=[validate_image_size, validate_image_extension])
-    
-    avg_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-    
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['brand','name'],
-                name="unique_brand_name"
-            )
-        ]
-        indexes = [
-            models.Index(fields=['avg_rating'])
-        ]
-        ordering = ['brand__name','name', '-model_year']
-        verbose_name_plural = "Car Models"
-    
-    @property
-    def get_seo_title(self):
-        return (
-            self.seo_title 
-            or f"Tìm hiểu mẫu xe {self.name} của hãng {self.brand.name} | WebsiteCar"
-            )
-    
-    @property
-    def get_seo_description(self):
-        return (
-            self.seo_description 
-            or f"Thông tin chi tiết, thông số kỹ thuật, giá bán của "
-            f"{self.brand.name} {self.name}"
-            )
-        
-    def recalculate_avg_rating(self)-> None:
-        avg = self.reviews.filter(is_approved=True).aggregate(Avg("rating"))["rating__avg"] # pyright: ignore[reportAttributeAccessIssue]
-        self.avg_rating = avg or 0
-        self.save(update_fields=["avg_rating"])
-        
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(f"{self.brand.name}-{self.name}")
-        super().save(*args, **kwargs)
-            
-    @property
-    def primary_image(self):
-        img = self.images.filter(is_primary=True).first() # type: ignore
-        if img:
-            return img.image.url
-        fallback = self.images.first() # type: ignore
-        if fallback:
-            return fallback.image.url
-        return None
-            
-            
-        super().save(*args, **kwargs)
-    
-    def __str__(self):
-        return f"{self.brand.name} {self.name}"
-    
-    def get_absolute_url(self):
-        return reverse("cars:car_detail", kwargs={"slug": self.slug})
-        
-    
-class CarVariant(SEOMetaData, models.Model):
-    # BODY_TYPE_CHOICES = [
-    #     ('sedan', 'Sedan'),
-    #     ('suv', 'SUV'),
-    #     ('hatchback', 'Hatchback'),
-    #     ('pickup', 'Pickup Truck'),
-    #     ('coupe', 'Coupe'),
-    #     ('convertible', 'Convertible'),
-    #     ('minivan', 'Minivan'),
-    # ]
-    
-    FUEL_TYPE_CHOICES = [
-        ('gasoline', 'Xăng'),
-        ('diesel', 'Diesel'),
-        ('electric', 'Điện'),
-        ('hybrid', 'Hybrid'),
-        ('phev', 'Plug-in Hybrid'),
-    ]
-
-    
-    # Basic Information
-    car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="variants")
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=300, unique=True, blank=True)
-    
-    # Change
-    @property
-    def variant_name(self):
-        return self.name
-    
-    # classification
-    fuel_system = models.CharField(max_length=100, blank=True, help_text="Hệ thống nhiên liệu")
-    fuel_type = models.CharField(max_length=20, choices=FUEL_TYPE_CHOICES)    
-    
-    # price
-    price_min = models.DecimalField(max_digits=15, decimal_places=0)
-    price_max = models.DecimalField(max_digits=15, decimal_places=0)
-    
-    is_active = models.BooleanField(default=True)
-    
-    origin_country = models.CharField(max_length=100, blank=True, help_text="Xuất xứ")
-    
-    # objects = models.Manager.from_queryset(VariantQuerySet)()
-    objects: VariantManager = VariantManager()
-          
-    if TYPE_CHECKING:
-        is_saved: bool
-    
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['car_model', 'name'],
-                name="unique_car_variant"
-            )
-        ]
-        indexes = [
-            models.Index(fields=['fuel_type']),
-            models.Index(fields=['price_min'])
-        ]
-        verbose_name = "Variant"
-        verbose_name_plural = "Variants"
-        
-    def get_meta_title(self):
-        return (self.seo_title 
-                or f"Giá xe {self.car_model} {self.name} mới nhất"
-                f"| WebsiteCar"
-        )
-    
-    def get_meta_description(self):
-        if self.seo_description:
-            return self.seo_description
-        
-        return (
-            f"Đánh giá {self.name}, động cơ {self.fuel_type}, "
-            f"giá từ {self.price_range}. Xem chi tiết thông số kỹ thuật tại đây."
-            )
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            base_slug = slugify(f"{self.car_model}-{self.name}")
-            new_slug = base_slug
-            count = 1
-            while CarVariant.objects.filter(slug=new_slug).exists():
-                new_slug = slugify(f"{base_slug}-{count}")
-                count += 1
-            self.slug = new_slug
-            
-        super().save(*args, **kwargs)
-        
-    @property
-    def price_range(self):
-        if self.price_min is None or self.price_max is None:
-            return "Liên hệ"
-        min_m = self.price_min/Decimal(1_000_000)
-        max_m = self.price_max/Decimal(1_000_000)
-        return f'{min_m:,.0f} - {max_m:,.0f} triệu VNĐ'
-    
-    @property
-    def primary_image(self):
-        """Return URL of primary (or first) VariantImage. Falls back to the
-        parent CarModel's primary_image if this variant has no images of
-        its own (e.g. a new variant added before photos were uploaded)."""
-        img = self.variant_images.filter(is_primary=True).first() # type: ignore
-        if img:
-            return img.image.url
-        fallback = self.variant_images.first() # type: ignore
-        if fallback:
-            return fallback.image.url
-        return self.car_model.primary_image
-        
-    def __str__(self):
-        return f"{self.car_model} {self.name}"
-    
-    def get_absolute_url(self):
-        return reverse("cars:variant_detail", kwargs={"slug": self.slug})
-    
-    
-class DimensionSpecification(models.Model):
+class DimensionSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='dimension')
     
     length = models.PositiveIntegerField(null=True, blank=True, help_text="Chiều dài(mm)")
@@ -290,7 +20,7 @@ class DimensionSpecification(models.Model):
     seating_capacity = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Số chỗ ngồi")
     fuel_tank_capacity = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Dung tích bình nhiên liệu(lít)")
     
-class EngineSpecification(models.Model):
+class EngineSpecification(SpecificationDisplayMixin, models.Model):
     TRANSMISSION_CHOICES = [
         ('automatic', 'Tự động'),
         ('manual', 'Số sàn'),
@@ -319,7 +49,7 @@ class EngineSpecification(models.Model):
     transmission = models.CharField(max_length=40, choices=TRANSMISSION_CHOICES, help_text="Hộp số")
     
 
-class PerformanceSpecification(models.Model):
+class PerformanceSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='performance')
     
     # suspension
@@ -338,7 +68,7 @@ class PerformanceSpecification(models.Model):
     brake_front = models.CharField(max_length=50, blank=True, help_text="Phanh trước")
     brake_rear = models.CharField(max_length=50, blank=True, help_text="Phanh sau")    
     
-class FuelConsumptionSpecification(models.Model):
+class FuelConsumptionSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='fuel_consumption')
     
     # fuel comsumption
@@ -347,7 +77,7 @@ class FuelConsumptionSpecification(models.Model):
     extra_urban = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Ngoài đô thị(lít/100km)")
     combined = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Kết hợp(lít/100km)")
     
-class ExteriorSpecification(models.Model):
+class ExteriorSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='exterior')
     
     # exterior
@@ -396,7 +126,7 @@ class ExteriorSpecification(models.Model):
     mudguard = models.CharField(max_length=40, blank=True, help_text="Chắn bùn")
     support_bar = models.BooleanField(default=False, help_text="Thanh đỡ nóc xe")
     
-class InteriorSpecification(models.Model):
+class InteriorSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='interior')
     
     # Interior
@@ -421,7 +151,7 @@ class InteriorSpecification(models.Model):
     
     sunroof = models.CharField(max_length=50, blank=True, help_text="Cửa sổ trời")
     
-class SeatSpecification(models.Model):
+class SeatSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='seat')
     
     # Seat
@@ -437,7 +167,7 @@ class SeatSpecification(models.Model):
     third_seat = models.CharField(max_length=100, blank=True, help_text="Hàng ghế thứ ba")
     rear_seat_armset = models.CharField(max_length=50, blank=True, help_text="Tựa tay hàng ghế sau")
     
-class ComfortSpecification(models.Model):
+class ComfortSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='comfort')
     
     # Utilities & Comfort
@@ -475,14 +205,14 @@ class ComfortSpecification(models.Model):
     brake_hold = models.BooleanField(default=False, help_text="Giữ phanh tự động")
     
 
-class SecureSpecification(models.Model):
+class SecureSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='secure')
     
     alarm_system = models.BooleanField(default=False, help_text="Hệ thống báo động (An ninh)")
     eis = models.BooleanField(default=False, help_text="Hệ thống mã hóa khóa động cơ")
     
     
-class SafetySpecification(models.Model):
+class SafetySpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='safety')
     
     # active safety
@@ -545,91 +275,3 @@ class SafetySpecification(models.Model):
                 })
         
         return items
-    
-    
-class CarImage(models.Model):
-    car = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to=UploadToPath('cars', 'gallery', slug_field='car.slug'), 
-                              validators=[validate_image_size, validate_image_extension])
-    caption = models.CharField(max_length=200, blank=True)
-    is_primary = models.BooleanField(default=False)
-    order = models.PositiveSmallIntegerField(default=0)
-    
-    class Meta:
-        ordering = ['order']
-        verbose_name = "Car picture"
-        
-    def save(self, *args, **kwargs):
-        if self.is_primary:
-            CarImage.objects.filter(
-                car = self.car, is_primary = True
-            ).exclude(pk=self.pk).update(is_primary = False)
-        
-        super().save(*args, **kwargs)
-        
-class VariantImage(models.Model):
-    variant = models.ForeignKey(CarVariant, on_delete=models.CASCADE, related_name='variant_images')
-    image = models.ImageField(upload_to=UploadToPath('variants','gallery', slug_field='variant.slug'),
-                              validators=[validate_image_extension, validate_image_size], blank=True, null=True)
-    caption = models.CharField(max_length=200, blank=True)
-    is_primary = models.BooleanField(default=False)
-    order = models.PositiveSmallIntegerField(default=0)
-    
-    class Meta:
-        ordering = ['order']
-        verbose_name = 'Variant picture'
-    
-    def save(self, *args, **kwargs):
-        if self.is_primary:
-            VariantImage.objects.filter(
-                variant = self.variant, is_primary = True
-            ).exclude(pk=self.pk).update(is_primary = False)
-        
-        super().save(*args, **kwargs)
-        
-class Review(models.Model):
-    RATING_CHOICES = [(i, f"{i} star") for i in range(1,6)]
-    
-    car = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="reviews")
-    author_name = models.CharField(max_length=100)
-    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    pros = models.TextField(blank=True, help_text="Ưu điểm")
-    cons = models.TextField(blank=True, help_text="Nhược điểm")
-    is_approved = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['rating', 'is_approved'])
-        ]
-        verbose_name = 'Đánh giá'
-        verbose_name_plural = 'Đánh giá'
-        
-    def __str__(self):
-        return f"{self.author_name} - {self.car} ({self.rating}*)"
-    
-
-class Comparison(models.Model):
-    session_key = models.CharField(max_length=40, blank=True)
-    cars = models.ManyToManyField(CarVariant, related_name='comparisons')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        verbose_name = "Car Comparison"
-    
-    def __str__(self):
-        car_names = ", ".join(car.variant_name for car in self.cars.all()) 
-        return f"So sánh: {car_names or "Chưa có xe"}"
-    
-    def can_add_car(self):
-        # Maximum of 3 vehicles per comparison.
-        return self.cars.count() < 3
-    
-
-
-    
-    
