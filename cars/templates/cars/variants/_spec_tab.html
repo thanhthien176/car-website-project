@@ -1,0 +1,33 @@
+{% if spec_tabs %}
+<ul class="nav nav-tabs">
+  {% for tab in spec_tabs %}
+  <li class="nav-item">
+    <a class="nav-link {% if forloop.first %}active{% endif %}"
+       data-bs-toggle="tab" href="#{{ tab.key }}">
+      {{ tab.label }}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
+<div class="tab-content">
+  {% for tab in spec_tabs %}
+  <div class="tab-pane {% if forloop.first %}show active{% endif %}" id="{{ tab.key }}">
+    <table class="table">
+      {% for item in tab.items %}
+      <tr>
+        <td>{{ item.label }}</td>
+        <td>
+          {% if item.is_boolean %}
+            <i class="bi bi-check-circle-fill text-success"></i>
+          {% else %}
+            {{ item.value }}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

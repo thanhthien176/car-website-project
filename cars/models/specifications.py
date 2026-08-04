@@ -20,6 +20,9 @@ class DimensionSpecification(SpecificationDisplayMixin, models.Model):
     seating_capacity = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Số chỗ ngồi")
     fuel_tank_capacity = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Dung tích bình nhiên liệu(lít)")
     
+    class Meta:
+        verbose_name = "Tổng Thể"
+    
 class EngineSpecification(SpecificationDisplayMixin, models.Model):
     TRANSMISSION_CHOICES = [
         ('automatic', 'Tự động'),
@@ -48,6 +51,9 @@ class EngineSpecification(SpecificationDisplayMixin, models.Model):
     drive_train = models.CharField(max_length=50, blank=True, help_text="Hệ số truyền động")
     transmission = models.CharField(max_length=40, choices=TRANSMISSION_CHOICES, help_text="Hộp số")
     
+    
+    class Meta:
+            verbose_name = "Động Cơ"
 
 class PerformanceSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='performance')
@@ -66,17 +72,22 @@ class PerformanceSpecification(SpecificationDisplayMixin, models.Model):
     
     brake = models.CharField(max_length=50, blank=True, help_text="Phanh trước/sau(front/rear)")
     brake_front = models.CharField(max_length=50, blank=True, help_text="Phanh trước")
-    brake_rear = models.CharField(max_length=50, blank=True, help_text="Phanh sau")    
+    brake_rear = models.CharField(max_length=50, blank=True, help_text="Phanh sau")
+    
+    class Meta:
+            verbose_name = "Vận Hành"    
     
 class FuelConsumptionSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='fuel_consumption')
     
     # fuel comsumption
     emission_standards = models.CharField(max_length=50, blank=True, help_text="Tiêu chuẩn khí thải")
-    urban = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Trong đô thị(lit/100km)")
-    extra_urban = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Ngoài đô thị(lít/100km)")
-    combined = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Kết hợp(lít/100km)")
+    urban = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Mức tiêu thụ trong đô thị(lit/100km)")
+    extra_urban = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Mức tiêu thụ ngoài đô thị(lít/100km)")
+    combined = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, help_text="Mức tiêu thụ kết hợp(lít/100km)")
     
+    class Meta:
+            verbose_name = "Nhiên Liệu"
 class ExteriorSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='exterior')
     
@@ -87,8 +98,8 @@ class ExteriorSpecification(SpecificationDisplayMixin, models.Model):
     
     daytime_running_light = models.BooleanField(default=False, help_text="Đèn chiếu sáng ban ngày")
     auto_light_control = models.BooleanField(default=False, help_text="Tự động bật tắt đèn")
-    pabs = models.CharField(max_length=50, blank=True, help_text="Hệ thống cân bằng góc chiếu (Projection angle balancing system)")      
-    nlm = models.BooleanField(default=False, help_text="Chế độ đèn chờ dẫn đường (Navigation light mode)")
+    pabs = models.CharField(max_length=50, blank=True, help_text="Hệ thống cân bằng góc chiếu ")    # (Projection angle balancing system) 
+    nlm = models.BooleanField(default=False, help_text="Chế độ đèn chờ dẫn đường")                  # (Navigation light mode)
     
     rearlamp = models.CharField(max_length=50, blank=True, help_text="Đèn hậu")
     foglamp = models.CharField(max_length=50, blank=True, help_text="Đèn sương mù")
@@ -126,6 +137,9 @@ class ExteriorSpecification(SpecificationDisplayMixin, models.Model):
     mudguard = models.CharField(max_length=40, blank=True, help_text="Chắn bùn")
     support_bar = models.BooleanField(default=False, help_text="Thanh đỡ nóc xe")
     
+    class Meta:
+            verbose_name = "Ngoại Thất"
+    
 class InteriorSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='interior')
     
@@ -151,6 +165,9 @@ class InteriorSpecification(SpecificationDisplayMixin, models.Model):
     
     sunroof = models.CharField(max_length=50, blank=True, help_text="Cửa sổ trời")
     
+    class Meta:
+            verbose_name = "Nội Thất"
+    
 class SeatSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='seat')
     
@@ -167,6 +184,9 @@ class SeatSpecification(SpecificationDisplayMixin, models.Model):
     third_seat = models.CharField(max_length=100, blank=True, help_text="Hàng ghế thứ ba")
     rear_seat_armset = models.CharField(max_length=50, blank=True, help_text="Tựa tay hàng ghế sau")
     
+    
+    class Meta:
+            verbose_name = "Ghế Ngồi"
 class ComfortSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='comfort')
     
@@ -204,6 +224,8 @@ class ComfortSpecification(SpecificationDisplayMixin, models.Model):
     electric_parking_brake = models.BooleanField(default=False, help_text="Phanh tay điện tủ")
     brake_hold = models.BooleanField(default=False, help_text="Giữ phanh tự động")
     
+    class Meta:
+            verbose_name = "Tiện Lợi"
 
 class SecureSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='secure')
@@ -211,6 +233,8 @@ class SecureSpecification(SpecificationDisplayMixin, models.Model):
     alarm_system = models.BooleanField(default=False, help_text="Hệ thống báo động (An ninh)")
     eis = models.BooleanField(default=False, help_text="Hệ thống mã hóa khóa động cơ")
     
+    class Meta:
+            verbose_name = "An Ninh"
     
 class SafetySpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='safety')
@@ -261,17 +285,19 @@ class SafetySpecification(SpecificationDisplayMixin, models.Model):
     
     safety_rating = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Sao NCAP")
     
-    @property
-    def boolean_safety_items(self):
-        items = []
-        for field in self._meta.get_fields():
-            if isinstance(field, models.BooleanField):
-                value = getattr(self, field.name)
+    class Meta:
+            verbose_name = "An Toàn"
+    # @property
+    # def boolean_safety_items(self):
+    #     items = []
+    #     for field in self._meta.get_fields():
+    #         if isinstance(field, models.BooleanField):
+    #             value = getattr(self, field.name)
                 
-                items.append({
-                    'short_name': field.name.upper(),
-                    'help_text': field.help_text or '',
-                    'value': value,
-                })
+    #             items.append({
+    #                 'short_name': field.name.upper(),
+    #                 'help_text': field.help_text or '',
+    #                 'value': value,
+    #             })
         
-        return items
+    #     return items
