@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 
+from cars.services.model_services import CarQueryService
 from core.cache.keys import CacheKeys
 
 class VariantCacheService:
@@ -19,13 +20,17 @@ class VariantCacheService:
         return variant
     
     @staticmethod
-    def other_variant(qs, slug):
+    def get_other_variant(car_model, slug, user):
         key = CacheKeys.other_variants(slug)
         other_variants = cache.get(key)
         
         if other_variants is None:
-            other_variants = list(qs)
-            cache.set(key, other_variants, 60*60)
+            other_variants = list(
+                    CarQueryService
+                    .get_variants_of_car_model(car_model, user)
+                    .exclude(slug=slug)
+                    )
+            cache.set(key, other_variants, timeout=None)
         
         return other_variants
     

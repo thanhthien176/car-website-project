@@ -43,3 +43,7 @@ class CacheKeys:
     @staticmethod
     def other_variants(slug):
         return f'variant:detail:{slug}:other_variants'
+    
+    @staticmethod
+    def variant_spec_tabs(slug: str):
+        return f"variant_spec_tabs:{slug}"

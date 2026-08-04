@@ -5,6 +5,7 @@ from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.core.cache import cache
 
+from cars.services.model_services import SpecService
 from core.cache.invalidation import ClearCacheKeys
 
 from .models import BodyType, Brand, CarImage, CarModel, Review, CarVariant, VariantImage
@@ -219,5 +220,16 @@ def clear_variant_image_cache(sender, instance, **kwargs):
 @receiver([post_save, post_delete], sender=Review)
 def clear_review_cache(sender, instance, **kwargs):
     ClearCacheKeys.clear_review_cache(instance)
-      
+    
+#-------------------------------------------------
+# Delete cache specifications
+#-------------------------------------------------
+def _invalidate_spec_cache(sender, instance, **kwargs):
+    variant = getattr(instance, "variant", None)
+    if variant is not None:
+        ClearCacheKeys.clear_spec_cache(variant)
+
+for _accessor, _spec_model in SpecService.get_spec_relations():
+    receiver(post_save, sender=_spec_model)(_invalidate_spec_cache)
+    receiver(post_delete, sender=_spec_model)(_invalidate_spec_cache)
 

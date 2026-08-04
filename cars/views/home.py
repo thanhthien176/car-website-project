@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView
-from cars.services.car_selector import CarSelector
+from cars.services.model_services.car_selector import CarSelector
 
 class HomeView(TemplateView):
     """

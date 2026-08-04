@@ -1,10 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 from django.db import models
 
-if TYPE_CHECKING:
-    class ModelWithMetaProtocol(Protocol):
-        _meta: models.Model
-
 class SpecificationDisplayMixin(models.Model):
     """Mixin for models *Specification*: automatically generate a list of fields to use
     Render to template, no need to hard code field names."""

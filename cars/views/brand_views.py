@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from django.core.cache import cache
 
 from cars.models import Brand
-from cars.services.brands_services import get_active_brands, get_brand_detail, get_car_models_brand
+from cars.services.model_services import BrandService
 
 class BrandListView(ListView):
     """
@@ -17,7 +17,7 @@ class BrandListView(ListView):
         
     def get_queryset(self):
        
-        return get_active_brands()
+        return BrandService.get_active_brands()
         
 
 class BrandDetailView(DetailView):
@@ -38,10 +38,10 @@ class BrandDetailView(DetailView):
     
     def get_object(self, queryset=None) -> Any:
         slug = self.kwargs[self.slug_url_kwarg]
-        return get_brand_detail(slug, queryset)
+        return BrandService.get_brand_detail(slug, queryset)
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         
-        context['car_models'] = get_car_models_brand(self.object)
+        context['car_models'] = BrandService.get_car_models_brand(self.object)
         return context

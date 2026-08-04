@@ -6,7 +6,6 @@ from django.db.models import Avg
 from django.utils.text import slugify
 from django.urls import reverse
 
-from cars.services import VariantManager
 from cars.validators import validate_image_size, validate_image_extension
 from cars.utils.upload_utils import UploadToPath
 
@@ -174,6 +173,7 @@ class CarVariant(SEOMetaData, models.Model):
     #     ('convertible', 'Convertible'),
     #     ('minivan', 'Minivan'),
     # ]
+    from cars.services import VariantManager
     
     FUEL_TYPE_CHOICES = [
         ('gasoline', 'Xăng'),

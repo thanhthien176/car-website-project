@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.test import TestCase
 from django.contrib.auth.models import AnonymousUser
 
-from cars.services.car_selector import CarSelector
+from cars.services.model_services.car_selector import CarSelector
 from cars.tests.helpers.helper_models import make_brand, make_variant, make_car_model
 from cars.models import Review, CarModel, BodyType
 

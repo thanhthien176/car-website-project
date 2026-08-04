@@ -1,7 +1,7 @@
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 
-from cars.services.car_query_services import CarQueryService
+from cars.services.model_services import CarQueryService
 from core.cache.keys import CacheKeys
 
 

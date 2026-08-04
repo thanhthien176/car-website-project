@@ -31,6 +31,7 @@ class ClearCacheKeys:
             CacheKeys.variants_of_car_model(variant.car_model.slug),
             CacheKeys.get_variant_detail(variant.slug),
             CacheKeys.other_variants(variant.slug),
+            CacheKeys.variant_spec_tabs(variant.slug),
         ])
         
     @staticmethod
@@ -46,4 +47,11 @@ class ClearCacheKeys:
             CacheKeys.car_model_detail(review.car.slug),
             CacheKeys.get_variant_detail(review.car.slug)
         ])
+    
+    @staticmethod
+    def clear_spec_cache(variant):
+        cache.delete_many([
+            CacheKeys.variant_spec_tabs(variant.slug),
+        ])   
+    
     

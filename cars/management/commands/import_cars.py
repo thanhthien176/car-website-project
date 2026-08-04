@@ -86,7 +86,7 @@ class Command(BaseImportCommand):
         
         car_model, model_created = CarModel.objects.get_or_create(
             brand=brand,
-            name=model_name,
+            name=model_name.title(),
             defaults=model_defaults,
         )
         
@@ -137,7 +137,7 @@ class Command(BaseImportCommand):
         
         variant, variant_created = CarVariant.objects.get_or_create(
             car_model = car_model,
-            name = variant_name,
+            name = variant_name.title(),
             defaults=variant_defaults,
         )
         

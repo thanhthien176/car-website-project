@@ -8,11 +8,10 @@ from django.views.generic import ListView, DetailView
 
 from cars.models import CarModel, CarVariant
 from cars.forms import ReviewForm
-from cars.services.car_cache_services import CarCacheService
-from cars.services.car_query_services import CarQueryService
-from cars.services.sidebar_services import SidebarService
+from cars.services.cache_services import CarCacheService, VariantCacheService, SpecCacheService
+from cars.services.model_services import CarQueryService
+from cars.services.cache_services import SidebarService
 from cars.services.variant_query_services import VariantQueryService
-from cars.services.variant_cache_services import VariantCacheService
 
 class CarModelListView(ListView):
     """list car models, supports optional ?brand=<slug> filter
@@ -112,15 +111,15 @@ class CarVariantDetailView(DetailView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         
-        qs = CarQueryService.get_reviews_of_car_model(self.object.car_model)
-        context['reviews'] = CarCacheService.get_reviews_of_car_model(self.object.car_model, qs)
+        qs_reviews = CarQueryService.get_reviews_of_car_model(self.object.car_model)
+        context['reviews'] = CarCacheService.get_reviews_of_car_model(self.object.car_model, qs_reviews)
         
-        qs_other = (
-                    CarQueryService
-                    .get_variants_of_car_model(self.object.car_model, self.request.user)
-                    .exclude(pk=self.object.pk)
-                    )
-        context['other_variants'] = VariantCacheService.other_variant(qs_other, self.object.slug)
-            
+        context['other_variants'] = VariantCacheService.get_other_variant(
+                                                                            self.object.car_model, 
+                                                                            self.object.slug, 
+                                                                            self.request.user,
+                                                                        )
+        
+        context['spec_tabs'] = SpecCacheService.get_spec_tabs(self.object)
            
         return context

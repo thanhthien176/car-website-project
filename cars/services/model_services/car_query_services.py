@@ -1,13 +1,14 @@
 from django.db.models import Count, Min, Max, QuerySet
 
-from cars.models import CarModel
-from cars.services.car_selector import CarSelector
+from cars.services.model_services.car_selector import CarSelector
 
 
 class CarQueryService:
     
     @staticmethod
     def base_queryset() -> QuerySet:
+        from cars.models import CarModel
+        
         return (
             CarModel.objects
             .annotate(
@@ -45,6 +46,8 @@ class CarQueryService:
         
     @staticmethod
     def detail_queryset() -> QuerySet:
+        from cars.models import CarModel
+        
         return (
             CarModel.objects
             .select_related('brand', 'body_type', 'car_class',)
@@ -52,7 +55,7 @@ class CarQueryService:
         )
         
     @staticmethod
-    def get_variants_of_car_model(car_model: CarModel, params)-> QuerySet:
+    def get_variants_of_car_model(car_model, params)-> QuerySet:
         """
         car_model: CarModel object
         params: self.request.user
