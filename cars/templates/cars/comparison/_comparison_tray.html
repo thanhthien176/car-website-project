@@ -2,89 +2,134 @@
 
 {% if comparison_cars %}
 <div id="comparison-tray"
-     class="comparison-tray">
+     class="comparison-tray fixed-bottom py-2 bg-body-tertiary border-top shadow-lg">
     
-    <div class="container-xl">
-        <div class="d-flex align-items-center gap-3">
+    <div class="container-xl px-2 px-sm-3">
+        <div class="d-flex align-items-center justify-content-between gap-2">
 
             {# Header label #}
-            <div class="d-flex align-items-center gap-2 me-2" style="white-space: nowrap;">
-                <i class="bi bi-git" style="font-size:16px; color:#0d6efd;"></i>
-                <span style="font-weight:500; font-size:13px;">So sánh xe</span>
-                <span class="badge text-bg-primary" style="font-size: 11px;">
+            <div class="d-flex align-items-center gap-1 gap-sm-2 flex-shrink-0">
+                <i class="bi bi-git text-primary fs-6"></i>
+                <span class="d-none d-sm-inline fw-medium fs-7">So sánh</span>
+                <span class="badge text-bg-primary fs-8">
                     {{ total }}/3
                 </span>
             </div>
 
             {# Car slots #}
-            <div class="d-flex gap-2 flex-column-1">
+            <div class="d-flex align-items-center gap-1 gap-sm-2 py-1 flex-grow-1 justify-content-start justify-content-sm-center">
                 {% for variant in comparison_cars  %}
-                <div class="d-flex align-items-center gap-2 px-2 py-1 flex-grow-1"
-                     style="background:var(--bs-secondary-bg);
-                            border-radius:var(--bs-border-radius);
-                            max-width:220px;min-width:0">
+                {# Flex-fill helps divide the space 100% equally among the selected vehicles #}
+                
+                <div class="d-flex align-items-center gap-1 gap-sm-2 px-1 px-sm-2 py-1 position-relative bg-secondary-subtle rounded flex-shrink-0 flex-fill"
+                     style="max-width:300px;min-width:0; z-index: {{ forloop.revcounter }};"
+                     x-data="{ open: false }"
+                    @click="open = !open"
+                    @click.outside="open = false"
+                    :style="open ? 'z-index: 2000; position: relative;' : 'z-index: 1; position: relative;'">
 
-                    {# Thumbnail #}
-                    <div class="thumbnail-comparison">
-                        {% with img=variant.primary_image %}
-                            {% if img %}
-                                <img src="{{ img }}" alt="{{ variant }}"
-                                style="width: 100%; height=100%; object-fit:cover;">
-                            {% else %}
-                                <i class="bi bi-car-front" style="font-size:20px;color:var(--bs-secondary-color)"></i>
-                            {% endif %}
-                        {% endwith %}
+                    {# Popover Container on Mobile: Click on image/icon to see name + price #}
+                    <div>
+
+                        {# Thumbnail -Small Dropdown/Popover on Mobile #}
+                        <div class="thumbnail-comparison flex-shrink-0" style="width: 36px; height: 28px;">
+                            {% with img=variant.primary_image %}
+                                {% if img %}
+                                    <img src="{{ img }}" alt="{{ variant }}"
+                                    class="w-100 h-100 rounded" style="object-fit: cover;">
+                                {% else %}
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded">
+                                    <i class="bi bi-car-front text-secondary"></i>
+                                </div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+
+                        {# Popover/Menu displays information when clicking on Thumbnail on Mobile #}
+                        <div  
+                            x-show="open"
+                            x-transition
+                            x-cloak
+                            class="position-absolute bg-white border rounded shadow p-2"
+                            style="bottom: calc(100% + 8px);
+                                    {% if forloop.first %}
+                                        left: 0;
+                                    {% elif forloop.last %}
+                                        right: 0;
+                                    {% else %}
+                                        left: 50%; transform: translateX(-50%);
+                                    {% endif %}
+                                    min-width: 160px; z-index: 2001;"
+                            >
+                            <div class="fw-semibold text-dark mb-1 fs-8"
+                                style="font-size:11px;"
+                                >
+                                {{ variant }}
+                            </div>
+                            <div 
+                                class="text-danger fw-bold fs-8"
+                                style="font-size:9px;">
+                                {{ variant.price_min|million_vnd }}
+                            </div>
+                        </div>
                     </div>
+                                      
 
-                     {# Name + price #}
-                    <div style="flex:1; min-width:0;">
-                        <div style="font-size:12px;font-weight:500;
-                                    white-space:nowrap;overflow:hidden;
-                                    text-overflow:ellipsis">
+                     {# Name + price: Only displayed normally from Tablet (sm) screen and above #} 
+                    <div class="d-none d-sm-block text-truncate" style="min-width: 0;">
+                        <div class="fw-medium text-truncate" style="font-size: 11px; line-height: 1.2;">
                             {{ variant }}
                         </div>
-                        <div style="font-size:11px; color:#dc3545;">
+                        <div class="text-danger" style="font-size: 10px;">
                             {{ variant.price_min|million_vnd }}
                         </div>
                     </div>
 
                     {# Remove button #}
-                    <button class="remove-button"
+                    <button class="btn p-0 border-0 text-secondary ms-auto flex-shrink-0"
                             aria-label="Xóa {{ variant }}"
                             hx-post="{% url 'cars:comparison_remove' variant_pk=variant.pk %}"
                             hx-target="#comparison-tray"
                             hx-swap="outerHTML">
-                        <i class="bi bi-x-lg" style="font-size:13px"></i>
+                        <i class="bi bi-x-circle-fill fs-7"></i>
                     </button>
 
                 </div>
                 {% endfor %}
 
-                {# Empty slots #}
+                {# Empty slots: Chia đều không gian với các ô xe thực tế #}
                 {% for i in empty_slots %}
-                <div class="d-flex align-items-center justify-content-center flex-grow-1 empty-slots">
-                    <span style="font-size:12px;color:var(--bs-secondary-color)">
-                        <i class="bi bi-plus"></i> Thêm xe
+                <div 
+                    class="d-none d-md-flex align-items-center justify-content-center border border-dash rounded px-2 py-1 flex-fill text-secondary"
+                    style="min-height: 36px; max-width: 220px;">
+                    <span style="font-size:11px;">
+                        <i class="bi bi-plus-lg"></i> Thêm xe
                     </span>
                 </div>
                 {% endfor %}
 
             </div>
 
-            {# CTA button #}
-            {% if total >= 2 %}
-            <a href="{% url 'cars:comparison_page' %}"
-               class="btn btn-primary btn-sm"
-               style="white-space:nowrap;">
-                Xem so sánh <i class="bi bi-arrow-right"></i>
-            </a>
-            {% else %}
-            <button class="btn btn-sm btn-outline-secondary" disabled
-                    style="white-space:nowrap; font-size:12px;">
-                Cần ≥ 2 xe
-            </button>
-            {% endif %}
+            {# CTA button -Always in the far right corner #}
+            <div class="flex-shrink-0 ms-auto">
+                {% if total >= 2 %}
+                    <a href="{% url 'cars:comparison_page' %}"
+                    class="btn btn-primary btn-sm px-2 px-sm-3 text-nowrap"
+                    style="font-size: 12px;">
+                        <span class="d-none d-sm-inline">Xem so sánh </span>
+                        <span class="d-inline d-sm-none">So sánh </span>
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                {% else %}
+                    <button class="btn btn-sm btn-outline-secondary px-2 px-sm-3 text-nowrap disabled"
+                        style="font-size: 11px;">
+                        Cần 2 xe
+                    </button>
+                {% endif %}
 
+            </div>
+           
+            
         </div>
     </div>
 </div>
