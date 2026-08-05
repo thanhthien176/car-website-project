@@ -45,3 +45,61 @@ class SpecService:
                 })
 
         return tabs
+    
+    
+    @classmethod
+    def get_comparison_tabs(cls, variants):
+        """
+        Build tabs so sánh cho N variants.
+        Field xuất hiện nếu >=1 variant "có nghĩa" với field đó
+        (theo đúng định nghĩa has_data/get_display_items của mixin).
+        Field ẩn nếu tất cả variant đều rỗng/False/None.
+        """
+        tabs = []
+        for accessor, model in cls.get_spec_relations():
+            instances = [cls._safe_get(v, accessor) for v in variants]
+
+            if not any(inst and inst.has_data for inst in instances):
+                continue  # không xe nào có data cho spec model này -> bỏ tab
+
+            # Gom field "có nghĩa" từ TẤT CẢ variant (giữ thứ tự xuất hiện đầu tiên)
+            meaningful = {}
+            for inst in instances:
+                if inst is None:
+                    continue
+                for item in inst.get_display_items():
+                    meaningful.setdefault(item['field_name'], {
+                        'label': item['label'],
+                        'is_boolean': item['is_boolean'],
+                    })
+
+            if not meaningful:
+                continue
+
+            rows = []
+            for field_name, meta in meaningful.items():
+                values = [
+                    getattr(inst, field_name) if inst is not None else None
+                    for inst in instances
+                ]
+                rows.append({
+                    'field': field_name,
+                    'label': meta['label'],
+                    'is_boolean': meta['is_boolean'],
+                    'values': values,  # cùng thứ tự với `variants`
+                })
+
+            tabs.append({
+                'key': accessor,
+                'label': model._meta.verbose_name,
+                'rows': rows,
+            })
+
+        return tabs
+    
+    @staticmethod
+    def _safe_get(variant, accessor):
+        try:
+            return getattr(variant, accessor)
+        except ObjectDoesNotExist:
+            return None

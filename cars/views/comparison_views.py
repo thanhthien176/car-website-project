@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 
 from cars.models import Comparison, CarVariant, CarModel
+from cars.services.model_services import SpecService
 
 def _get_or_create_comparison(request):
     """
@@ -42,7 +43,10 @@ class ComparisonPageView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         comparison = _get_or_create_comparison(self.request)
-        context['variants'] = (
+        
+        spec_accessors = [name for name, _ in SpecService.get_spec_relations()]
+        
+        variants = list(
             comparison.cars
             .select_related(
                 'car_model__brand',
@@ -50,9 +54,11 @@ class ComparisonPageView(TemplateView):
                 'car_model__car_class'
             )
             .prefetch_related(
-                'variant_images', 'engine', 'dimension', 'safety'
+                'variant_images', *spec_accessors
             )
         )
+        context['variants'] = variants
+        context['comparison_tabs'] = SpecService.get_comparison_tabs(variants)
         return context
 
 

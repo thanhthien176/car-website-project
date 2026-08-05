@@ -1,0 +1,30 @@
+<thead>
+    <tr>
+        <th style="width: 220px;">Thông số</th>
+        {% for variant in variants %}
+        <th class="text-center">{{ variant.car_model }} {{ variant.name }}</th>
+        {% endfor %}
+    </tr>
+</thead>
+<tbody>
+    {% for row in tab.rows %}
+    <tr>
+        <th class="fw-normal text-muted">{{ row.label }}</th>
+        {% for value in row.values %}
+        <td class="text-center">
+        {% if value is None or value == "" %}
+            <span class="text-muted">-</span>
+        {% elif row.is_boolean %}
+            {% if value %}
+            <i class="bi bi-check-lg text-success" aria-label="Có"></i>
+            {% else %}
+            <i class="bi bi-x-lg text-danger" aria-label="Không"></i>
+            {% endif %}
+        {% else %}
+            {{ value }}
+        {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</tbody>

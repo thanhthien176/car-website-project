@@ -1,0 +1,25 @@
+{# templates/cars/comparison/_comparison_tabs.html #}
+{% if comparison_tabs %}
+<div class="comparison-tabs">
+  {% include "cars/comparison/_label_tabs.html" %}
+
+  <div class="tab-content border border-top-0 p-3" id="specTabContent">
+    {% for tab in comparison_tabs %}
+    <div
+      class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+      id="tab-pane-{{ tab.key }}"
+      role="tabpanel"
+      aria-labelledby="tab-btn-{{ tab.key }}"
+    >
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle comparison-table">
+          {% include "cars/comparison/_table_spec.html" %}
+        </table>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<p class="text-muted">Chưa có dữ liệu thông số kỹ thuật để so sánh.</p>
+{% endif %}

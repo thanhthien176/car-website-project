@@ -7,45 +7,24 @@
 <div class="container py-4" style="font-size: 13px;">
     <h2 class="mb-4">So sánh xe</h2>
     {% if variants %}
-    <div class="table-responsive">
-        <table class="table table-bordered align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th style="width: 160px;">Thông số</th>
-                    {% for v in variants %}
-                        <th class="text-center">{{ v }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="text-secondary" >Hãng</td>
-                    {% for v in variants %}
-                    <td class="text-center">{{ v.car_model.brand }}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td class="text-secondary" >Nhiên liệu</td>
-                    {% for v in variants %}
-                    <td class="text-center">{{ v.get_fuel_type_display }}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td class="text-secondary" >Giá</td>
-                    {% for v in variants %}
-                    <td class="text-center">{{ v.price_range }}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td class="text-secondary" >Loại xe</td>
-                    {% for v in variants %}
-                    <td class="text-center">{{ v.car_model.body_type|default:"-" }}</td>
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-
+    <div class="comparison-tabs">
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle comparison-table">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 220px;">Thông số</th>
+                        {% for v in variants %}
+                            <th class="text-center">{{ v }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                {% include "cars/comparison/_table_info.html" %}
+            </table>
+        </div>
     </div>
+    
+        {% include "cars/comparison/_comparison_tabs.html" %}
+
     {% else %}
     <div class="text-center py-5 text-secondary">
         <i class="bi bi-git" style="font-size:3rem;"></i>

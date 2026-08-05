@@ -1,0 +1,18 @@
+ <ul class="nav nav-tabs" id="specTabNav" role="tablist">
+    {% for tab in comparison_tabs %}
+    <li class="nav-item" role="presentation">
+        <button
+        class="nav-link {% if forloop.first %}active{% endif %}"
+        id="tab-btn-{{ tab.key }}"
+        data-bs-toggle="tab"
+        data-bs-target="#tab-pane-{{ tab.key }}"
+        type="button"
+        role="tab"
+        aria-controls="tab-pane-{{ tab.key }}"
+        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+        >
+        {{ tab.label }}
+        </button>
+    </li>
+    {% endfor %}
+</ul>
