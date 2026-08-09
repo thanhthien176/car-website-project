@@ -18,11 +18,11 @@
                 <a href="{% url 'cars:car_list' %}">Tất cả xe</a>
             </li>
             <li class="breadcrumb-item">
-                <a href="{% url 'cars:brand_detail' slug=car_model.brand.slug %}">
+                <a href="{% url 'cars:brand_detail' slug=car_model.brand.slug %}" class="text-uppercase">
                     {{ car_model.brand.name }}
                 </a>
             </li>
-            <li class="breadcrumb-item active">{{ car_model.name }}</li>
+            <li class="breadcrumb-item active" class="text-uppercase">{{ car_model.name }}</li>
         </ol>
     </nav>
 
@@ -46,11 +46,11 @@
         <div class="col-md-7 mt-4 mt-md-0">
             <p class="text-muted mb-1">
                 <a href="{% url 'cars:brand_detail' slug=car_model.brand.slug %}"
-                    class="text-decoration-none">
+                    class="text-decoration-none text-uppercase">
                     {{ car_model.brand.name }}
                 </a>
             </p>
-            <h1 class="mb-2">{{ car_model }}</h1>
+            <h1 class="mb-2 text-uppercase">{{ car_model }}</h1>
 
             {# Star rating #}
             <div class="mb-3">
@@ -67,12 +67,12 @@
             {# Metadata #}
             <div class="d-flex flex-wrap gap-2 mb-3">
                 {% if car_model.body_type %}
-                <span class="badge bg-secondary fs-6">
+                <span class="badge bg-secondary fs-6 text-uppercase">
                     <i class="bi bi-tag"></i> {{ car_model.body_type }}
                 </span>
                 {% endif %}
                 {% if car_model.car_class %}
-                <span class="badge bg-info text-dark fs-6">
+                <span class="badge bg-info text-dark fs-6 text-uppercase">
                      {{ car_model.car_class }}
                 </span>
                 {% endif %}
