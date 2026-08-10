@@ -3,6 +3,16 @@ from django import forms
 from core.models import ContactMe
 
 class ContactMeForm(forms.ModelForm):
+    
+    website = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'autocomplete': 'off',
+            'tabindex': '-1',
+        }),
+        label='Website',
+    )
+
     class Meta:
         model = ContactMe
         fields = ['name', 'email', 'subject', 'message']
@@ -33,4 +43,10 @@ class ContactMeForm(forms.ModelForm):
         for name, field in self.fields.items():
             css_class = field.widget.attrs.get('class', '')
             field.widget.attrs['class'] = f'{css_class} form-control'.strip()
+            
+    def clean_website(self):
+        value = self.cleaned_data.get('website')
+        if value:
+            raise forms.ValidationError("Spam detected.")
+        return value
             

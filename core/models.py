@@ -39,3 +39,14 @@ class ContactMe(models.Model):
         
     def __str__(self):
         return f'{self.name} - {self.subject}'
+    
+
+class SiteIdentify(models.Model):
+    slogan = models.CharField(max_length=400, blank=True, help_text="Slogan of website")
+    
+    og_title = models.CharField(max_length=150, blank=True, help_text="Tiêu đề hiển thị khi chia sẻ link")
+    og_description = models.CharField(max_length=300, blank=True, help_text="Mô tả ngắn khi chia sẻ link")
+    og_image = models.ImageField(upload_to="identify/og/", help_text="Ảnh preview khi chia sẻ Social Media (Tỉ lệ chuẩn 1200x630)")
+    
+    is_active = models.BooleanField(default=True)
+    updated_at = models.DateTimeField(auto_now=True)

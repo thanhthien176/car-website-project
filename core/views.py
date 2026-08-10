@@ -3,6 +3,7 @@ from typing import Any
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
+from django.urls import reverse_lazy
 
 from core.forms import ContactMeForm
 
@@ -21,6 +22,7 @@ class AboutView(TemplateView):
 class ContactView(FormView):
     template_name = "core/contact.html"
     form_class = ContactMeForm
+    success_url = reverse_lazy("core:contact")
     
     def form_valid(self, form: Any) -> HttpResponse:
         form.save()

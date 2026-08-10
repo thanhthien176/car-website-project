@@ -78,6 +78,10 @@
                                     {% endif %}
                                 </div>
                             {% endfor %}
+                            <div style="position:absolute; left:-9999px; top:-9999px;" aria-hidden="true">
+                                <label for="{{ form.website.id_for_label }}">Website</label>
+                                {{ form.website }}
+                            </div>
                             <button
                                 type="submit"
                                 class="btn btn-primary px-4">
