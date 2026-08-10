@@ -80,13 +80,13 @@ class Command(BaseImportCommand):
         model_defaults = {
             "body_type": body_type,
             "car_class": car_class,
-            "model_year": self._to_int(row.get("model_year"), row_num),
+            "model_year": self._to_int(row.get("model_year"), row_num) or 2026,
             "description": self._clean_str(row.get("description")) or "",
         }
         
         car_model, model_created = CarModel.objects.get_or_create(
             brand=brand,
-            name=model_name.title(),
+            name=model_name,
             defaults=model_defaults,
         )
         
@@ -119,9 +119,13 @@ class Command(BaseImportCommand):
                 ))
 
         # ── 5. CarVariant (tuỳ chọn) ───────────────────────────────────
-        variant_name = row.get("variant_name", "").strip()
+        variant_name = self._clean_str(row.get("variant_name", ""))
+        
         if not variant_name:
             return
+
+        variant_text = f'{brand_name}-{model_name}-{variant_name}'
+        variant_slug = self._create_slugify(variant_text)
         
         fuel_type = self._clean_fuel_type(row.get("fuel_type"), row_num)
         
@@ -129,6 +133,7 @@ class Command(BaseImportCommand):
         price_max = self._to_decimal(row.get("price_max", "0"), row_num)
         
         variant_defaults = {
+            "name": variant_name,
             "fuel_type": fuel_type,
             "price_min": price_min,
             "price_max": price_max if price_max else price_min,
@@ -137,7 +142,7 @@ class Command(BaseImportCommand):
         
         variant, variant_created = CarVariant.objects.get_or_create(
             car_model = car_model,
-            name = variant_name.title(),
+            slug = variant_slug,
             defaults=variant_defaults,
         )
         

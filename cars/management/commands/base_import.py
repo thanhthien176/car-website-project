@@ -7,6 +7,7 @@ from typing import Any
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.conf import settings
+from django.utils.text import slugify
 
 from cars.utils.image_utils import save_remote_image_to_field
 
@@ -187,3 +188,9 @@ class BaseImportCommand(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f"\n{prefix}✅ Process Completed Successfully.\nSummary Analytics:\n{metrics}"
         ))
+        
+    def _create_slugify(self, text):
+        return slugify(text)
+
+
+    
