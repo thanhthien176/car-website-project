@@ -80,26 +80,32 @@ class Command(BaseImportCommand):
         model_defaults = {
             "body_type": body_type,
             "car_class": car_class,
-            "model_year": self._to_int(row.get("model_year"), row_num) or 2026,
+            "model_year": self._to_int(row.get("model_year"), row_num),
             "description": self._clean_str(row.get("description")) or "",
         }
         
-        car_model, model_created = CarModel.objects.get_or_create(
-            brand=brand,
-            name=model_name,
-            defaults=model_defaults,
-        )
+        computed_slug = slugify(f"{brand.name}-{model_name}")
+        try:
+            car_model = CarModel.objects.get(slug=computed_slug)
+            model_created = False
+        except CarModel.DoesNotExist:
+            car_model = CarModel(brand=brand, name=model_name, **model_defaults)
+            car_model.save()
+            model_created = True
+            
         
         if model_created:
+            if model_defaults['model_year'] is None:
+                model_defaults['model_year'] = 2026
+            
+            if model_defaults['description'] is None:
+                model_defaults['description'] = ""
             stats["model_created"] += 1
             self.stdout.write(f" + CarModel: {car_model}")
         elif options["update"]:
-            for field, value in model_defaults.items():
-                setattr(car_model, field, value)
-            
-            car_model.save()
-            stats["model_updated"] += 1
-            self.stdout.write(f" ~ CarModel updated: {car_model}")
+            if self._apply_update(car_model, model_defaults):           
+                stats["model_updated"] += 1
+                self.stdout.write(f" ~ CarModel updated: {car_model}")
             
         #=======4.b. CarModel thumbnail (optional, download from URL)========
         thumbnail_url = self._clean_str(row.get("thumbnail_url"))
@@ -133,7 +139,6 @@ class Command(BaseImportCommand):
         price_max = self._to_decimal(row.get("price_max", "0"), row_num)
         
         variant_defaults = {
-            "name": variant_name,
             "fuel_type": fuel_type,
             "price_min": price_min,
             "price_max": price_max if price_max else price_min,
@@ -143,7 +148,10 @@ class Command(BaseImportCommand):
         variant, variant_created = CarVariant.objects.get_or_create(
             car_model = car_model,
             slug = variant_slug,
-            defaults=variant_defaults,
+            defaults={
+                "name": variant_name,
+                **variant_defaults,
+                },
         )
         
         if variant_created:
@@ -158,9 +166,17 @@ class Command(BaseImportCommand):
     
     
     def _apply_update(self, instance, fields:dict):
+        updated = False
         for field, value in fields.items():
-            setattr(instance, field, value)
-        instance.save()
+            if value in ("", None):
+                continue
+            
+            if getattr(instance, field) != value:
+                setattr(instance, field, value)
+                updated = True
+        if updated:
+            instance.save()
+        return updated
         
     def _clean_fuel_type(self, value, row_num) -> str:
         fuel = self._clean_str(value).lower() or "gasoline"
