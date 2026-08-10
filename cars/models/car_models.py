@@ -86,6 +86,7 @@ class Brand(SEOMetaData, models.Model):
         return reverse("cars:brand_detail", kwargs={"slug": self.slug})
     
 
+# Car Model
 class CarModel(SEOMetaData, models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="car_models")
     name = models.CharField(max_length=100)

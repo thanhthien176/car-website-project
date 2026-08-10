@@ -6,6 +6,7 @@ from .mixins import SpecificationDisplayMixin
 class DimensionSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='dimension')
     
+    overall_dimensions = models.CharField(max_length=100, blank=True, help_text="Kích thước tổng thể (DxRxC)")
     length = models.PositiveIntegerField(null=True, blank=True, help_text="Chiều dài(mm)")
     width = models.PositiveIntegerField(null=True, blank=True, help_text="Chiều rộng(mm)")
     height = models.PositiveIntegerField(null=True, blank=True, help_text="chiều cao(mm)")
@@ -38,6 +39,7 @@ class EngineSpecification(SpecificationDisplayMixin, models.Model):
     cylinder_arrangement = models.CharField(max_length=50, blank=True, help_text="Bố trí xy lanh")
     displacement = models.CharField(max_length=50, blank=True, help_text="Dung tích xi lanh(cc)")
     variable_valve_system = models.CharField(max_length=50, blank=True, help_text="Hệ thống van biến thiên")
+    compression_ratio = models.CharField(max_length=50, blank=True, help_text="Tỉ số nén")
     
     max_power = models.CharField(max_length=100, blank=True, help_text="Công suất tối đa(Hp)")
     max_torque = models.CharField(max_length=100, blank=True, help_text="Momen xoắn tối đa(Nm)")
@@ -48,7 +50,7 @@ class EngineSpecification(SpecificationDisplayMixin, models.Model):
     hybrid_batteries = models.CharField(max_length=50, blank=True, help_text="Ắc quy hybrid")
     
     drive_mode = models.CharField(max_length=100, blank=True, help_text="Các chế độ lái")
-    drive_train = models.CharField(max_length=50, blank=True, help_text="Hệ số truyền động")
+    drive_train = models.CharField(max_length=50, blank=True, help_text="Hệ thống truyền động")
     transmission = models.CharField(max_length=40, choices=TRANSMISSION_CHOICES, help_text="Hộp số")
     
     
@@ -59,6 +61,7 @@ class PerformanceSpecification(SpecificationDisplayMixin, models.Model):
     variant = models.OneToOneField(CarVariant, on_delete=models.CASCADE, related_name='performance')
     
     # suspension
+    suspension = models.CharField(max_length=100, blank=True, help_text="Hệ thống treo")
     suspension_font = models.CharField(max_length=50, blank=True, help_text="Hệ thống treo trước")
     suspension_rear = models.CharField(max_length=50, blank=True, help_text="Hệ thống treo sau")
 
@@ -70,9 +73,9 @@ class PerformanceSpecification(SpecificationDisplayMixin, models.Model):
     tire_size = models.CharField(max_length=50, blank=True, help_text="Kích thước lốp xe")
     spare_tire = models.CharField(max_length=50, blank=True, help_text="Lốp dự phòng")
     
-    brake = models.CharField(max_length=50, blank=True, help_text="Phanh trước/sau(front/rear)")
-    brake_front = models.CharField(max_length=50, blank=True, help_text="Phanh trước")
-    brake_rear = models.CharField(max_length=50, blank=True, help_text="Phanh sau")
+    brake = models.CharField(max_length=50, blank=True, help_text="Hệ thống phanh trước/sau(front/rear)")
+    brake_front = models.CharField(max_length=50, blank=True, help_text="Hệ thống phanh trước")
+    brake_rear = models.CharField(max_length=50, blank=True, help_text="Hệ thống phanh sau")
     
     class Meta:
             verbose_name = "Vận Hành"    
@@ -95,6 +98,9 @@ class ExteriorSpecification(SpecificationDisplayMixin, models.Model):
     headlamp = models.CharField(max_length=50, blank=True, help_text="Đèn chiếu sáng trước")
     low_beam_headlight = models.CharField(max_length=50, blank=True, help_text="Đèn chiếu gần trước")
     high_beam_headlight = models.CharField(max_length=50, blank=True, help_text="Đèn chiếu xa")
+    light_on_reminder = models.BooleanField(default=False, help_text="Hệ thống nhắc nhở đèn sáng")
+    cornering_light = models.BooleanField(default=False, help_text="Đèn chiếu góc")
+    hls = models.CharField(max_length=50, blank=True, help_text="Hệ thống cân bằng góc chiếu")
     
     daytime_running_light = models.BooleanField(default=False, help_text="Đèn chiếu sáng ban ngày")
     auto_light_control = models.BooleanField(default=False, help_text="Tự động bật tắt đèn")
@@ -131,6 +137,7 @@ class ExteriorSpecification(SpecificationDisplayMixin, models.Model):
     antenna = models.CharField(max_length=50, blank=True, help_text="Ăng ten")
     outside_handle = models.CharField(max_length=50, blank=True, help_text="Tay nắm cửa ngoài xe")
     
+    bumper_bar = models.CharField(blank=True, max_length=100, help_text="Thanh cản trước và sau")
     bumper_bar_front = models.BooleanField(default=False, help_text="Thanh cản trước")
     bumper_bar_rear = models.BooleanField(default=False, help_text="Thanh cản sau")
     
@@ -150,6 +157,7 @@ class InteriorSpecification(SpecificationDisplayMixin, models.Model):
     paddle_shifter = models.BooleanField(default=False, help_text="Lẫy chuyển số")
     icb = models.CharField(max_length=200, blank=True, help_text="Nút bấm điều khiển tích hơp (Integrated control buttons)")     
     steering_memory = models.BooleanField(default=False, help_text="Nhớ vị trí tay lái")
+    power_steering = models.CharField(max_length=100, blank=True, help_text="Trợ lực tay lái")
     
     inner_mirror = models.CharField(max_length=50, blank=True, help_text="Gương chiếu hậu trong")
     inside_handle_door = models.CharField(max_length=50, blank=True, help_text="Tay nắm cửa trong xe")
