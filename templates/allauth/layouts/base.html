@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block meta_add %}
+<meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block title %}{% block head_title %}{% endblock head_title %} | CarCompare{% endblock %}
 
 {% block content_root %}

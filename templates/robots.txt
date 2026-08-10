@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /admin/
+Disallow: /users/
 Disallow: /api/
 Disallow: /comparison/
 

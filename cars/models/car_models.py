@@ -67,7 +67,7 @@ class Brand(SEOMetaData, models.Model):
     
     @property
     def get_seo_title(self):
-        return self.seo_title or f"Tìm hiểu các dòng xe của hãng {self.name} | WebsiteCar"
+        return self.seo_title or f"Tìm hiểu các dòng xe của hãng {self.name} | Xehoi360.com.vn"
     
     @property
     def get_seo_description(self):
@@ -122,7 +122,7 @@ class CarModel(SEOMetaData, models.Model):
     def get_seo_title(self):
         return (
             self.seo_title 
-            or f"Tìm hiểu mẫu xe {self.name} của hãng {self.brand.name} | WebsiteCar"
+            or f"Tìm hiểu mẫu xe {self.name} của hãng {self.brand.name} | Xehoi360.com.vn"
             )
     
     @property
@@ -230,7 +230,7 @@ class CarVariant(SEOMetaData, models.Model):
     def get_meta_title(self):
         return (self.seo_title 
                 or f"Giá xe {self.car_model} {self.name} mới nhất"
-                f"| WebsiteCar"
+                f"| Xehoi360.com.vn"
         )
     
     def get_meta_description(self):
