@@ -1,7 +1,5 @@
-from collections.abc import Iterable
-
 from django.contrib.sitemaps import Sitemap
-from .models import CarModel, CarVariant, Brand
+from cars.models import CarModel, CarVariant, Brand
 
 class BrandSitemap(Sitemap):
     changefreq = 'monthly'

@@ -23,12 +23,18 @@ from django.contrib.sitemaps.views import sitemap
 
 from cars.sitemaps import BrandSitemap, CarModelSitemap, CarVariantSitemap
 from cars.views.dashboard_view import admin_dashboard
+
+from blogs.sitemaps import BrandHistorySitemap, BlogPostSitemap
+
 from config.health import health_check
+
 
 sitemaps = {
     'brands': BrandSitemap,
     'car_models': CarModelSitemap,
     'variants': CarVariantSitemap,
+    'brand_histories': BrandHistorySitemap,
+    'blog_posts': BlogPostSitemap,
 }
 
 urlpatterns = [
