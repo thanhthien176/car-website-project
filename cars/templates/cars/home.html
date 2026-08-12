@@ -5,26 +5,27 @@
 {% block mete_description %}So sánh thông số và giá xe hơi tại Việt Nam{% endblock %}
 
 {% block content_root %}
-
-    <h1>Chào mừng đến với <strong>xehoi360</strong></h1>
-
     {# Hero section #}
     <div class="p-5 mb-4 bg-dark text-white rounded-3">
-        <h1 class="display-5 fw-bold">Khám phá thế giới xe hơi với xehoi360</h1>
+        <h1 class="display-5 fw-bold">Khám phá thế giới xe hơi với <strong class="text-warning">xehoi360</strong></h1>
         <p class="col-md-8 fs-4">
-            Tìm kiếm lựa chọn xe hơi từ các hãng xe tại Việt Nam, 
-            so sánh thông số kỹ thuật và giá bán của các loại xe,
-            để lại đánh giá với các xe bạn đã sử dụng.
+            Xehoi360 - Không thể chọn thay bạn, nhưng giúp bạn lựa chọn chính xác hơn.
         </p>
-        <a href="{% url 'cars:car_list' %}" class="btn btn-warning btn-lg">
+        <a href="{% url 'cars:car_list' %}" class="btn btn-outline-warning btn-sm text-primary">
             Xem tất cả xe <i class="bi bi-arrow-right"></i>
         </a>
     </div>
 
     {# Featured brands #}
     <section>
-        <h2 class="mb-3">Hãng xe nổi bật ({{ featured_brands.count }})</h2>
-        <div class="row row-cols-2 row-cols-md-4 g-3 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-3">Hãng xe nổi bật <span class="text-muted fs-6">({{ featured_brands.count }})</span></h2>
+            <a href="{% url 'cars:brand_list' %}" class="btn btn-outline-warning btn-sm fw-semibold text-primary">
+                Tất cả hãng xe <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="row row-cols-3 row-cols-md-6 g-3 mb-5">
             {% for brand in featured_brands %}
             <div class="col">
                 <a href="{{ brand.get_absolute_url }}" class="text-decoration-none">
@@ -65,7 +66,12 @@
     </section>
 
     <section>
+        <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="mb-3">Đánh giá cao nhất</h2>
+        <a href="{% url 'cars:car_list' %}" class="btn btn-outline-warning btn-sm fw-semibold text-primary-emphasis">
+            Tất cả xe <i class="bi bi-arrow-right"></i>
+        </a>
+        </div>
         <div class="row row-cols-1 row-cols-md-4 g-3">
             {% for car in top_rated  %}
             <div class="col">

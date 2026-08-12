@@ -8,7 +8,7 @@ class CarSelector:
     Keeps views thin and business logic testable in isolation.
     """
     
-    def get_featured_brands(self, limit: int = 8):
+    def get_featured_brands(self, limit: int = 12):
         """
         Return active brands with model_count annotation to avoid N+1.
         Template use {{ brand.model_count }} instead of {{ brand.car_models.count }}
@@ -40,7 +40,7 @@ class CarSelector:
         
         return qs
         
-    def get_top_rated_models(self, limit: int = 4):
+    def get_top_rated_models(self, limit: int = 8):
         """Return car models with highest average rating."""
         from cars.models import CarModel
         
