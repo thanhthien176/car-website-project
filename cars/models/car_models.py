@@ -1,6 +1,7 @@
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Avg
 from django.utils.text import slugify
@@ -61,6 +62,8 @@ class Brand(SEOMetaData, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    display_order = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(99)], help_text="Ưu tiên xuất hiện")
+    
     class Meta:
         ordering = ['name']
         verbose_name = 'Brand'
@@ -108,6 +111,8 @@ class CarModel(SEOMetaData, models.Model):
     
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    display_order = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(99)], help_text="Chỉ số để ưu tiên hiển thị")
     
     
     class Meta:

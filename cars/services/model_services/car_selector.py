@@ -18,7 +18,7 @@ class CarSelector:
         return (Brand.objects
                 .filter(is_active=True)
                 .annotate(model_count=Count('car_models', distinct=True))
-                .order_by("name")[:limit]
+                .order_by("-display_order","name")[:limit]
                 )
         
     def get_latest_variants(self, user, limit: int = 6):
@@ -47,7 +47,7 @@ class CarSelector:
         return (CarModel.objects
                 .filter(avg_rating__gt=0)
                 .select_related('brand')
-                .order_by('-avg_rating')[:limit]
+                .order_by('-avg_rating', '-display_order')[:limit]
                 )
         
     def search_car_models(self, query:str, qs=None):
