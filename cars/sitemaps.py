@@ -25,6 +25,9 @@ class CarModelSitemap(Sitemap):
     def location(self, obj):
         return obj.get_absolute_url()
     
+    def lastmod(self, obj):
+        return obj.updated_at
+    
     
 class CarVariantSitemap(Sitemap):
     changfreq = 'weekly'
@@ -39,4 +42,7 @@ class CarVariantSitemap(Sitemap):
         )
     
     def location(self, obj) -> str:
-        return obj.get_absolute_url()
+        return obj.get_absolute_url() 
+    
+    def lastmod(self, obj):
+            return obj.updated_at

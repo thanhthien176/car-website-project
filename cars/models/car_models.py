@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from django.db import models
 from django.db.models import Avg
 from django.utils.text import slugify
+from django.utils import timezone
 from django.urls import reverse
 
 from cars.validators import validate_image_size, validate_image_extension
@@ -104,6 +105,10 @@ class CarModel(SEOMetaData, models.Model):
                                   validators=[validate_image_size, validate_image_extension])
     
     avg_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     
     class Meta:
         constraints = [
@@ -206,6 +211,9 @@ class CarVariant(SEOMetaData, models.Model):
     is_active = models.BooleanField(default=True)
     
     origin_country = models.CharField(max_length=100, blank=True, help_text="Xuất xứ")
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
     
     # objects = models.Manager.from_queryset(VariantQuerySet)()
     objects: VariantManager = VariantManager()
