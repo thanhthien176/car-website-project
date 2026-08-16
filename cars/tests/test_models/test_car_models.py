@@ -40,7 +40,7 @@ class CarModelTest(TestCase):
         car = make_car_model(brand=self.brand, name="Hilux")
         self.assertIn("Hilux", car.get_seo_title)
         self.assertIn("Toyota", car.get_seo_title)
-        self.assertIn("WebsiteCar", car.get_seo_title)
+        self.assertIn("Tìm hiểu mẫu xe", car.get_seo_title)
         
     def test_seo_description_fallback(self):
         car = make_car_model(brand=self.brand, name="Innova")

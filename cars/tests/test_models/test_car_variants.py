@@ -65,7 +65,7 @@ class CarVariantTest(TestCase):
         variant = make_variant(car_model=self.car_model, name="Cross 2.0G")
         self.assertIn("Cross 2.0G", variant.get_meta_title())
         self.assertIn("Toyota Innova", variant.get_meta_title())
-        self.assertIn("WebsiteCar", variant.get_meta_title())
+        self.assertIn("Giá xe", variant.get_meta_title())
         
     def test_get_meta_title_custom_seo(self):
         variant = make_variant(

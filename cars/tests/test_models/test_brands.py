@@ -32,7 +32,7 @@ class BrandModelTest(TestCase):
     def test_get_seo_title_fallback(self):
         brand = make_brand(name="Toyota")
         self.assertIn("Toyota",brand.get_seo_title)
-        self.assertIn("WebsiteCar", brand.get_seo_title)
+        self.assertIn("Tìm hiểu các dòng xe", brand.get_seo_title)
         
     def test_get_seo_title_custom(self):
         brand = make_brand(name="Toyota", seo_title="My Custom Title")
