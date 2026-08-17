@@ -111,6 +111,18 @@ class BaseImportCommand(BaseCommand):
     # ------------------------------------------------------------------
     # Data Transformation & Sanitization Helpers
     # ------------------------------------------------------------------
+    
+    def _format_price(self, value: str, row_num: int):
+        raw = str(value).strip() if value else ""
+        if not raw:
+            return None
+        try:
+            return value.replace('.','').replace(',','.')
+        except ValueError:
+            self.stdout.write(self.style.WARNING(
+                f"  [Row {row_num}] Invalid price literal '{value}' - Defaulting to 'None'."
+            ))
+            return None
 
     def _to_int(self, value: Any, row_num: int) -> int | None:
         """Sanitizes strings and transforms them to standard integers."""

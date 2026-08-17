@@ -21,7 +21,7 @@ class CarQueryService:
                 'car_class',
             )
             .prefetch_related('images')
-            .order_by('brand__name', 'name')
+            .order_by('-display_order', 'name')
         )
         
     @staticmethod

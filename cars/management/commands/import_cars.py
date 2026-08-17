@@ -82,6 +82,7 @@ class Command(BaseImportCommand):
             "car_class": car_class,
             "model_year": self._to_int(row.get("model_year"), row_num),
             "description": self._clean_str(row.get("description")) or "",
+            "display_order": self._to_int(row.get("display_order"), row_num)
         }
         
         computed_slug = slugify(f"{brand.name}-{model_name}")
@@ -135,23 +136,23 @@ class Command(BaseImportCommand):
         
         fuel_type = self._clean_fuel_type(row.get("fuel_type"), row_num)
         
-        price_min = self._to_decimal(row.get("price_min", "0"), row_num)
-        price_max = self._to_decimal(row.get("price_max", "0"), row_num)
+        price_min = self._to_decimal(self._format_price(row.get("price_min", "0"), row_num), row_num)
+        price_max = self._to_decimal(self._format_price(row.get("price_max", "0"), row_num), row_num)
+        
+        number_of_seats = self._to_int(row.get("number_of_seats", 0), row_num)
         
         variant_defaults = {
             "fuel_type": fuel_type,
             "price_min": price_min,
             "price_max": price_max if price_max else price_min,
             "is_active": self._to_bool(row.get("is_active"), default=True),
+            "number_of_seats": number_of_seats,
         }
         
         variant, variant_created = CarVariant.objects.get_or_create(
-            car_model = car_model,
-            slug = variant_slug,
-            defaults={
-                "name": variant_name,
-                **variant_defaults,
-                },
+            car_model=car_model,
+            name=variant_name,
+            defaults=variant_defaults,
         )
         
         if variant_created:

@@ -35,7 +35,7 @@ class CarSelector:
                 .annotate_saved(user) # type: ignore
                 .select_related('car_model__brand', 'car_model__body_type')
                 .prefetch_related('variant_images')
-                .order_by('-id')[:limit]
+                .order_by('-car_model__display_order')[:limit]
                 )
         
         return qs
@@ -45,7 +45,7 @@ class CarSelector:
         from cars.models import CarModel
         
         return (CarModel.objects
-                .filter(avg_rating__gt=0)
+                # .filter(avg_rating__gt=0)
                 .select_related('brand')
                 .order_by('-avg_rating', '-display_order')[:limit]
                 )

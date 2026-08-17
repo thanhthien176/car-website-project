@@ -22,7 +22,7 @@ class BrandService:
                         Brand.objects
                         .filter(is_active=True)
                         .annotate(model_count=Count('car_models', distinct=True))
-                        .order_by('name')
+                        .order_by('-display_order','name')
                     )
             cache.set(key, brands, cls.CACHE_TTL)
         

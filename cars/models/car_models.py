@@ -216,6 +216,7 @@ class CarVariant(SEOMetaData, models.Model):
     is_active = models.BooleanField(default=True)
     
     origin_country = models.CharField(max_length=100, blank=True, help_text="Xuất xứ")
+    number_of_seats = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Số chỗ ngồi")
     
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
