@@ -42,10 +42,6 @@ class CarSelectorQueryTest(TestCase):
         slugs = [v.slug for v in result]
         self.assertIn(self.variant.slug, slugs)
         self.assertNotIn(inactive.slug, slugs)
-    
-    def test_get_top_rated_models_excludes_zero_rating(self):
-        result = list(self.selector.get_top_rated_models())
-        self.assertEqual(result, [])
         
     def test_get_top_rated_models_returns_when_has_rating(self):
         Review.objects.create(

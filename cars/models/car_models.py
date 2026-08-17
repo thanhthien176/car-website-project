@@ -62,7 +62,7 @@ class Brand(SEOMetaData, models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    display_order = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(99)], help_text="Ưu tiên xuất hiện")
+    display_order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)], help_text="Ưu tiên xuất hiện")
     
     class Meta:
         ordering = ['name']
@@ -112,7 +112,7 @@ class CarModel(SEOMetaData, models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
-    display_order = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(99)], help_text="Chỉ số để ưu tiên hiển thị")
+    display_order = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(99)], help_text="Chỉ số để ưu tiên hiển thị")
     
     
     class Meta:
