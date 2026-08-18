@@ -1,5 +1,5 @@
 <select name="brand" class="form-select form-select-sm mb-3" 
-    onchange="this.form.submit()"
+    {% comment %} onchange="this.form.submit()" {% endcomment %}
     hx-trigger="change"
     hx-get="{% url 'cars:car_list' %}"
     hx-include="#filter-form"

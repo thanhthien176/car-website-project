@@ -34,9 +34,8 @@ class CarCacheService:
         params: self.request.GET
         """
         has_filter = cls.has_filter(params)
-        is_first_page = cls.is_first_page(params)
         
-        if not has_filter and is_first_page:
+        if not has_filter:
             key = CacheKeys.car_models_default()
             cached = cache.get(key)
             if cached:
@@ -52,7 +51,7 @@ class CarCacheService:
             
             cache_ttl = 60*60
             key = CacheKeys.car_models_default()
-            result = list(qs[:paginate_by])
+            result = list(qs)
             
             cache.set(key, result, cache_ttl)
             return qs

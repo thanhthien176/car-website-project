@@ -57,7 +57,7 @@ class CarModelListViewTest(TestCase):
         qs = response.context['car_models']
         self.assertIn(self.camry, qs)
         self.assertIn(self.civic, qs)
-        self.assertEqual(qs.count(), 2)
+        self.assertEqual(len(qs), 2)
         
     def test_filter_min_price(self):
         response = self.client.get(self.url, {'min_price': 900})

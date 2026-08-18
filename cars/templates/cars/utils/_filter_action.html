@@ -1,0 +1,8 @@
+<div id="filter-action" hx-swap-oob="true">
+    {% if has_filters %}
+        <a href="{% url 'cars:car_list' %}"
+        class="btn btn-outline-secondary btn-sm w-100">
+        <i class="bi bi-x-circle"></i>Xóa bộ lọc
+    </a>
+    {% endif %}
+</div>

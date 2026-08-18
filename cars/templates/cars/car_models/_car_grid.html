@@ -1,6 +1,8 @@
 {% load car_filters %}
 {# Partial: render car card of car_models #}
 
+{% include "cars/utils/_filter_action.html" %}
+
 <div class="d-flex justify-content-between mb-3">
     <span>
         Tìm thấy <strong>{{ paginator.count }}</strong> dòng xe
