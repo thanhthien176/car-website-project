@@ -77,12 +77,14 @@ class Command(BaseImportCommand):
             stats["skipped"] += 1
             return
         
+        display_order = self._to_int(row.get("display_order"), row_num)
+        
         model_defaults = {
             "body_type": body_type,
             "car_class": car_class,
             "model_year": self._to_int(row.get("model_year"), row_num),
             "description": self._clean_str(row.get("description")) or "",
-            "display_order": self._to_int(row.get("display_order"), row_num)
+            "display_order": display_order if display_order else 0,
         }
         
         computed_slug = slugify(f"{brand.name}-{model_name}")
