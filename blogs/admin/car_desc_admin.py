@@ -2,11 +2,15 @@ from django.contrib import admin
 
 from blogs.models import CarDescription, CarDescriptionSection
 
-class CarDescriptionSectionInline(admin.TabularInline):
+class CarDescriptionSectionInline(admin.StackedInline):
     model = CarDescriptionSection
     extra = 1
-    fields = ["order", "title", "content", "image"]
-    
+    fields = ['order', 'title', 
+               'content', "image", 
+               ('author_name', 'author_url'),
+               ('source_name', 'source_url'),
+                'license'
+            ]
 
 @admin.register(CarDescription)
 class CarDescriptionAdmin(admin.ModelAdmin):

@@ -2,10 +2,15 @@ from django.contrib import admin
 
 from blogs.models import BlogTag, BlogSection, BlogPost, BlogCategory
 
-class BlogSectionInline(admin.TabularInline):
+class BlogSectionInline(admin.StackedInline):
     model = BlogSection
     extra = 1
-    fields = ["order", "title", "content", "image"]
+    fields = ['order', 'title', 
+               'content', "image", 
+               ('author_name', 'author_url'),
+               ('source_name', 'source_url'),
+                'license'
+            ]
     
 @admin.register(BlogCategory)
 class BlogCategoryAdmin(admin.ModelAdmin):

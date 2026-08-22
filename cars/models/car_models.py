@@ -168,8 +168,8 @@ class CarModel(SEOMetaData, models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        model_year = str(self.model_year) if self.model_year else ""
-        return f"{self.brand.name} {self.name} {model_year}"
+        model_year = f" {self.model_year}" if self.model_year else ""
+        return f"{self.brand.name} {self.name}{model_year}"
     
     def get_absolute_url(self):
         return reverse("cars:car_detail", kwargs={"slug": self.slug})
@@ -288,8 +288,8 @@ class CarVariant(SEOMetaData, models.Model):
         return self.car_model.primary_image
         
     def __str__(self):
-        model_year = str(self.car_model.model_year) if self.car_model.model_year else "" 
-        return f"{self.car_model.brand.name} {self.car_model.name} {self.name} {model_year}"
+        model_year = f" {self.car_model.model_year}" if self.car_model.model_year else "" 
+        return f"{self.car_model.brand.name} {self.car_model.name} {self.name}{model_year}"
     
     def get_absolute_url(self):
         return reverse("cars:variant_detail", kwargs={"slug": self.slug})

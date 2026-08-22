@@ -57,15 +57,25 @@ export_cars_csv.short_description = "Export selected variants to CSV"
 # Inlines
 # ---------------------------------------------------------------------------
 
-class CarImageInline(admin.TabularInline):
+class CarImageInline(admin.StackedInline):
     model = CarImage
     extra = 3
-    fields = ['image', 'caption', 'is_primary', 'order']
+    fields = ['image', 'caption', 
+        ('is_primary', 'order'),
+        ('author_name', 'author_url'),
+        ('source_name', 'source_url'),
+        'license'
+        ]
     
-class VariantImageInline(admin.TabularInline):
+class VariantImageInline(admin.StackedInline):
     model = VariantImage
     extra = 2
-    fields = ['image', 'caption', 'is_primary', 'order']
+    fields = ['image', 'caption', 
+            ('is_primary', 'order'),
+            ('author_name', 'author_url'),
+            ('source_name', 'source_url'),
+            'license'
+            ]
     
     
 # The specifications are split into 9 separate models — each requiring its own inline.

@@ -3,10 +3,15 @@ from django.contrib import admin
 from blogs.models import BrandHistorySection, BrandHistory
 
 
-class BrandHistorySectionInline(admin.TabularInline):
+class BrandHistorySectionInline(admin.StackedInline):
     model = BrandHistorySection
     extra = 1
-    fields = ["order", "title", "content", "image"]
+    fields = ['order', 'title', 
+               'content', "image", 
+               ('author_name', 'author_url'),
+               ('source_name', 'source_url'),
+                'license'
+            ]
     
 
 @admin.register(BrandHistory)
