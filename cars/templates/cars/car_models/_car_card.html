@@ -1,7 +1,7 @@
 {% load static car_filters %}
 
 <div class="col">
-    <div class="card h-100 shadow-sm car-card rounded-3"
+    <div class="card h-100 shadow-sm car-card rounded-3 card-custom"
         :class="{ 'z-3': open }" 
         style="position: relative;"
         x-data="{ 
@@ -27,24 +27,24 @@
             {# Star #}
             <div class="mb-2">
                 {% for star in model.avg_rating|star_range %}
-                <i class="bi {{star}} text-warning" style="font-size:0.75rem;"></i>
+                <i class="bi {{star}} stars" style="font-size:0.75rem;"></i>
                 {% empty %}
-                <span class="text-muted" style="font-size:0.75rem;">Chưa có đánh giá</span>
+                <span class="text-muted-custom" style="font-size:0.75rem;">Chưa có đánh giá</span>
                 {% endfor %}
             </div>
 
             {# Badges #}
             <div class="mb-3">
                 {% if model.body_type %}
-                    <span class="badge bg-secondary">{{ model.body_type }}</span>
+                    <span class="badge badge-brand">{{ model.body_type }}</span>
                 {% endif %}
-                <span class="badge bg-light text-dark border">
+                <span class="badge badge-brand badge-brand-outline">
                     {{ model.variant_count }} phiên bản
                 </span>
             </div>
 
             <a href="{{ model.get_absolute_url }}"
-                class="btn btn-outline-secondary btn-sm mt-auto">
+                class="btn btn-outline-brand btn-sm mt-auto">
                 Xem chi tiết
             </a>
 

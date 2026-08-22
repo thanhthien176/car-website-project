@@ -1,60 +1,113 @@
-<div class="container">
-  <div class="row text-start p-2">
-    <div class="col-6 col-md-3 mb-3">
-        <h5>Danh Mục</h5>
-        <ul class="nav flex-column">
-        <li class="nav-item mb-2">
-            <a href="{% url 'core:general_term' %}" class="nav-link p-0 text-white-50 link-light">Điều khoản sử dụng</a>
-        </li>
-        <li class="nav-item mb-2">
-            <a href="{% url 'core:privacy_policy' %}" class="nav-link p-0 text-white-50 link-light">Chính sách bảo mật</a>
-        </li>
-        <li class="nav-item mb-2">
-            <a href="{% url 'core:disclaimer' %}" class="nav-link p-0 text-white-50 link-light">Tuyên bố miễn trừ</a>
-        </li>
-        <li class="nav-item mb-2">
-            <a href="{% url 'core:contact' %}" class="nav-link p-0 text-white-50 link-light">Liên Hệ</a>
-        </li>
-        <li class="nav-item mb-2">
-            <a href="{% url 'core:about_me' %}" class="nav-link p-0 text-white-50 link-light">About Me</a>
-        </li>
-        </ul>
-    </div>
+<footer class="site-footer">
 
-    <div class="col-md-5 ms-auto mb-3">
-      <form>
-        <h5>Subscribe to our newsletter</h5>
-        <p>Monthly digest of what's new and exciting from us.</p>
-        <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-          <label for="newsletter1" class="visually-hidden">Email address</label>
-          <input
-            id="newsletter1"
-            type="email"
-            class="form-control"
-            placeholder="Email address"
-          />
-          <button class="btn btn-primary" type="button">Subscribe</button>
+    <div class="container">
+        <div class="row text-start p-2">
+
+            <div class="col-6 col-md-3 mb-3">
+                <h5>Danh mục</h5>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="{% url 'core:general_term' %}"
+                           class="nav-link p-0">
+                            Điều khoản sử dụng
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a href="{% url 'core:privacy_policy' %}"
+                           class="nav-link p-0">
+                            Chính sách bảo mật
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a href="{% url 'core:disclaimer' %}"
+                           class="nav-link p-0">
+                            Tuyên bố miễn trừ
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a href="{% url 'core:contact' %}"
+                           class="nav-link p-0">
+                            Liên hệ
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a href="{% url 'core:about_me' %}"
+                           class="nav-link p-0">
+                            About Me
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="col-md-5 ms-auto mb-3">
+                <form>
+                    <h5>Đăng ký nhận tin</h5>
+
+                    <p>
+                        Nhận những thông tin mới nhất từ Xehoi360.
+                    </p>
+
+                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+
+                        <label for="newsletter1"
+                               class="visually-hidden">
+                            Địa chỉ email
+                        </label>
+
+                        <input
+                            id="newsletter1"
+                            type="email"
+                            class="form-control"
+                            placeholder="Địa chỉ email"
+                        >
+
+                        <button class="btn btn-footer"
+                                type="button">
+                            Đăng ký
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+
         </div>
-      </form>
     </div>
-  </div>
-</div>
 
 
+    <div class="footer-bottom
+                d-flex flex-column flex-sm-row
+                justify-content-between
+                pt-4 px-4
+                border-top">
 
-<div 
-  class="d-flex flex-column flex-sm-row justify-content-between pt-4 px-4 border-top border-secondary">
-  <p>© 2026 Xehoi360. All rights reserved.</p>
-  <ul class="list-unstyled d-flex">
-    <li class="ms-3">
-      <a class="text-white-75" href="#" aria-label="Instagram">
-        <i class="bi bi-instagram" width="24" height="24"></i>
-      </a>
-    </li>
-    <li class="ms-3">
-      <a class="text-white-75" href="#" aria-label="Facebook">
-        <i class="bi bi-facebook" width="24" height="24"></i>
-      </a>
-    </li>
-  </ul>
-</div>
+        <p class="mb-0">
+            © 2026 Xehoi360. All rights reserved.
+        </p>
+
+        <ul class="list-unstyled d-flex mb-0">
+
+            <li class="ms-3">
+                <a href="#"
+                   aria-label="Instagram">
+                    <i class="bi bi-instagram"></i>
+                </a>
+            </li>
+
+            <li class="ms-3">
+                <a href="#"
+                   aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</footer>

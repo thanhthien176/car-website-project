@@ -4,64 +4,67 @@
 {% block title %}Danh sách xe | CarCompare{% endblock title %}
 
 {% block content_root %}
-<div class="container py-4">
-    <h1 clas="mb-4">Tất cả xe hơi</h1>
-    <div class="row g-4">
+<div class="container">
+    <div class="content-surface">
+        <h1 clas="mb-4">Tất cả xe hơi</h1>
+        <div class="row g-4">
 
-        {# ── Sidebar Filter ───────────────────────────────────────── #}
-        <div class="col-lg-3">
-            <div class="card shadow-sm sticky-top" style="top: 60px;">
-                <div class="card-header fw-semibold">
-                    <i class="bi bi-bi-funnel"></i> Lọc xe
-                </div>
-                <div class="card-body">
-                    {# Filter form — GET method để URL giữ params #}
-                    <form   method="get" 
-                            id="filter-form"
-                            action="{% url 'cars:car_list' %}"
-                            >
+            {# ── Sidebar Filter ───────────────────────────────────────── #}
+            <div class="col-lg-3">
+                <div class="card shadow-sm sticky-top my-2" style="top: 1rem;">
+                    <div class="card-header fw-semibold">
+                        <i class="bi bi-bi-funnel"></i> Lọc xe
+                    </div>
+                    <div class="card-body">
+                        {# Filter form — GET method để URL giữ params #}
+                        <form   method="get" 
+                                id="filter-form"
+                                action="{% url 'cars:car_list' %}"
+                                >
 
-                        <label class="form-label fw-semibold small text-uppercase text-muted">
-                            Tìm xe
-                        </label>
-                        {% include "cars/utils/_search_bar.html" %}
+                            <label class="form-label fw-semibold small text-uppercase text-muted">
+                                Tìm xe
+                            </label>
+                            {% include "cars/utils/_search_bar.html" %}
 
-                        {# Brand filter #}
-                        <label class="form-label fw-semibold small text-uppercase text-muted" >
-                            Hãng xe
-                        </label>
-                        
-                        {% include "cars/utils/_filter_brands.html" %}
+                            {# Brand filter #}
+                            <label class="form-label fw-semibold small text-uppercase text-muted" >
+                                Hãng xe
+                            </label>
+                            
+                            {% include "cars/utils/_filter_brands.html" %}
 
-                        {# Body type filter #}
-                        <label class="form-label fw-semibold small text-uppercase text-muted">
-                            Kiểu xe
-                        </label>
-                        
-                        {% include "cars/utils/_filter_body.html" %}
+                            {# Body type filter #}
+                            <label class="form-label fw-semibold small text-uppercase text-muted">
+                                Kiểu xe
+                            </label>
+                            
+                            {% include "cars/utils/_filter_body.html" %}
 
-                        {# Filter by price #}
-                        {% include "cars/utils/_filter_price.html" %}
+                            {# Filter by price #}
+                            {% include "cars/utils/_filter_price.html" %}
 
-                        {# Clear filters — Only show when filter #}
-                        {% include "cars/utils/_filter_action.html" %}
-                        
+                            {# Clear filters — Only show when filter #}
+                            {% include "cars/utils/_filter_action.html" %}
+                            
 
-                    </form>
+                        </form>
 
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {# ── Main Content ─────────────────────────────────────────── #}
-        <div class="col-lg-9">
-            {# Car grid #}
-            <div id="car-grid-container" class="transition-opacity">
-                {% include 'cars/car_models/_car_grid.html' %}
+            {# ── Main Content ─────────────────────────────────────────── #}
+            <div class="col-lg-9">
+                {# Car grid #}
+                <div id="car-grid-container" class="transition-opacity">
+                    {% include 'cars/car_models/_car_grid.html' %}
+                </div>
+                
             </div>
-            
         </div>
     </div>
+    
 </div>
 
 {% endblock %}

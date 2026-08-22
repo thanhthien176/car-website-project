@@ -1,0 +1,16 @@
+<div class="col">
+    <a href="{{ brand.get_absolute_url }}" class="text-decoration-none">
+        <div class="card text-center h-100 car-card">
+            <div class="card-body">
+                {% if brand.logo %}
+                    <img src="{{ brand.logo.url }}" alt="{{ brand.name }}"
+                    class="brand-logo mb-2">
+                {% else %}
+                    <i class="bi bi-shield-check fs-1 text-secondary"></i>
+                {% endif %}
+                <p class="mb-0 fw-semibold">{{ brand.name }}</p>
+                <small class="text-muted">{{ brand.country_of_origin }}</small>
+            </div>
+        </div>    
+    </a>
+</div>

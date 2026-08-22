@@ -1,4 +1,4 @@
-<nav class="mt-4">
+<nav class="mt-4 z-0">
     <ul class="pagination justify-content-center">
 
         {% if page_obj.has_previous %}
@@ -11,7 +11,7 @@
         {% endif %}
 
         {% for num in paginator.page_range %}
-        <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+        <li class="page-item {% if num == page_obj.number %}active z-0{% endif %}">
             <a class="page-link" 
                 href="?page={{ num }}&brand={{ current_brand }}&body={{ current_body }}">
                 {{ num }}

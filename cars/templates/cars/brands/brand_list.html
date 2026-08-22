@@ -7,31 +7,21 @@
 
 {% block content_root %}
 <div class="brand_list_page">
-    <h1 class="mb-4">Tất cả các hãng xe <span class="badge bg-secondary">{{brands|length}}</span></h1>
+    <div class="content-surface">
+        <h1 class="mb-4">Tất cả các hãng xe <span class="badge badge-brand">{{brands|length}}</span></h1>
    
-    <article class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
-    {% for brand in brands %}
-    <div class="col">
-        <a href="{{ brand.get_absolute_url }}" class="text-decoration-none">
-            <div class="card-body py-3">
-                {% if brand.logo %}
-                    <img src="{{ brand.logo.url }}" alt="{{ brand }}"
-                        class="brand-logo mb-2 w-100">
-                {% else %}
-                    <i class="bi bi-shield-check fs-2 text-secondary mb-2 d-block"></i>
-                {% endif %}
-                <p class="fw-semibold mb-0">{{ brand.name }}</p>
-                <small class="text-muted">{{ brand.model_count }} dòng xe</small>
-            </div>
-        </a>               
-    </div>
-    {% empty %}
-    <div class="col-12">
-        <p class="text-muted">Chưa có hãng xe nào.</p>
-    </div>
-    {% endfor %}
+        <article class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+        {% for brand in brands %}
+            {% include "cars/brands/_card_brand.html" %}
+        {% empty %}
+        <div class="col-12">
+            <p class="text-muted-custom">Chưa có hãng xe nào.</p>
+        </div>
+        {% endfor %}
 
-    </article>
+        </article>
+    
+    </div>
     
 
 </div>

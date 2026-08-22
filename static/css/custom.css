@@ -1,132 +1,1304 @@
-/* CarCompare custom styles — dùng khi Bootstrap không đủ */
 
-/* Star rating color */
-.stars {
-    color: #f4a261;
-    letter-spacing: 2px;
+/* =========================================================
+   1. DESIGN TOKENS
+   ========================================================= */
+
+:root {
+    /* Brand colors */
+    --brand-primary: #1D4533;
+    --brand-primary-dark: #153A2B;
+
+    /* Text */
+    --brand-text: #5E3122;
+    --brand-text-secondary: #75665D;
+
+    /* Background */
+    --brand-bg: #F5F0EA;
+    --brand-surface: #f7eee6;
+    --brand-muted: #795548;
+
+    --brand-content-bg-50: rgba(249, 210, 186, 0.25);
+
+    --brand-content-bg-mix: color-mix(in srgb, var(--brand-surface) 30%, white);
+
+    /* Accent */
+    --brand-rating: #d4d103;
+
+    /* Bootstrap integration */
+    --bs-body-font-family: 'Roboto', sans-serif;
+    --bs-body-font-weight: 400;
+    --bs-body-line-height: 1.6;
+
+    --bs-body-color: var(--brand-text);
+    --bs-body-bg: var(--brand-bg);
+
+    /* Bootstrap border */
+    --bs-border-color: rgba(94, 49, 34, 0.15);
 }
 
-/* Price highlight */
-.price-tag {
-    color: #dc3545;
+
+/* =========================================================
+   2. GLOBAL / BODY
+   ========================================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--brand-bg);
+    color: var(--brand-text-secondary);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================================
+   3. TYPOGRAPHY
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--bs-body-font-family);
+    font-weight: 700;
+    color: var(--brand-text);
+    line-height: 1.25;
+    margin-top: 0;
+}
+
+p {
+    color: var(--brand-text);
+}
+
+a {
+    color: var(--brand-primary);
+}
+
+a:hover {
+    color: var(--brand-text);
+}
+
+
+/* Muted text */
+
+.text-muted,
+.text-muted-custom {
+    color: var(--brand-muted) !important;
+}
+
+
+/* =========================================================
+   4. HEADER / NAVBAR
+   ========================================================= */
+
+.site-header {
+    --bs-navbar-color: var(--brand-bg);
+    --bs-navbar-hover-color: var(--brand-surface);
+    --bs-navbar-active-color: var(--brand-surface);
+
+    --bs-navbar-brand-color: var(--brand-bg);
+    --bs-navbar-brand-hover-color: var(--brand-surface);
+
+    --bs-navbar-toggler-border-color: rgba(247, 234, 224, 0.35);
+
+    background-color: var(--brand-primary);
+
+    box-shadow:
+        0 4px 12px rgba(29, 69, 51, 0.12),
+        0 1px 3px rgba(94, 49, 34, 0.08);
+}
+
+
+/* Brand */
+
+.site-header .navbar-brand {
+    color: var(--brand-bg);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.2px;
+    transition: color 0.2s ease;
+}
+
+.site-header .navbar-brand:hover {
+    color: var(--brand-surface);
+}
+
+.site-header .brand-icon {
+    font-size: 1.4rem;
+    margin-right: 0.25rem;
+}
+
+.brand-logo-placeholder {
+    width: 80px;
+    height: 80px;
+    background-color: var(--brand-surface);
+    color: var(--brand-primary);
+}
+
+
+/* Navigation links */
+
+.site-header .nav-link {
+    color: var(--brand-bg);
+    font-weight: 500;
+    padding: 0.65rem 0.85rem;
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.site-header .nav-link:hover {
+    color: var(--brand-surface);
+}
+
+.site-header .nav-link.active {
+    color: var(--brand-surface);
+    font-weight: 700;
+}
+
+
+/* Icons */
+
+.site-header .nav-link i {
+    margin-right: 0.25rem;
+}
+
+
+/* Navbar toggler */
+
+.site-header .navbar-toggler {
+    border-color: rgba(247, 234, 224, 0.35);
+}
+
+.site-header .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(249, 210, 186, 0.25);
+}
+
+/* Hero Section */
+.hero-section {
+    background-color: var(--brand-primary);
+    color: var(--brand-bg);
+}
+
+.hero-section h1 {
+    color: var(--brand-bg);
+}
+
+.hero-section h1 strong {
+    color: var(--brand-surface);
+}
+
+.hero-section p {
+    color: var(--brand-bg);
+}
+
+.btn-hero {
+    background-color: var(--brand-bg);
+    color: var(--brand-primary);
+    border: 1px solid var(--brand-bg);
+}
+
+.btn-hero:hover {
+    background-color: var(--brand-surface);
+    color: var(--brand-primary);
+    border-color: var(--brand-surface);
+}
+
+/* User menu inside navbar */
+
+.site-header .dropdown-menu {
+    border: 1px solid rgba(94, 49, 34, 0.12);
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px rgba(29, 69, 51, 0.12);
+}
+
+.site-header .dropdown-item {
+    color: var(--brand-text);
+}
+
+.site-header .dropdown-item:hover,
+.site-header .dropdown-item:focus {
+    color: var(--brand-text);
+    background-color: var(--brand-bg);
+}
+
+/* =========================================================
+   4.1 CONTENT
+   ========================================================= */
+.content-surface {
+    background-color: var(--brand-content-bg-mix);
+    border-radius: 12px;
+    padding: 2rem;
+
+    box-shadow: 0 2px 12px rgba(94, 49, 34, 0.04);
+}
+
+
+
+/* =========================================================
+   5. EMAIL VERIFICATION ALERT
+   ========================================================= */
+
+.email-verification-alert {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
+    border-bottom: 1px solid rgba(94, 49, 34, 0.12);
+}
+
+.email-verification-content {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.email-verification-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.email-verification-message i {
+    font-size: 1rem;
+}
+
+.email-verification-form {
+    margin: 0;
+}
+
+
+/* =========================================================
+   6. BUTTONS
+   ========================================================= */
+
+.btn-brand {
+    --bs-btn-color: var(--brand-bg);
+    --bs-btn-bg: var(--brand-primary);
+    --bs-btn-border-color: var(--brand-primary);
+
+    --bs-btn-hover-color: var(--brand-bg);
+    --bs-btn-hover-bg: #163728;
+    --bs-btn-hover-border-color: #163728;
+
+    --bs-btn-active-color: var(--brand-bg);
+    --bs-btn-active-bg: #163728;
+    --bs-btn-active-border-color: #163728;
+
     font-weight: 600;
 }
 
-/* Card hover effect */
-.car-card {
-    transition: transform 0.2s, box-shadow 0.2s;
+.btn-outline-brand {
+    --bs-btn-color: var(--brand-primary);
+    --bs-btn-border-color: var(--brand-primary);
+
+    --bs-btn-hover-color: var(--brand-bg);
+    --bs-btn-hover-bg: var(--brand-primary);
+    --bs-btn-hover-border-color: var(--brand-primary);
+
+    --bs-btn-active-color: var(--brand-bg);
+    --bs-btn-active-bg: var(--brand-primary);
+    --bs-btn-active-border-color: var(--brand-primary);
+
+    font-weight: 600;
 }
+
+.btn-compare-picker {
+    background-color: transparent;
+    color: var(--brand-primary);
+    border: 1px solid var(--brand-primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-compare-picker:hover {
+    background-color: var(--brand-primary);
+    border-color: var(--brand-text);
+    color: var(--brand-bg);
+}
+
+.btn-compare-picker:focus-visible {
+    box-shadow: 0 0 0 0.2rem rgba(29, 69, 51, 0.2);
+}
+
+
+/* =========================================================
+   7. CARDS
+   ========================================================= */
+
+.card-custom {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
+    border: 1px solid rgba(94, 49, 34, 0.08);
+}
+
+
+/* Car card */
+
+.car-card {
+    background-color: var(--brand-surface);
+    border: 1px solid rgba(94, 49, 34, 0.08);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
 .car-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
 }
 
-/* Brand logo container */
-.brand-logo {
-    height: 60px;
-    object-fit: contain;
+.variant-picker {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    margin-top: 4px;
+
+    background-color: var(--brand-content-bg-50);
+    color: var(--brand-text);
+
+    border: 1px solid rgba(94, 49, 34, 0.12);
+    border-radius: var(--bs-border-radius);
+
+    box-shadow: 0 8px 24px rgba(94, 49, 34, 0.12);
 }
 
-/* Navbar brand */
-.navbar-brand .brand-icon {
-    font-size: 1.4rem;
+
+/* =========================================================
+   8. PRICE
+   ========================================================= */
+
+/*
+   Primary price:
+   Use brand green instead of Bootstrap red.
+*/
+
+.price {
+    color: var(--brand-primary);
+    font-weight: 700;
 }
 
-/* ===== Star Rating ===== */
+
+/*
+   Special price tag.
+
+   Red is kept here because it can communicate
+   discount / special pricing.
+*/
+
+.price-tag {
+    color: #B63D32;
+    font-weight: 700;
+}
+
+/* =========================================================
+   BADGE
+   ========================================================= */
+
+.badge-brand {
+    background-color: var(--brand-primary);
+    color: var(--brand-bg);
+}
+
+.badge-brand-outline {
+    background-color: transparent;
+    color: var(--brand-text);
+    border: 1px solid var(--brand-primary);
+}
+
+/* =========================================================
+   9. STAR RATING
+   ========================================================= */
+
+.stars {
+    color: var(--brand-rating);
+    letter-spacing: 2px;
+}
+
+
+/* Interactive star rating */
+
 .star-rating {
-  display: flex;
-  gap: 4px;
+    display: flex;
+    gap: 4px;
 }
 
 .star-rating .star-radio {
-  display: none !important;
+    display: none !important;
 }
 
 .star-rating label {
-  font-size: 2.5rem;
-  color: #ccc;
-  cursor: pointer;
-  transition: color 0.15s ease;
-  line-height: 1;
+    font-size: 2.5rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.15s ease;
+    line-height: 1;
 }
 
+
+/* =========================================================
+   10. BRAND LOGO
+   ========================================================= */
+
+.brand-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-detail-logo {
+    max-height: 80px;
+    object-fit: contain;
+}
+
+.empty-state {
+    padding: 1.5rem;
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
+    border-radius: var(--bs-border-radius);
+    text-align: center;
+}
+
+.empty-state i {
+    color: var(--brand-primary);
+    font-size: 1.5rem;
+    margin-right: 0.35rem;
+}
+
+/* =========================================================
+   11. COMPARISON TRAY
+   ========================================================= */
 
 .comparison-tray {
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    z-index:1050;
-    background:var(--bs-body-bg);
-    border-top:1px solid var(--bs-border-color);
-    box-shadow:0 -4px 16px rgba(0,0,0,0.08);
-    padding:12px 24px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+
+    background: var(--brand-bg);
+    color: var(--brand-text);
+
+    border-top: 1px solid var(--bs-border-color);
+
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+
+    padding: 12px 24px;
 }
 
+
 .thumbnail-comparison {
-    width:40px;
-    height:40px;
-    flex-shrink:0;
-    background:var(--bs-tertiary-bg);
-    border-radius:var(--bs-border-radius);
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    background: var(--brand-surface);
+
+    border-radius: var(--bs-border-radius);
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.model-thumbnail {
+    height: 180px;
+    object-fit: cover;
 }
 
 .remove-button {
-    background:none;
-    border:none;
-    cursor:pointer;
-    color:var(--bs-secondary-color);
-    padding:2px;
-    flex-shrink:0;
-    line-height:1;
+    background: none;
+    border: none;
+
+    cursor: pointer;
+
+    color: var(--brand-muted);
+
+    padding: 2px;
+
+    flex-shrink: 0;
+    line-height: 1;
 }
+
+.remove-button:hover {
+    color: var(--brand-text);
+}
+
 
 .empty-slots {
-    padding:8px 12px;
-    border:1px dashed var(--bs-border-color);
-    border-radius:var(--bs-border-radius);
-    max-width:220px;
-    min-width:0;
+    padding: 8px 12px;
+
+    border: 1px dashed var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+
+    max-width: 220px;
+    min-width: 0;
+
+    color: var(--brand-muted);
 }
 
-/* ============Filter Price============= */
+
+/* =========================================================
+   12. PRICE RANGE FILTER
+   ========================================================= */
+
 .range-slider {
-    background-color: rgb(173, 168, 168);
+    background-color: rgba(94, 49, 34, 0.25);
 }
+
+
 .range-thumb {
     position: absolute;
+
     width: 100%;
+
     top: 50%;
+
     transform: translateY(-50%);
+
     -webkit-appearance: none;
     appearance: none;
+
     background: transparent;
-    pointer-events: none; /* Tracks do not capture clicks, only thumbs do */
+
+    pointer-events: none;
+
     z-index: 2;
 }
+
+.pagination {
+    --bs-pagination-color: var(--brand-text);
+    --bs-pagination-bg: var(--brand-content-bg);
+    --bs-pagination-border-color: rgba(94, 49, 34, 0.15);
+
+    --bs-pagination-hover-color: var(--brand-bg);
+    --bs-pagination-hover-bg: var(--brand-primary);
+    --bs-pagination-hover-border-color: var(--brand-primary);
+
+    --bs-pagination-focus-color: var(--brand-text);
+    --bs-pagination-focus-bg: var(--brand-bg);
+    --bs-pagination-focus-box-shadow: 0 0 0 0.2rem rgba(29, 69, 51, 0.15);
+
+    --bs-pagination-active-color: var(--brand-bg);
+    --bs-pagination-active-bg: var(--brand-primary);
+    --bs-pagination-active-border-color: var(--brand-primary);
+}
+
+
+/* Chrome / Safari */
+
 .range-thumb::-webkit-slider-thumb {
-    pointer-events: auto; /* Only the thumb (drag button) recognizes the mouse */
+    pointer-events: auto;
+
     -webkit-appearance: none;
+
     width: 18px;
     height: 18px;
+
     border-radius: 50%;
-    background: #0d6efd;
+
+    background: var(--brand-primary);
+
     cursor: pointer;
+
+    border: 2px solid var(--brand-bg);
 }
+
+
+/* Firefox */
+
 .range-thumb::-moz-range-thumb {
     pointer-events: auto;
+
     width: 18px;
     height: 18px;
-    border-radius: 50%;
-    background: #0d6efd;
-    cursor: pointer;
-    border: none;
-}
-/* hide the browser's default track, keep only the thumb */
-.range-thumb::-webkit-slider-runnable-track { background: transparent; }
-.range-thumb::-moz-range-track { background: transparent; }
 
+    border-radius: 50%;
+
+    background: var(--brand-primary);
+
+    cursor: pointer;
+
+    border: 2px solid var(--brand-bg);
+}
+
+
+/* Hide browser default track */
+
+.range-thumb::-webkit-slider-runnable-track {
+    background: transparent;
+}
+
+.range-thumb::-moz-range-track {
+    background: transparent;
+}
+
+
+/* =========================================================
+   13. FORM ELEMENTS
+   ========================================================= */
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 0.2rem rgba(29, 69, 51, 0.15);
+}
+
+
+/* =========================================================
+   14. LINKS
+   ========================================================= */
+
+.link-brand {
+    color: var(--brand-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-brand:hover {
+    color: var(--brand-text);
+}
+
+
+/* =========================================================
+   15. FOOTER
+   ========================================================= */
+
+.site-footer {
+    background-color: var(--brand-primary);
+    color: var(--brand-bg);
+}
+
+.site-footer h5 {
+    color: var(--brand-bg);
+    font-weight: 700;
+}
+
+.site-footer p {
+    color: var(--brand-bg);
+}
+
+.site-footer .nav-link {
+    color: var(--brand-bg);
+}
+
+.site-footer .nav-link:hover {
+    color: var(--brand-surface);
+}
+
+.site-footer a {
+    color: var(--brand-bg);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    color: var(--brand-surface);
+}
+
+.site-footer .footer-bottom {
+    border-color: rgba(247, 234, 224, 0.25) !important;
+}
+
+.site-footer .btn-footer {
+    min-width: 90px;
+    white-space: nowrap;
+
+    background-color: var(--brand-bg);
+    color: var(--brand-primary);
+    border: 1px solid var(--brand-bg);
+    font-weight: 500;
+}
+
+.site-footer .btn-footer:hover {
+    background-color: var(--brand-surface);
+    color: var(--brand-primary);
+    border-color: var(--brand-surface);
+}
+
+/* =========================================================
+   16. RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .site-header .navbar-nav {
+        padding-top: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .site-header .nav-link {
+        padding: 0.7rem 0.5rem;
+    }
+
+    .email-verification-content {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .comparison-tray {
+        padding: 10px 12px;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+
+    .site-header .navbar-brand {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .email-verification-content {
+        padding: 0.75rem;
+    }
+
+    .email-verification-message {
+        text-align: center;
+    }
+
+    .comparison-tray {
+        padding: 8px;
+    }
+}
+
+/* =========================================================
+   BLOG POST
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   Article
+   --------------------------------------------------------- */
+
+.blog-article {
+    background-color: var(--brand-content-bg-mix);
+    border: 1px solid rgba(94, 49, 34, 0.08);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 16px rgba(94, 49, 34, 0.04);
+}
+
+
+/* ---------------------------------------------------------
+   Back link
+   --------------------------------------------------------- */
+
+.blog-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    color: var(--brand-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.blog-back-link:hover {
+    color: var(--brand-text);
+    text-decoration: underline;
+}
+
+
+/* ---------------------------------------------------------
+   Title
+   --------------------------------------------------------- */
+
+.blog-title {
+    margin: 0;
+
+    color: var(--brand-text);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+
+/* ---------------------------------------------------------
+   Meta
+   --------------------------------------------------------- */
+
+.blog-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+
+    color: var(--brand-text-secondary);
+    font-size: 0.9rem;
+}
+
+.blog-meta i {
+    color: var(--brand-primary);
+}
+
+.blog-meta-separator {
+    opacity: 0.5;
+}
+
+
+/* ---------------------------------------------------------
+   Tags
+   --------------------------------------------------------- */
+
+.blog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.blog-tag {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
+
+    border: 1px solid rgba(94, 49, 34, 0.10);
+
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+
+/* ---------------------------------------------------------
+   Divider
+   --------------------------------------------------------- */
+
+.blog-divider {
+    margin: 1.5rem 0 2rem;
+
+    border-color: rgba(94, 49, 34, 0.12);
+    opacity: 1;
+}
+
+
+/* ---------------------------------------------------------
+   Content
+   --------------------------------------------------------- */
+
+.blog-content {
+    max-width: 760px;
+}
+
+
+/* ---------------------------------------------------------
+   Sections
+   --------------------------------------------------------- */
+
+.blog-section {
+    margin-bottom: 3rem;
+}
+
+.blog-section:last-child {
+    margin-bottom: 0;
+}
+
+.blog-section h2 {
+    margin-bottom: 1.25rem;
+
+    color: var(--brand-text);
+    font-size: 1.65rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+
+/* ---------------------------------------------------------
+   Article text
+   --------------------------------------------------------- */
+
+.blog-text {
+    color: var(--brand-text-secondary);
+
+    font-size: 1.05rem;
+    line-height: 1.85;
+}
+
+.blog-text p {
+    margin-bottom: 1.25rem;
+}
+
+.blog-text strong {
+    color: var(--brand-text);
+    font-weight: 700;
+}
+
+.blog-text a {
+    color: var(--brand-primary);
+    font-weight: 500;
+}
+
+
+/* ---------------------------------------------------------
+   Images
+   --------------------------------------------------------- */
+
+.blog-figure {
+    margin: 1.5rem 0 2rem;
+}
+
+.blog-image {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    border-radius: 10px;
+
+    box-shadow: 0 5px 18px rgba(94, 49, 34, 0.10);
+}
+
+.blog-figure figcaption {
+    margin-top: 0.5rem;
+
+    color: var(--brand-text-secondary);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+
+/* ---------------------------------------------------------
+   End article
+   --------------------------------------------------------- */
+
+.blog-end {
+    margin-top: 3rem;
+    padding-top: 2rem;
+
+    text-align: center;
+}
+
+.blog-end-line {
+    width: 60px;
+    height: 3px;
+
+    margin: 0 auto 1rem;
+
+    background-color: var(--brand-primary);
+    border-radius: 10px;
+}
+
+.blog-end p {
+    color: var(--brand-text-secondary);
+    font-size: 0.9rem;
+}
+
+
+/* ---------------------------------------------------------
+   Blog buttons
+   --------------------------------------------------------- */
+
+.btn-blog-primary {
+    background-color: var(--brand-primary);
+    color: var(--brand-bg);
+
+    border: 1px solid var(--brand-primary);
+
+    font-weight: 600;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.btn-blog-primary:hover {
+    background-color: var(--brand-primary-dark);
+    border-color: var(--brand-primary-dark);
+    color: var(--brand-bg);
+
+    transform: translateY(-1px);
+}
+
+
+.btn-blog-outline {
+    color: var(--brand-primary);
+
+    background-color: transparent;
+
+    border: 1px solid var(--brand-primary);
+
+    font-weight: 600;
+}
+
+.btn-blog-outline:hover {
+    color: var(--brand-bg);
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+
+/* =========================================================
+   BLOG SIDEBAR
+   ========================================================= */
+
+.blog-sidebar {
+    position: sticky;
+    top: 1rem;
+}
+
+
+/* ---------------------------------------------------------
+   Sidebar section
+   --------------------------------------------------------- */
+
+.blog-sidebar-section {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+
+    padding: 1 rem;
+
+    background-color: var(--brand-content-bg);
+
+    border: 1px solid rgba(94, 49, 34, 0.08);
+    border-radius: 12px;
+
+    box-shadow: 0 3px 12px rgba(94, 49, 34, 0.035);
+}
+
+
+/* ---------------------------------------------------------
+   Sidebar heading
+   --------------------------------------------------------- */
+
+.blog-sidebar-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+
+    margin-bottom: 1rem;
+
+    padding-bottom: 0.75rem;
+
+    border-bottom: 1px solid rgba(94, 49, 34, 0.10);
+}
+
+.blog-sidebar-heading i {
+    color: var(--brand-primary);
+}
+
+.blog-sidebar-heading h2 {
+    margin: 0;
+
+    color: var(--brand-text);
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+
+/* ---------------------------------------------------------
+   Post list
+   --------------------------------------------------------- */
+
+.blog-post-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ---------------------------------------------------------
+   Post item
+   --------------------------------------------------------- */
+
+.blog-post-item {
+    display: flex;
+    gap: 0.75rem;
+
+    padding: 0.75rem 0;
+
+    color: inherit;
+    text-decoration: none;
+
+    border-bottom: 1px solid rgba(94, 49, 34, 0.08);
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.blog-post-item:first-child {
+    padding-top: 0;
+}
+
+.blog-post-item:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.blog-post-item:hover {
+    transform: translateX(2px);
+}
+
+
+/* ---------------------------------------------------------
+   Sidebar thumbnail
+   --------------------------------------------------------- */
+
+.blog-post-item > img {
+    flex: 0 0 82px;
+
+    width: 82px;
+    height: 62px;
+
+    object-fit: cover;
+
+    border-radius: 6px;
+}
+
+
+/* ---------------------------------------------------------
+   Sidebar content
+   --------------------------------------------------------- */
+
+.blog-post-item-content {
+    min-width: 0;
+}
+
+.blog-post-category {
+    display: block;
+
+    margin-bottom: 0.15rem;
+
+    color: var(--brand-primary);
+
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.blog-post-item h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+
+    margin: 0;
+
+    color: var(--brand-text);
+
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.blog-post-item small {
+    display: block;
+
+    margin-top: 0.25rem;
+
+    color: var(--brand-text-secondary);
+
+    font-size: 0.7rem;
+}
+
+
+/* =========================================================
+   SIDEBAR CTA
+   ========================================================= */
+
+.blog-sidebar-cta {
+    margin-top: 1rem;
+    padding: 0.75rem;
+
+    background-color: var(--brand-content-bg-mix);
+    color: var(--brand-text);
+
+    border-radius: 12px;
+
+    box-shadow: 0 6px 18px rgba(29, 69, 51, 0.12);
+}
+
+.blog-sidebar-cta > i {
+    display: inline-block;
+
+    margin-bottom: 0.75rem;
+
+    font-size: 1.75rem;
+}
+
+.blog-sidebar-cta h2 {
+    margin-bottom: 0.5rem;
+
+    color: var(--brand-text);
+
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.blog-sidebar-cta p {
+    margin-bottom: 1rem;
+
+    color: var(--brand-text-secondary);
+
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.blog-sidebar-cta .btn {
+    background-color: var(--brand-text);
+    color: var(--brand-content-bg-mix);
+
+    border-color: var(--brand-primary);
+
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.blog-sidebar-cta .btn:hover {
+    background-color: var(--brand-primary-dark);
+    border-color: var(--brand-surface);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .blog-sidebar {
+        position: static;
+    }
+
+    .blog-content {
+        max-width: none;
+    }
+
+}
+
+
+@media (max-width: 767.98px) {
+
+    .blog-article {
+        padding: 1.25rem;
+        border-radius: 8px;
+    }
+
+    .blog-title {
+        font-size: 2rem;
+    }
+
+    .blog-text {
+        font-size: 1rem;
+        line-height: 1.75;
+    }
+
+    .blog-section h2 {
+        font-size: 1.4rem;
+    }
+
+}

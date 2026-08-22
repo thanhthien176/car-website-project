@@ -1,57 +1,101 @@
 {% load static car_filters %}
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg site-header" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand px-4 text-white-50 link-light" href="{% url 'cars:home' %}">
-            <span class="brand-icon">🚗</span> xehoi360
-        </a>
-        {% if user.is_authenticated and not email_verified %}
-        <div class="alert alert-warning d-flex justify-content-between align-items-center mb-0 rounded-0">
-            <span>Email của bạn chưa được xác nhận.</span>
-            <form method="post" action="{% url 'users:resend_confirmation' %}" class="m-0">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-outline-dark">Gửi lại email xác nhận</button>
-            </form>
-        </div>
-        {% endif %}
 
-        {# Mobile toggle #}
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <!-- Brand -->
+        <a class="navbar-brand px-4" href="{% url 'cars:home' %}">
+            <span class="brand-icon">🚗</span>
+            <span>xehoi360</span>
+        </a>
+
+        <!-- Mobile toggle -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNav"
+                aria-controls="mainNav"
+                aria-expanded="false"
+                aria-label="Mở menu">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
+
+        <!-- Main navigation -->
         <div class="collapse navbar-collapse" id="mainNav">
+
             <ul class="navbar-nav ms-auto">
+
+                <!-- Home -->
                 <li class="nav-item">
                     <a class="nav-link {% active_url 'home' %}"
-                        href="{% url 'cars:home' %}">
-                        <i class="bi bi-house"></i> Trang chủ
+                       href="{% url 'cars:home' %}">
+                        <i class="bi bi-house"></i>
+                        <span>Trang chủ</span>
                     </a>
                 </li>
+
+                <!-- Brands -->
                 <li class="nav-item">
                     <a class="nav-link {% active_url 'brand_list' %}"
-                        href="{% url 'cars:brand_list' %}">
-                        <i class="bi bi-shield-check"></i> Brand
+                       href="{% url 'cars:brand_list' %}">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Hãng xe</span>
                     </a>
                 </li>
+
+                <!-- Cars -->
                 <li class="nav-item">
                     <a class="nav-link {% active_url 'car_list' %}"
-                        href="{% url 'cars:car_list' %}">
-                        <i class="bi bi-car-front"></i> All Cars
+                       href="{% url 'cars:car_list' %}">
+                        <i class="bi bi-car-front"></i>
+                        <span>Xe hơi</span>
                     </a>
                 </li>
+
+                <!-- Blog -->
                 <li class="nav-item">
                     <a class="nav-link {% active_url 'post_list' %}"
-                        href="{% url 'blogs:post_list' %}">
-                        <i class="bi bi-newspaper"></i> Blogs
+                       href="{% url 'blogs:post_list' %}">
+                        <i class="bi bi-newspaper"></i>
+                        <span>Blog</span>
                     </a>
                 </li>
 
             </ul>
-            
+
+            <!-- User menu -->
             {% include "header/_user.html" %}
 
         </div>
     </div>
 </nav>
+
+
+<!-- Email verification notification -->
+{% if user.is_authenticated and not email_verified %}
+<div class="email-verification-alert">
+    <div class="container-fluid">
+        <div class="email-verification-content">
+
+            <div class="email-verification-message">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span>
+                    Email của bạn chưa được xác nhận.
+                </span>
+            </div>
+
+            <form method="post"
+                  action="{% url 'users:resend_confirmation' %}"
+                  class="email-verification-form">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-sm btn-outline-dark">
+                    Gửi lại email xác nhận
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+

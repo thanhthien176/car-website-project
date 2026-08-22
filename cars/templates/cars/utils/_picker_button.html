@@ -1,10 +1,6 @@
 {# Picker trigger button #}
-<button class="btn btn-sm w-100 mt-2"
+<button class="btn btn-compare-picker btn-sm w-100 mt-2"
         @click="open = !open"
-        style="background:var(--bs-primary-bg-subtle);
-                color:var(--bs-primary-text-emphasis);
-                border:1px solid var(--bs-primary-border-subtle);
-                font-size:12px"
         hx-get="{% url 'cars:variant_picker' slug=model.slug %}"
         hx-target="#picker-{{ model.slug }}"
         hx-swap="innerHTML"
