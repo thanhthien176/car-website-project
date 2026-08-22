@@ -150,7 +150,8 @@ class CarModel(SEOMetaData, models.Model):
         
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(f"{self.brand.name}-{self.name}")
+            year = f"-{self.model_year}" if self.model_year else ""
+            self.slug = slugify(f"{self.brand.name}-{self.name}{year}")
         super().save(*args, **kwargs)
             
     @property
@@ -167,7 +168,8 @@ class CarModel(SEOMetaData, models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"{self.brand.name} {self.name}"
+        model_year = str(self.model_year) if self.model_year else ""
+        return f"{self.brand.name} {self.name} {model_year}"
     
     def get_absolute_url(self):
         return reverse("cars:car_detail", kwargs={"slug": self.slug})
@@ -258,13 +260,9 @@ class CarVariant(SEOMetaData, models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(f"{self.car_model}-{self.name}")
-            new_slug = base_slug
-            count = 1
-            while CarVariant.objects.filter(slug=new_slug).exists():
-                new_slug = slugify(f"{base_slug}-{count}")
-                count += 1
-            self.slug = new_slug
+            year = f"-{self.car_model.model_year}" if self.car_model.model_year else ""
+            self.slug = slugify(f"{self.car_model.brand.name}-{self.car_model.name}-{self.name}{year}")
+        
             
         super().save(*args, **kwargs)
         
@@ -290,7 +288,8 @@ class CarVariant(SEOMetaData, models.Model):
         return self.car_model.primary_image
         
     def __str__(self):
-        return f"{self.car_model} {self.name}"
+        model_year = str(self.car_model.model_year) if self.car_model.model_year else "" 
+        return f"{self.car_model.brand.name} {self.car_model.name} {self.name} {model_year}"
     
     def get_absolute_url(self):
         return reverse("cars:variant_detail", kwargs={"slug": self.slug})

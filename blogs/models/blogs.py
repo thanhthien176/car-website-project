@@ -4,6 +4,7 @@ from django.utils.text import slugify
 
 from cars.validators import validate_image_size, validate_image_extension
 from cars.utils.upload_utils import UploadToPath
+from cars.models import ImageAttributionMixin
 from .base import ArticleBase, SectionBase
 
 class BlogCategory(models.Model):
@@ -56,7 +57,7 @@ class BlogPost(ArticleBase):
         return reverse("blogs:post_detail", kwargs={"slug": self.slug})
     
 
-class BlogSection(SectionBase):
+class BlogSection(ImageAttributionMixin, SectionBase):
     post = models.ForeignKey("BlogPost", on_delete=models.CASCADE, related_name="sections")
     image = models.ImageField(
         upload_to = UploadToPath("blogs", "post_section", slug_field="post.slug"),

@@ -1,5 +1,6 @@
 from django.contrib.messages import success
 from django.utils.text import slugify
+from django.utils import timezone
  
 from cars.models import Brand, BodyType, CarClass, CarModel, CarVariant
 from .base_import import BaseImportCommand
@@ -79,10 +80,11 @@ class Command(BaseImportCommand):
         
         display_order = self._to_int(row.get("display_order"), row_num)
         
+        current_year = timezone.now().year
         model_defaults = {
             "body_type": body_type,
             "car_class": car_class,
-            "model_year": self._to_int(row.get("model_year"), row_num),
+            "model_year": self._to_int(row.get("model_year", current_year), row_num),
             "description": self._clean_str(row.get("description")) or "",
             "display_order": display_order if display_order else 0,
         }

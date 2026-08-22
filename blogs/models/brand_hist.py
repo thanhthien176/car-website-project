@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from cars.utils.upload_utils import UploadToPath
 from cars.validators import validate_image_size, validate_image_extension
-
+from cars.models import ImageAttributionMixin
 from .base import ArticleBase, SectionBase
 
 
@@ -24,7 +24,7 @@ class BrandHistory(ArticleBase):
         return reverse("cars:brand_history", kwargs={"slug": self.brand.slug})
     
     
-class BrandHistorySection(SectionBase):
+class BrandHistorySection(ImageAttributionMixin, SectionBase):
     history = models.ForeignKey(
         "BrandHistory", on_delete=models.CASCADE, related_name="sections"
     )

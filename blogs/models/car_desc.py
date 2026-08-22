@@ -4,9 +4,7 @@ from django.urls import reverse
 
 from cars.utils.upload_utils import UploadToPath
 from cars.validators import validate_image_size, validate_image_extension
-
-
-
+from cars.models import ImageAttributionMixin
 
 from .base import ArticleBase, SectionBase
 
@@ -58,7 +56,7 @@ class CarDescription(ArticleBase):
             return reverse("cars:variant_detail", kwargs={"slug": self.variant.slug})
         return reverse("cars:car_detail", kwargs={"slug": self.car_model.slug})
     
-class CarDescriptionSection(SectionBase):
+class CarDescriptionSection(ImageAttributionMixin, SectionBase):
     description = models.ForeignKey(
         "CarDescription", on_delete=models.CASCADE, related_name="sections"
     )
