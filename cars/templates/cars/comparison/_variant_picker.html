@@ -28,7 +28,7 @@
                 <div>
                     <div style="font-size:13px;font-weight:500;">{{ variant.variant_name }}</div>
                     <div style="font-size:11px;color:var(--bs-secondary-color)">
-                        <span class="badge bg-secondary">
+                        <span class="badge badge-brand-outline">
                         {{ variant.get_fuel_type_display }}
                         </span>
                         <span style="color:#dc3545">
@@ -38,18 +38,18 @@
                 </div>
 
                 {% if variant.pk in added_pks %}
-                <button class="btn btn-sm btn-outline-secondary" disabled 
+                <button class="btn btn-sm btn-outline-brand" disabled 
                         style="font-size:12px">
                     <i class="bi bi-check-lg"></i> Đã thêm    
                 </button>
                 {% elif not can_add %}
-                <button class="btn btn-sm btn-outline-secondary" disabled
+                <button class="btn btn-sm btn-outline-brand" disabled
                         style="font-size:12px">
                     Đã đủ
                 </button>
                 {% else %}
                 <button class="btn btn-sm" style="font-size:12px"
-                        :class="added ? 'btn-outline-secondary' : 'btn-primary' "
+                        :class="added ? 'btn-outline-brand' : 'btn-brand' "
                         :disabled="added || adding "
                         @click="adding = true"
                         hx-post="{% url 'cars:comparison_add' variant_pk=variant.pk %}"

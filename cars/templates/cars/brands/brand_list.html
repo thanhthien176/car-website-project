@@ -10,7 +10,7 @@
     <div class="content-surface">
         <h1 class="mb-4">Tất cả các hãng xe <span class="badge badge-brand">{{brands|length}}</span></h1>
    
-        <article class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+        <article class="row row-cols-3 row-cols-md-6 g-3 mb-5">
         {% for brand in brands %}
             {% include "cars/brands/_card_brand.html" %}
         {% empty %}

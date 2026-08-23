@@ -1,5 +1,5 @@
 {% if spec_tabs %}
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs spec-tabs">
   {% for tab in spec_tabs %}
   <li class="nav-item">
     <a class="nav-link {% if forloop.first %}active{% endif %}"
@@ -10,16 +10,16 @@
   {% endfor %}
 </ul>
 
-<div class="tab-content">
+<div class="tab-content pt-3">
   {% for tab in spec_tabs %}
   <div class="tab-pane {% if forloop.first %}show active{% endif %}" id="{{ tab.key }}">
-    <table class="table">
+    <table class="table spec-table">
       {% for item in tab.items %}
       <tr>
         <td>{{ item.label }}</td>
         <td>
           {% if item.is_boolean %}
-            <i class="bi bi-check-circle-fill text-success"></i>
+            <i class="bi bi-check-circle-fill spec-check"></i>
           {% else %}
             {{ item.value }}
           {% endif %}
