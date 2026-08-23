@@ -19,3 +19,5 @@ DATABASES = {
 
 # In development, print emails to console instead of sending
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CLOUDFLARE_PURGE_ENABLED = config('CLOUDFLARE_PURGE_ENABLED', default=False, cast=bool)

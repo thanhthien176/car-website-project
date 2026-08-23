@@ -68,6 +68,8 @@ AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_REGION_NAME = 'auto'
 AWS_QUERYSTRING_AUTH = False
 
+# Cloudflare purge caching
+CLOUDFLARE_PURGE_ENABLED = config('CLOUDFLARE_PURGE_ENABLED', default=True, cast=bool)
 
 # ── Security headers ────────────────────────────────────────────────────────
 SECURE_HSTS_SECONDS = 31536000

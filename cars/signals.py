@@ -1,12 +1,15 @@
 import os
 import logging
 from django.core.files.base import ContentFile
+from django.db import transaction
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.core.cache import cache
 
 from cars.services.model_services import SpecService
+from core.cache.cloudflare import CloudflareCacheService
 from core.cache.invalidation import ClearCacheKeys
+from core.cache.urls_caching import CacheUrl
 
 from .models import BodyType, Brand, CarImage, CarModel, Review, CarVariant, VariantImage
 from users.models import User
@@ -195,15 +198,26 @@ def update_car_rating_on_delete(sender, instance, **kwargs):
 def clear_brand_cache(sender, instance, **kwargs):
     ClearCacheKeys.clear_brand_cache(instance)
     
+    # Delete Caching of Cloudflare
+    urls = CacheUrl.brand_urls(instance)
+    transaction.on_commit(lambda: CloudflareCacheService.purge_urls(urls))
+    
     
 @receiver([post_save, post_delete], sender=CarModel)
 def clear_car_model_cache(sender, instance, **kwargs):
     ClearCacheKeys.clear_car_model_cache(instance)
     
+    # Delete Caching of Cloudflare
+    urls = CacheUrl.car_urls(instance)
+    transaction.on_commit(lambda: CloudflareCacheService.purge_urls(urls))
     
 @receiver([post_save, post_delete], sender=CarVariant)
 def clear_variant_cache(sender, instance, **kwargs):
     ClearCacheKeys.clear_variant_cache(instance)
+    
+    # Delete Caching of Cloudflare
+    urls = CacheUrl.variant_urls(instance)
+    transaction.on_commit(lambda: CloudflareCacheService.purge_urls(urls))
     
 @receiver([post_save, post_delete], sender=BodyType)
 def clear_body_type_cache(sender, instance, **kwargs):
@@ -213,13 +227,25 @@ def clear_body_type_cache(sender, instance, **kwargs):
 def clear_car_image_cache(sender, instance, **kwargs):
     ClearCacheKeys.clear_car_model_cache(instance.car)
     
+    # Delete Caching of Cloudflare
+    urls = CacheUrl.car_urls(instance.car)
+    transaction.on_commit(lambda: CloudflareCacheService.purge_urls(urls))
+    
 @receiver([post_save, post_delete], sender=VariantImage)
 def clear_variant_image_cache(sender, instance, **kwargs):
     ClearCacheKeys.clear_variant_cache(instance.variant)
+    
+    # Delete Caching of Cloudflare
+    urls = CacheUrl.variant_urls(instance.variant)
+    transaction.on_commit(lambda: CloudflareCacheService.purge_urls(urls))
 
 @receiver([post_save, post_delete], sender=Review)
 def clear_review_cache(sender, instance, **kwargs):
     ClearCacheKeys.clear_review_cache(instance)
+    
+    # Delete Caching of Cloudflare
+    urls = CacheUrl.review_urls(instance)
+    transaction.on_commit(lambda: CloudflareCacheService.purge_urls(urls))
     
 #-------------------------------------------------
 # Delete cache specifications
@@ -228,6 +254,10 @@ def _invalidate_spec_cache(sender, instance, **kwargs):
     variant = getattr(instance, "variant", None)
     if variant is not None:
         ClearCacheKeys.clear_spec_cache(variant)
+        
+        # Delete Caching of Cloudflare
+        urls = CacheUrl.spec_urls(instance)
+        transaction.on_commit(lambda: CloudflareCacheService.purge_urls(urls))
 
 for _accessor, _spec_model in SpecService.get_spec_relations():
     receiver(post_save, sender=_spec_model)(_invalidate_spec_cache)

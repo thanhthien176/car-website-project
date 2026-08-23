@@ -164,9 +164,7 @@ class CarModel(SEOMetaData, models.Model):
             return fallback.image.url
         return None
             
-            
-        super().save(*args, **kwargs)
-    
+
     def __str__(self):
         model_year = f" {self.model_year}" if self.model_year else ""
         return f"{self.brand.name} {self.name}{model_year}"

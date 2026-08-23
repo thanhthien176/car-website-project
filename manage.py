@@ -3,6 +3,17 @@
 import os
 import sys
 
+"""Check error when the error is hide
+# import warnings, traceback
+
+# def warn_with_traceback(message, category, filename, lineno, file=None, line=None):
+#     traceback.print_stack()
+#     print(warnings.formatwarning(message, category, filename, lineno, line))
+
+# warnings.showwarning = warn_with_traceback
+
+"""
+
 
 def main():
     """Run administrative tasks."""

@@ -180,3 +180,8 @@ ACCOUNT_LOGOUT_ON_GET = True # Logout immediately after GET /accounts/logout/ wi
 # Social account: do not create an additional email/password if you already have a social account with email
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
+# Manage Cloudflare Caching
+CLOUDFLARE_API_TOKEN = config('CLOUDFLARE_API_TOKEN', default='')
+CLOUDFLARE_ZONE_ID = config('CLOUDFLARE_ZONE_ID', default='')
+CLOUDFLARE_PURGE_ENABLED = False
