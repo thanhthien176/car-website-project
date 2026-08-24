@@ -1,43 +1,55 @@
+/*
+1D4533: rgb(29, 69, 51)   -> header / footer / hero / card surfaces (elevated tone)
+F7EAE0: rgb(247, 234, 224) -> primary accent (links, buttons, price, icons) — small usage only
+F9D2BA: rgb(249, 210, 186) -> headings / high-emphasis text
+5E3122: rgb(94, 49, 34)    -> accent surfaces (tags, hover fills)
+75665D: rgb(117, 102, 93)  -> base for secondary text (lightened below for contrast on dark bg)
+153A2B: rgb(21, 58, 43)    -> page background (deepest tone)
+*/
 
+/*
+9CB080: 1
+618764: 2
+2B5748: 3
+273338: 4
 
+*/
 :root {
-    /* ---- Brand hues  ---- */
-    --brand-primary: #1D4533;
-    --brand-primary-dark: #153A2B;
+    /* ---- Brand hues ---- */
+    --brand-primary: F7EAE0;
+    --brand-primary-dark: color-mix(in srgb, var(--brand-primary) 15%, black);
     --brand-primary-light: color-mix(in srgb, var(--brand-primary) 15%, white);
 
-    --brand-accent: #F9D2BA; 
+    --brand-accent: #5E3122;
 
     /* ---- Text ---- */
-    --brand-text: #5E3122;             
-    --brand-text-secondary: #75665D;   
+    --brand-text: #F9D2BA;
+    --brand-text-secondary: color-mix(in srgb, #75665D 50%, white);
     --brand-muted: #97887E;
 
-    /* ---- Background ---- */
-    --brand-bg: #F7EAE0;
-    --brand-surface: color-mix(in srgb, var(--brand-bg) 55%, white);
-    --brand-content-bg-mix: color-mix(in srgb, var(--brand-surface) 30%, white);
+    /* ---- Background (two-tone dark system) ---- */
+    --brand-bg: #153A2B;                                              /* page background — deepest */
+    --brand-surface: #1D4533;                                         /* header, footer, hero, cards — one step lighter */
+    --brand-content-bg-mix: color-mix(in srgb, var(--brand-surface) 85%, black); /* content wrappers, pagination, sidebar CTA */
 
     /* ---- Accent tint layer ---- */
-    --brand-accent-tint: color-mix(in srgb, var(--brand-accent) 30%, white);
-    --brand-accent-tint-strong: color-mix(in srgb, var(--brand-accent) 55%, white);
+    --brand-accent-tint: color-mix(in srgb, var(--brand-accent) 55%, var(--brand-surface));
+    --brand-accent-tint-strong: color-mix(in srgb, var(--brand-accent) 80%, white);
 
-    
     --brand-rating: #D89B4A;
-
     --brand-danger-accent: #B63D32;
 
     --brand-border-subtle: color-mix(in srgb, var(--brand-text) 8%, transparent);
-    --brand-border: color-mix(in srgb, var(--brand-text) 12%, transparent);
-    --brand-border-strong: color-mix(in srgb, var(--brand-text) 22%, transparent);
+    --brand-border: color-mix(in srgb, var(--brand-text) 14%, transparent);
+    --brand-border-strong: color-mix(in srgb, var(--brand-text) 24%, transparent);
 
-    --brand-shadow-xs: color-mix(in srgb, var(--brand-text) 4%, transparent);
-    --brand-shadow-sm: color-mix(in srgb, var(--brand-text) 10%, transparent);
-    --brand-shadow-primary: color-mix(in srgb, var(--brand-primary) 12%, transparent);
+    --brand-shadow-xs: color-mix(in srgb, black 15%, transparent);
+    --brand-shadow-sm: color-mix(in srgb, black 30%, transparent);
+    --brand-shadow-primary: color-mix(in srgb, black 40%, transparent);
 
-    --brand-focus-ring: color-mix(in srgb, var(--brand-primary) 15%, transparent);
-    --brand-bg-border: color-mix(in srgb, var(--brand-bg) 35%, transparent);
-    --brand-bg-border-soft: color-mix(in srgb, var(--brand-bg) 25%, transparent);
+    --brand-focus-ring: color-mix(in srgb, var(--brand-primary) 25%, transparent);
+    --brand-bg-border: var(--brand-border-strong);
+    --brand-bg-border-soft: var(--brand-border-subtle);
 
     /* ---- Bootstrap integration ---- */
     --bs-body-font-family: 'Roboto', sans-serif;
@@ -73,11 +85,10 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--bs-body-font-family);
     font-weight: 700;
-    color: var(--brand-text);     
+    color: var(--brand-text);
     line-height: 1.25;
     margin-top: 0;
 }
-
 
 p {
     color: var(--brand-text-secondary);
@@ -102,16 +113,16 @@ a:hover {
    ========================================================= */
 
 .site-header {
-    --bs-navbar-color: var(--brand-bg);
-    --bs-navbar-hover-color: var(--brand-surface);
-    --bs-navbar-active-color: var(--brand-surface);
+    --bs-navbar-color: var(--brand-text);
+    --bs-navbar-hover-color: var(--brand-primary);
+    --bs-navbar-active-color: var(--brand-primary);
 
-    --bs-navbar-brand-color: var(--brand-bg);
-    --bs-navbar-brand-hover-color: var(--brand-surface);
+    --bs-navbar-brand-color: var(--brand-text);
+    --bs-navbar-brand-hover-color: var(--brand-primary);
 
     --bs-navbar-toggler-border-color: var(--brand-bg-border);
 
-    background-color: var(--brand-primary);
+    background-color: var(--brand-surface);
 
     box-shadow:
         0 4px 12px var(--brand-shadow-primary),
@@ -119,7 +130,7 @@ a:hover {
 }
 
 .site-header .navbar-brand {
-    color: var(--brand-bg);
+    color: var(--brand-text);
     font-weight: 700;
     font-size: 1.25rem;
     letter-spacing: 0.2px;
@@ -127,7 +138,7 @@ a:hover {
 }
 
 .site-header .navbar-brand:hover {
-    color: var(--brand-surface);
+    color: var(--brand-primary);
 }
 
 .site-header .brand-icon {
@@ -138,23 +149,23 @@ a:hover {
 .brand-logo-placeholder {
     width: 80px;
     height: 80px;
-    background-color: var(--brand-surface);
-    color: var(--brand-primary);
+    background-color: var(--brand-bg);
+    color: var(--brand-primary-light);
 }
 
 .site-header .nav-link {
-    color: var(--brand-bg);
+    color: var(--brand-text);
     font-weight: 500;
     padding: 0.65rem 0.85rem;
     transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .site-header .nav-link:hover {
-    color: var(--brand-surface);
+    color: var(--brand-primary);
 }
 
 .site-header .nav-link.active {
-    color: var(--brand-surface);
+    color: var(--brand-primary);
     font-weight: 700;
 }
 
@@ -172,36 +183,37 @@ a:hover {
 
 /* Hero Section */
 .hero-section {
-    background-color: var(--brand-primary);
-    color: var(--brand-bg);
+    background-color: var(--brand-surface);
+    color: var(--brand-text-secondary);
 }
 
 .hero-section h1 {
-    color: var(--brand-bg);
+    color: var(--brand-text);
 }
 
 .hero-section h1 strong {
-    color: var(--brand-surface);
+    color: var(--brand-primary);
 }
 
 .hero-section p {
-    color: var(--brand-bg);
+    color: var(--brand-text-secondary);
 }
 
 .btn-hero {
-    background-color: var(--brand-bg);
-    color: var(--brand-primary);
-    border: 1px solid var(--brand-bg);
+    background-color: var(--brand-primary);
+    color: var(--brand-bg);
+    border: 1px solid var(--brand-primary);
 }
 
 .btn-hero:hover {
-    background-color: var(--brand-surface);
-    color: var(--brand-primary);
-    border-color: var(--brand-surface);
+    background-color: var(--brand-primary-dark);
+    color: var(--brand-bg);
+    border-color: var(--brand-primary-dark);
 }
 
 /* Dropdown trong navbar */
 .site-header .dropdown-menu {
+    background-color: var(--brand-surface);
     border: 1px solid var(--brand-border);
     border-radius: 0.75rem;
     box-shadow: 0 10px 30px var(--brand-shadow-primary);
@@ -213,8 +225,8 @@ a:hover {
 
 .site-header .dropdown-item:hover,
 .site-header .dropdown-item:focus {
-    color: var(--brand-text);
-    background-color: var(--brand-bg);
+    color: var(--brand-bg);
+    background-color: var(--brand-primary);
 }
 
 
@@ -275,12 +287,12 @@ a:hover {
     --bs-btn-bg: var(--brand-primary);
     --bs-btn-border-color: var(--brand-primary);
 
-    --bs-btn-hover-color: var(--brand-bg);
-    --bs-btn-hover-bg: var(--brand-primary-dark);
+    --bs-btn-hover-color: var(--brand-primary);
+    --bs-btn-hover-bg: var(--brand-bg);
     --bs-btn-hover-border-color: var(--brand-primary-dark);
 
-    --bs-btn-active-color: var(--brand-bg);
-    --bs-btn-active-bg: var(--brand-primary-dark);
+    --bs-btn-active-color: var(--brand-primary);
+    --bs-btn-active-bg: var(--brand-bg);
     --bs-btn-active-border-color: var(--brand-primary-dark);
 
     font-weight: 600;
@@ -331,7 +343,7 @@ a:hover {
 
 
 /* =========================================================
-   7. CARDS 
+   7. CARDS
    ========================================================= */
 
 .card-custom,
@@ -345,15 +357,13 @@ a:hover {
     box-shadow: 0 2px 12px var(--brand-shadow-xs);
 }
 
-/* The individual differences of each class are retained below */
-
 .car-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .car-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
 }
 
 .blog-article {
@@ -402,7 +412,7 @@ a:hover {
 
 
 /* =========================================================
-   9. BADGE / TAG 
+   9. BADGE / TAG
    ========================================================= */
 
 .badge-brand {
@@ -414,7 +424,7 @@ a:hover {
 .badge-brand-outline,
 .blog-tag {
     background-color: var(--brand-accent-tint);
-    color: var(--brand-primary-dark);
+    color: var(--brand-text);
     border: 1px solid var(--brand-border-subtle);
     font-weight: 600;
 }
@@ -428,7 +438,7 @@ a:hover {
     font-size: 0.75rem;
     font-weight: 600;
     background-color: var(--brand-accent-tint);
-    color: var(--brand-primary-dark);
+    color: var(--brand-text);
     border: 1px solid var(--brand-border-subtle);
 }
 
@@ -471,14 +481,26 @@ a:hover {
    ========================================================= */
 
 .brand-logo {
-    height: 60px;
-    width: 60px;
+    height: 100px;
+    width: 100px;
     object-fit: contain;
 }
 
 .brand-detail-logo {
     max-height: 80px;
     object-fit: contain;
+}
+
+/* Optional helper: use this wrapper around brand <img> logos so they keep
+   a white backdrop regardless of the dark theme (most car brand logos are
+   designed for light backgrounds and lose contrast directly on dark green). */
+.brand-logo-chip {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .empty-state {
@@ -507,11 +529,11 @@ a:hover {
     right: 0;
     z-index: 1050;
 
-    background: var(--brand-bg);
+    background: var(--brand-surface);
     color: var(--brand-text);
 
     border-top: 1px solid var(--bs-border-color);
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.35);
 
     padding: 12px 24px;
 }
@@ -520,7 +542,7 @@ a:hover {
     width: 40px;
     height: 40px;
     flex-shrink: 0;
-    background: var(--brand-surface);
+    background: var(--brand-bg);
     border-radius: var(--bs-border-radius);
     overflow: hidden;
     display: flex;
@@ -630,8 +652,21 @@ a:hover {
    14. FORM ELEMENTS
    ========================================================= */
 
+.form-control,
+.form-select {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.form-control::placeholder {
+    color: var(--brand-muted);
+}
+
 .form-control:focus,
 .form-select:focus {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
     border-color: var(--brand-primary);
     box-shadow: 0 0 0 0.2rem var(--brand-focus-ring);
 }
@@ -657,34 +692,34 @@ a:hover {
    ========================================================= */
 
 .site-footer {
-    background-color: var(--brand-primary);
-    color: var(--brand-bg);
+    background-color: var(--brand-surface);
+    color: var(--brand-text-secondary);
 }
 
 .site-footer h5 {
-    color: var(--brand-bg);
+    color: var(--brand-text);
     font-weight: 700;
 }
 
 .site-footer p {
-    color: var(--brand-bg);
+    color: var(--brand-text-secondary);
 }
 
 .site-footer .nav-link {
-    color: var(--brand-bg);
+    color: var(--brand-text-secondary);
 }
 
 .site-footer .nav-link:hover {
-    color: var(--brand-surface);
+    color: var(--brand-primary);
 }
 
 .site-footer a {
-    color: var(--brand-bg);
+    color: var(--brand-text-secondary);
     text-decoration: none;
 }
 
 .site-footer a:hover {
-    color: var(--brand-surface);
+    color: var(--brand-primary);
 }
 
 .site-footer .footer-bottom {
@@ -694,16 +729,16 @@ a:hover {
 .site-footer .btn-footer {
     min-width: 90px;
     white-space: nowrap;
-    background-color: var(--brand-bg);
-    color: var(--brand-primary);
-    border: 1px solid var(--brand-bg);
+    background-color: var(--brand-primary);
+    color: var(--brand-bg);
+    border: 1px solid var(--brand-primary);
     font-weight: 500;
 }
 
 .site-footer .btn-footer:hover {
-    background-color: var(--brand-surface);
-    color: var(--brand-primary);
-    border-color: var(--brand-surface);
+    background-color: var(--brand-primary-dark);
+    color: var(--brand-bg);
+    border-color: var(--brand-primary-dark);
 }
 
 
@@ -771,7 +806,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Article title — use correct token heading, DO NOT use text-secondary */
 .blog-title {
     margin: 0;
     color: var(--brand-text);
@@ -803,8 +837,6 @@ a:hover {
     flex-wrap: wrap;
     gap: 0.4rem;
 }
-
-/* .blog-tag style has been merged into section 9. BADGE /TAG above */
 
 .blog-divider {
     margin: 1.5rem 0 2rem;
@@ -890,8 +922,6 @@ a:hover {
     font-size: 0.9rem;
 }
 
-/* Keep the class name, just remove the hardcode -> use token.
-   Có You can add .btn-lift if you want a lift effect when hovering (optional). */
 .btn-blog-primary {
     background-color: var(--brand-primary);
     color: var(--brand-bg);
@@ -999,8 +1029,6 @@ a:hover {
     text-transform: uppercase;
 }
 
-/* Tiêu đề bài viết mini trong sidebar — dùng token heading để nhất
-   quán với h1-h6, thay vì text-secondary như bản cũ */
 .blog-post-item h3 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -1154,13 +1182,11 @@ a:hover {
     vertical-align: middle;
 }
 
-/* (label) — light, "caption" */
 .spec-table td:first-child {
     color: var(--brand-text-secondary);
     width: 45%;
 }
 
-/* Cột giá trị — đậm hơn */
 .spec-table td:last-child {
     color: var(--brand-text);
     font-weight: 600;
@@ -1170,9 +1196,89 @@ a:hover {
     background-color: var(--brand-accent-tint);
 }
 
-/* Icon */
 .spec-check {
     color: var(--brand-primary);
     font-size: 1.1rem;
 }
 
+/* =========================================================
+   ICON LINK (Bootstrap component) — override màu theo theme
+   ========================================================= */
+.icon-link {
+    color: var(--brand-primary);
+}
+
+.icon-link:hover,
+.icon-link:focus {
+    color: var(--brand-text);
+}
+
+/* =========================================================
+   IMAGE ATTRIBUTION — overlay, không đẩy layout
+   ========================================================= */
+
+.img-attribution-wrap {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-attribution-toggle {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 5;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background-color: color-mix(in srgb, var(--brand-bg) 55%, transparent);
+    color: var(--brand-text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.img-attribution-toggle:hover {
+    background-color: var(--brand-bg);
+}
+
+.img-attribution-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(
+        to top,
+        color-mix(in srgb, var(--brand-bg) 85%, transparent),
+        transparent
+    );
+}
+
+.img-attribution-text {
+    margin: 0;
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--brand-text-secondary);
+}
+
+.img-attribution-link {
+    color: var(--brand-text-secondary);
+    text-decoration: underline;
+}
+
+.img-attribution-link:hover {
+    color: var(--brand-text);
+}
+
+
+/* ==========================
+    BREADCRUMB
+=============================*/
+.breadcrumb {
+    --bs-breadcrumb-divider-color: var(--brand-text-secondary);
+    --bs-breadcrumb-item-active-color: var(--brand-text); 
+}
