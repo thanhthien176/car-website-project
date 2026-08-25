@@ -42,7 +42,10 @@ class CloudflareCacheService:
             )
             data = resp.json()
             if not data.get("success"):
-                logger.error("Cloudflare %s failed: %s", log_label, data.get("errors"))
+                logger.error(
+                    "Cloudflare %s failed (status=%s): %s | payload=%s",
+                    log_label, resp.status_code, data.get("errors"), json_payload,
+                    )
             else:
                 logger.info("Cloudflare %s success: %s", log_label, json_payload)
         except Exception:

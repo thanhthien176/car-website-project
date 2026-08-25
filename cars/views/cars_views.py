@@ -32,7 +32,7 @@ class CarModelListView(ListView):
         
         qs = CarQueryService.filtered_queryset(self.request.GET)
                 
-        qs = CarCacheService.store_default(qs, self.request.GET, self.paginate_by)       
+        qs = CarCacheService.store_default(qs, self.request.GET)       
             
         return qs
     

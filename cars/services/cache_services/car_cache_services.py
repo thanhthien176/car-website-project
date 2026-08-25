@@ -43,7 +43,7 @@ class CarCacheService:
         return None
     
     @classmethod
-    def store_default(cls, qs, params, paginate_by):
+    def store_default(cls, qs, params):
         has_filter = cls.has_filter(params)
         is_first_page = cls.is_first_page(params)
         
