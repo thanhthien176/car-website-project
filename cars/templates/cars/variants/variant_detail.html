@@ -67,10 +67,13 @@
         {# Left: Primary image #}
         <div class="col-md-6">
             {% if variant.primary_image %}
-                <img src="{{ variant.primary_image }}" 
+                <img src="{{ variant.primary_image.image.url }}" 
                 alt="{{ variant }}"
                 class="img-fluid rounded shadow w-100"
                 style="max-height:350px; object-fit: cover;">
+
+                {% include "cars/utils/_buton_image_info.html" %}
+                
             {% else %}
                 <div class="bg-gradient rounded d-flex align-items-center justify-content-center shadow"
                     style="height:350px;">
@@ -87,6 +90,22 @@
                                 alt="{{ variant }}"
                                 class="rounded border"
                                 style="height:60px; width: 80px; object-fit:cover; cursor:pointer;">
+
+                            <!-- License Image -->
+                            {% if img.attribution_html %}
+                            <div x-data="{ show: false }">
+                                <button type="button"
+                                        class="img-attribution-toggle"
+                                        @click="show = !show"
+                                        aria-label="Thông tin bản quyền ảnh">
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
+                                <div class="img-attribution-overlay" x-show="show" x-transition x-cloak>
+                                    {{ variant.attribution_html }}
+                                </div>
+                            </div>
+                            {% endif %}
+                        
                         {% endfor %}
                     </div>
                 {% endif %}

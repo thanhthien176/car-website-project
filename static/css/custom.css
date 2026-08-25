@@ -13,28 +13,35 @@ F9D2BA: rgb(249, 210, 186) -> headings / high-emphasis text
 2B5748: 3
 273338: 4
 
+https://colorhunt.co/palette/27374d526d829db2bfdde6ed
+
+Dark Slate: #27374D
+Medium Slate: #526D82
+Light Slate: #9DB2BF
+Soft Ice/White: #DDE6ED
+
 */
 :root {
-    /* ---- Brand hues ---- */
-    --brand-primary: F7EAE0;
+    --brand-primary: #526D82;
     --brand-primary-dark: color-mix(in srgb, var(--brand-primary) 15%, black);
     --brand-primary-light: color-mix(in srgb, var(--brand-primary) 15%, white);
+    --brand-primary-medium: color-mix(in srgb, var(--brand-primary-light) 80%, black);
 
-    --brand-accent: #5E3122;
+    --brand-accent: #9DB2BF;
 
     /* ---- Text ---- */
-    --brand-text: #F9D2BA;
-    --brand-text-secondary: color-mix(in srgb, #75665D 50%, white);
-    --brand-muted: #97887E;
+    --brand-text: #27374D;
+    --brand-text-secondary: color-mix(in srgb, var(--brand-text) 65%, var(--brand-accent) 35%);
+    --brand-muted: color-mix(in srgb, var(--brand-accent) 55%, var(--brand-text) 45%);
 
     /* ---- Background (two-tone dark system) ---- */
-    --brand-bg: #153A2B;                                              /* page background — deepest */
-    --brand-surface: #1D4533;                                         /* header, footer, hero, cards — one step lighter */
-    --brand-content-bg-mix: color-mix(in srgb, var(--brand-surface) 85%, black); /* content wrappers, pagination, sidebar CTA */
+    --brand-bg: #DDE6ED;                                              /* page background — deepest */
+    --brand-surface: color-mix(in srgb, var(--brand-bg) 45%, white);                                       /* header, footer, hero, cards — one step lighter */
+    --brand-content-bg-mix: color-mix(in srgb, var(--brand-bg) 90%, var(--brand-accent)); /* content wrappers, pagination, sidebar CTA */
 
     /* ---- Accent tint layer ---- */
-    --brand-accent-tint: color-mix(in srgb, var(--brand-accent) 55%, var(--brand-surface));
-    --brand-accent-tint-strong: color-mix(in srgb, var(--brand-accent) 80%, white);
+    --brand-accent-tint: color-mix(in srgb, var(--brand-accent) 30%, var(--brand-surface));
+    --brand-accent-tint-strong: color-mix(in srgb, var(--brand-accent) 65%, white);
 
     --brand-rating: #D89B4A;
     --brand-danger-accent: #B63D32;
@@ -113,16 +120,16 @@ a:hover {
    ========================================================= */
 
 .site-header {
-    --bs-navbar-color: var(--brand-text);
-    --bs-navbar-hover-color: var(--brand-primary);
-    --bs-navbar-active-color: var(--brand-primary);
+    --bs-navbar-color: var(--brand-primary);
+    --bs-navbar-hover-color: var(--brand-primary-light);
+    --bs-navbar-active-color: var(--brand-primary-light);
 
-    --bs-navbar-brand-color: var(--brand-text);
+    --bs-navbar-brand-color: var(--brand-primary);
     --bs-navbar-brand-hover-color: var(--brand-primary);
 
     --bs-navbar-toggler-border-color: var(--brand-bg-border);
 
-    background-color: var(--brand-surface);
+    background-color: var(--brand-text);
 
     box-shadow:
         0 4px 12px var(--brand-shadow-primary),
@@ -130,7 +137,7 @@ a:hover {
 }
 
 .site-header .navbar-brand {
-    color: var(--brand-text);
+    color: var(--brand-primary-medium);
     font-weight: 700;
     font-size: 1.25rem;
     letter-spacing: 0.2px;
@@ -138,7 +145,7 @@ a:hover {
 }
 
 .site-header .navbar-brand:hover {
-    color: var(--brand-primary);
+    color: var(--brand-primary-light);
 }
 
 .site-header .brand-icon {
@@ -154,18 +161,20 @@ a:hover {
 }
 
 .site-header .nav-link {
-    color: var(--brand-text);
+    color: var(--brand-primary-medium);
     font-weight: 500;
     padding: 0.65rem 0.85rem;
     transition: color 0.2s ease, background-color 0.2s ease;
 }
 
+
+
 .site-header .nav-link:hover {
-    color: var(--brand-primary);
+    color: var(--brand-primary-light);
 }
 
 .site-header .nav-link.active {
-    color: var(--brand-primary);
+    color: var(--brand-primary-light);
     font-weight: 700;
 }
 
@@ -790,6 +799,10 @@ a:hover {
 /* =========================================================
    BLOG POST
    ========================================================= */
+.feature-post {
+    background-color: var(--brand-surface);
+    color: var(--brand-primary);
+}
 
 .blog-back-link {
     display: inline-flex;
@@ -1167,6 +1180,7 @@ a:hover {
 .spec-table {
     margin-bottom: 0;
     --bs-table-bg: transparent;
+    table-layout: fixed;
 }
 
 .spec-table tr {
@@ -1182,12 +1196,14 @@ a:hover {
     vertical-align: middle;
 }
 
+.spec-table th:first-child,
 .spec-table td:first-child {
     color: var(--brand-text-secondary);
-    width: 45%;
+    width: 25%;
+    font-weight: 400;
 }
 
-.spec-table td:last-child {
+.spec-table td:not(:first-child) {
     color: var(--brand-text);
     font-weight: 600;
 }
@@ -1195,6 +1211,18 @@ a:hover {
 .spec-table tr:hover td {
     background-color: var(--brand-accent-tint);
 }
+
+.table-light {
+    --bs-table-bg: var(--brand-surface);
+    --bs-table-color: var(--brand-text);
+    --bs-table-border-color: var(--brand-border);
+}
+
+.text-secondary {
+    color: var(--brand-text-secondary) !important;
+}
+
+
 
 .spec-check {
     color: var(--brand-primary);

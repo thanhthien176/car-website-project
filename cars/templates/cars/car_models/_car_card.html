@@ -7,12 +7,26 @@
         x-data="{ 
         open: false, 
         }">
-        
-        
 
-        {% if model.thumbnail %}
-        <img src="{{ model.thumbnail.url }}" alt="{{ model }}"
-            class="card-img-top" style="height:160px; object-fit:cover;">
+        {% if model.primary_image %}
+            <img src="{{ model.primary_image.image.url }}" alt="{{ model }}"
+                class="card-img-top" style="height:160px; object-fit:cover;">
+
+            <!-- Source Image -->
+            {% if model.primary_image.attribution_html %}
+            <div x-data="{ show: false }">
+                <button type="button"
+                        class="img-attribution-toggle"
+                        @click="show = !show"
+                        aria-label="Thông tin bản quyền ảnh">
+                    <i class="bi bi-info-circle"></i>
+                </button>
+                <div class="img-attribution-overlay" x-show="show" x-transition x-cloak>
+                    {{ variant.attribution_html }}
+                </div>
+            </div>
+            {% endif %}
+        
         {% else %}
         <div class="bg-light d-flex align-items-center justify-content-center"
             style="height: 160px;">
