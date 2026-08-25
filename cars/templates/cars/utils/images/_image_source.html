@@ -1,0 +1,19 @@
+<div x-data="{ show: false }">
+    <button type="button"
+            class="img-attribution-toggle rounded"
+            @click="show = !show"
+            aria-label="Thông tin bản quyền ảnh">
+        <i class="bi bi-info-circle"></i>
+    </button>
+    {% if image.attribution_html %}
+        <div class="img-attribution-overlay" x-show="show" x-transition x-cloak>
+            {{ image.attribution_html }}
+        </div>
+    
+    {% else %}
+        <div class="img-attribution-overlay" x-show="show" x-transition x-cloak>
+            CC0
+        </div>
+    {% endif %}
+    
+</div>

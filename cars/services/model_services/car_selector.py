@@ -47,6 +47,7 @@ class CarSelector:
         return (CarModel.objects
                 # .filter(avg_rating__gt=0)
                 .select_related('brand')
+                .prefetch_related('images')
                 .order_by('-avg_rating', '-display_order')[:limit]
                 )
         

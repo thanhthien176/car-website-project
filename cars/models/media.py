@@ -23,36 +23,49 @@ class ImageAttributionMixin(models.Model):
     def attribution_html(self):
         if not any([self.author_name, self.source_name, self.license]):
             return ""
-        
-        link_cls = 'class="text-decoration-underline link-secondary"'
-        
+
+        link_cls = 'class="img-attribution-link"'
+
         if self.author_name and self.author_url:
-            author_part = format_html('<a href="{}" target="_blank" rel="noopener" {}>{}</a>', self.author_url, link_cls, self.author_name)
+            author_part = format_html(
+                '''
+                <div>
+                    <span>Author: </span>
+                    <a href="{}" target="_blank" rel="noopener" {}>{}</a>
+                </div>
+                ''', 
+                self.author_url, link_cls, self.author_name)
         else:
             author_part = self.author_name
-            
+
         if self.source_name and self.source_url:
-            source_part = format_html('<a href="{}" target="_blank" rel="noopener" {}>{}</a>', self.source_url, link_cls, self.source_name)
+            source_part = format_html(
+                '''
+                <div>
+                <span>Source: </span>
+                <a href="{}" target="_blank" rel="noopener" {}>{}</a>
+                </div>
+                ''', 
+                self.source_url, link_cls, self.source_name)
         else:
             source_part = self.source_name
-            
+
         if author_part and source_part:
-            by_part = format_html('Ảnh: {} / {}', author_part, source_part)
+            by_part = format_html('{}  {}', author_part, source_part)
         elif author_part:
-            by_part = format_html('Ảnh: {}', author_part)
+            by_part = format_html('{}', author_part)
         elif source_part:
-            by_part = format_html('Nguồn: {}', source_part)
+            by_part = format_html('{}', source_part)
         else:
             by_part = ""
-            
-        license_part = f" ({self.license})" if self.license else ""
-        
+
+        license_part = format_html('<p><span>License: </span> ({})</p>', self.license) if self.license else ""
+
         return format_html(
-            '<figcaption class="figure-caption text-end mt-1 text-muted small">{}{}</figcaption>',
+            '<figcaption class="img-attribution-text">{}{}</figcaption>',
             by_part,
             license_part
         )
-
 class CarImage(ImageAttributionMixin):
     car = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to=UploadToPath('cars', 'gallery', slug_field='car.slug'), 

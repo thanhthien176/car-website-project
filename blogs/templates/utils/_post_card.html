@@ -1,5 +1,5 @@
 <div class="col">
-    <div class="row g-0 card-custom overflow-hidden flex-md-row mb-4 h-md-250 position-relative h-100">
+    <div class="row g-0 card-blog overflow-hidden flex-md-row mb-4 h-md-250 position-relative h-100">
         <div class="col p-4 d-flex flex-column position-static">
             <strong class="d-inline-block mb-2 blog-post-category">
                 {{ post.category }}
@@ -26,6 +26,8 @@
                      alt="{{ post.title }}"
                      class="w-100 h-100 py-2"
                      style="object-fit:cover;">
+
+                {% include "cars/utils/images/_image_source.html" with image=post.section.first %}
             {% else %}
                 <svg aria-label="Placeholder: Thumbnail" class="bd-placeholder-img"
                      height="250" preserveAspectRatio="xMidYMid slice" role="img"

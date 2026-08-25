@@ -127,11 +127,13 @@
 
             <a href="{{ related.get_absolute_url }}" class="blog-post-item">
               {% if related.thumbnail %}
-              <img
-                src="{{ related.thumbnail.url }}"
-                alt="{{ related.title }}"
-                loading="lazy"
-              />
+                <img
+                  src="{{ related.thumbnail.url }}"
+                  alt="{{ related.title }}"
+                  loading="lazy"
+                />
+
+                {% include "cars/utils/images/_image_source.html" with image= related %}
               {% endif %}
 
               <div class="blog-post-item-content">

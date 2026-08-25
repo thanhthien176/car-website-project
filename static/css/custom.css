@@ -22,21 +22,26 @@ Soft Ice/White: #DDE6ED
 
 */
 :root {
+
+    --brand-dark: #27374D;       /* Darkest */
+    --brand-primary: #526D82;    /* Average dark */
+    --brand-accent: #9DB2BF;     /* Average light */
+    --brand-light: #DDE6ED;      /* Brightest */
+
     --brand-primary: #526D82;
     --brand-primary-dark: color-mix(in srgb, var(--brand-primary) 15%, black);
     --brand-primary-light: color-mix(in srgb, var(--brand-primary) 15%, white);
     --brand-primary-medium: color-mix(in srgb, var(--brand-primary-light) 80%, black);
 
-    --brand-accent: #9DB2BF;
 
     /* ---- Text ---- */
-    --brand-text: #27374D;
-    --brand-text-secondary: color-mix(in srgb, var(--brand-text) 65%, var(--brand-accent) 35%);
-    --brand-muted: color-mix(in srgb, var(--brand-accent) 55%, var(--brand-text) 45%);
+    --brand-text: var(--brand-dark);
+    --brand-text-secondary: color-mix(in srgb, var(--brand-text) 70%, transparent);
+    --brand-muted: color-mix(in srgb, var(--brand-text) 45%, transparent);
 
     /* ---- Background (two-tone dark system) ---- */
-    --brand-bg: #DDE6ED;                                              /* page background — deepest */
-    --brand-surface: color-mix(in srgb, var(--brand-bg) 45%, white);                                       /* header, footer, hero, cards — one step lighter */
+    --brand-bg: var(--brand-light);                                              /* page background — deepest */
+    --brand-surface: white;                                      /* header, footer, hero, cards — one step lighter */
     --brand-content-bg-mix: color-mix(in srgb, var(--brand-bg) 90%, var(--brand-accent)); /* content wrappers, pagination, sidebar CTA */
 
     /* ---- Accent tint layer ---- */
@@ -354,36 +359,26 @@ a:hover {
 /* =========================================================
    7. CARDS
    ========================================================= */
+.card {
+    --bs-card-bg: var(--brand-accent)
+}
 
-.card-custom,
-.car-card,
-.blog-article,
-.blog-sidebar-section {
-    background-color: var(--brand-surface);
+
+.card-custom {
+    background-color: var(--brand-primary-dark);
     color: var(--brand-text-secondary);
-    border: 1px solid var(--brand-border-subtle);
-    border-radius: 12px;
+    border: 1px solid var(--brand-bg-border-soft);
+    border-radius: 1rem;
     box-shadow: 0 2px 12px var(--brand-shadow-xs);
 }
 
-.car-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.car-card:hover {
+.card-custom:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
 }
 
-.blog-article {
-    padding: 1rem;
-}
-
-.blog-sidebar-section {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-    padding: 1rem;
-    box-shadow: 0 3px 12px var(--brand-shadow-xs);
+.card-body {
+    background-color: var(--brand-content-bg-mix);
 }
 
 .variant-picker {
@@ -402,6 +397,35 @@ a:hover {
 
     box-shadow: 0 8px 24px var(--brand-shadow-sm);
 }
+
+/*======================
+Blog
+========================*/
+
+
+.blog-article {
+    padding: 1rem;
+}
+
+
+.card-blog,
+.blog-article,
+.blog-sidebar-section {
+    background-color: var(--brand-primary-light);
+    color: var(--brand-text);
+    border: 1px solid var(--brand-border-subtle);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px var(--brand-shadow-xs);
+}
+
+.blog-sidebar-section {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    box-shadow: 0 3px 12px var(--brand-shadow-xs);
+}
+
+
 
 
 /* =========================================================
@@ -800,8 +824,9 @@ a:hover {
    BLOG POST
    ========================================================= */
 .feature-post {
-    background-color: var(--brand-surface);
+    background-color: var(--brand-primary-medium);
     color: var(--brand-primary);
+    border-radius: 1rem;
 }
 
 .blog-back-link {
@@ -1252,8 +1277,8 @@ a:hover {
 
 .img-attribution-toggle {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    bottom: 8px;
+    right: 8px;
     z-index: 5;
     width: 28px;
     height: 28px;
@@ -1262,7 +1287,7 @@ a:hover {
     justify-content: center;
     border: none;
     border-radius: 50%;
-    background-color: color-mix(in srgb, var(--brand-bg) 55%, transparent);
+    background-color: color-mix(in srgb, var(--brand-bg) 55%, blue);
     color: var(--brand-text);
     cursor: pointer;
     transition: background-color 0.15s ease;
@@ -1279,11 +1304,8 @@ a:hover {
     bottom: 0;
     z-index: 4;
     padding: 0.5rem 0.75rem;
-    background: linear-gradient(
-        to top,
-        color-mix(in srgb, var(--brand-bg) 85%, transparent),
-        transparent
-    );
+    background: var(--brand-accent);
+    color: var(--brand-primary-dark);
 }
 
 .img-attribution-text {

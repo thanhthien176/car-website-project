@@ -21,6 +21,8 @@
         {% if section.title %}<h2 class="h4">{{ section.title }}</h2>{% endif %}
         {% if section.image %}
           <img src="{{ section.image.url }}" class="img-fluid rounded mb-2" alt="{{ section.title }}">
+
+          {% include "cars/utils/images/_image_source.html" with image=section %}
         {% endif %}
         <div>{{ section.content|linebreaks }}</div>
       </section>

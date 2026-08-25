@@ -158,10 +158,10 @@ class CarModel(SEOMetaData, models.Model):
     def primary_image(self):
         img = self.images.filter(is_primary=True).first() # type: ignore
         if img:
-            return img.image.url
+            return img
         fallback = self.images.first() # type: ignore
         if fallback:
-            return fallback.image.url
+            return fallback
         return None
             
 
@@ -279,10 +279,10 @@ class CarVariant(SEOMetaData, models.Model):
         its own (e.g. a new variant added before photos were uploaded)."""
         img = self.variant_images.filter(is_primary=True).first() # type: ignore
         if img:
-            return img.image.url
+            return img
         fallback = self.variant_images.first() # type: ignore
         if fallback:
-            return fallback.image.url
+            return fallback
         return self.car_model.primary_image
         
     def __str__(self):
