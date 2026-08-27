@@ -9,7 +9,7 @@
 
 {% block content_root%}
 <div class="container py-4 ">
-    <div class="content-surface">
+    <div>
         <!-- brand header -->
         <section class="row align-items-center mb-5">
             <div class="col-auto">
@@ -26,7 +26,7 @@
             </div>
             <div class="col">
                 <h1 class="mb-1">{{ brand.name }}</h1>
-                <p class="text-muted-custom mb-0">
+                <p class="mb-0">
                     <i class="bi bi-geo-alt"></i> {{ brand.country_of_origin }}
                     {% if brand.founded_year %}
                     &nbsp;·&nbsp;
@@ -50,13 +50,13 @@
         </section>
 
         {% if brand.description %}
-            <p class="lead text-muted-custom mb-5">{{ brand.description }}</p>
+            <p class="lead mb-5">{{ brand.description }}</p>
         {% endif %}
 
         <!-- Car Model Grid -->
         
         <h2>Các dòng xe của hãng {{brand.name}}</h2>
-        <section class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+        <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 {% for model in car_models%}
                 {% include "cars/car_models/_car_card.html" %}
                 {% empty %}

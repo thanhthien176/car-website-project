@@ -4,8 +4,8 @@
 {% block meta_description %}Lịch sử hình thành và phát triển của hãng {{ history.brand.name }}{% endblock %}
 
 {% block content_root %}
-<div class="container py-4">
-  <div class="content-surface">
+<div class="container">
+  <div>
 
     <p class="mb-2">
       <a href="{% url 'cars:brand_detail' slug=history.brand.slug %}">← {{ history.brand.name }}</a>

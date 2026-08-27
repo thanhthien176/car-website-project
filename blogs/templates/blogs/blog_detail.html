@@ -4,12 +4,12 @@
 {{ post.sections.first.content|truncatewords:25 }} {% endblock %} 
 {% block content_root %}
 
-<div class="container py-1 py-lg-0">
+<div class="container py-lg-0">
   <div class="row g-4 g-xl-5">
     <!-- =========================================
           MAIN ARTICLE
-         ========================================= -->
-    <main class="col-lg-8 py-2">
+    ========================================= -->
+    <div class="col-lg-8 py-2">
       <article class="blog-article">
         <!-- Back to blog -->
         <div class="mb-3">
@@ -66,14 +66,21 @@
           <section class="blog-section">
             {% if section.title %}
             <h2>{{ section.title }}</h2>
-            {% endif %} {% if section.image %}
+            {% endif %} 
+            
+            {% if section.image %}
             <figure class="blog-figure">
-              <img
+
+              <div style="position: relative;">
+                <img
                 src="{{ section.image.url }}"
                 class="blog-image"
                 alt="{{ section.title|default:post.title }}"
                 loading="lazy"
-              />
+                />
+
+                {% include "cars/utils/images/_image_source.html" with image=section %}
+              </div>            
 
               {% if section.title %}
               <figcaption>{{ section.title }}</figcaption>
@@ -104,7 +111,7 @@
           </a>
         </div>
       </article>
-    </main>
+    </div>
 
     <!-- =========================================
           SIDEBAR
@@ -124,7 +131,7 @@
 
           <div class="blog-post-list">
             {% for related in related_posts %}
-
+            
             <a href="{{ related.get_absolute_url }}" class="blog-post-item">
               {% if related.thumbnail %}
                 <img
@@ -133,7 +140,6 @@
                   loading="lazy"
                 />
 
-                {% include "cars/utils/images/_image_source.html" with image=related %}
               {% endif %}
 
               <div class="blog-post-item-content">

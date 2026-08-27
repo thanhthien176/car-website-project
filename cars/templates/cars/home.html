@@ -5,6 +5,8 @@
 {% block mete_description %}So sánh thông số và giá xe hơi tại Việt Nam{% endblock %}
 
 {% block content_root %}
+<div class="container">      
+    
     {# Hero section #}
     <div class="hero-section p-5 mb-4 rounded-3">
         <h1 class="display-5 fw-bold">
@@ -24,7 +26,7 @@
     </div>
 
     {# Featured brands #}
-    <section>
+    <section class="mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-3">Hãng xe nổi bật <span class="text-muted fs-6">({{ featured_brands.count }})</span></h2>
             <a href="{% url 'cars:brand_list' %}" class="btn btn-outline-brand btn-sm fw-semibold">
@@ -43,7 +45,7 @@
         </div>
     </section>
      
-    <section>
+    <section class="mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="mb-3">Đánh giá cao nhất</h2>
         <a href="{% url 'cars:car_list' %}" class="btn btn-outline-brand btn-sm fw-semibold">
@@ -57,9 +59,9 @@
         </div>
     </section>
 
-    <section>
+    <section class="mb-4">
         <h2 class="my-3">Xe mới cập nhật</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
+        <div class="row row-cols-1 row-cols-md-4 g-3 mb-3">
             {% for variant in lastest_variants %}
             <div class="col">
                 {% include "cars/variants/_variant_card.html" %}
@@ -71,5 +73,5 @@
         </div>
         
     </section>
-
+</div>
 {% endblock %}

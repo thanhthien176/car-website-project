@@ -29,20 +29,21 @@ Soft Ice/White: #DDE6ED
     --brand-light: #DDE6ED;      /* Brightest */
 
     --brand-primary: #526D82;
-    --brand-primary-dark: color-mix(in srgb, var(--brand-primary) 15%, black);
-    --brand-primary-light: color-mix(in srgb, var(--brand-primary) 15%, white);
+    --brand-primary-dark: color-mix(in srgb, var(--brand-primary) 40%, black);
+    --brand-primary-light: color-mix(in srgb, var(--brand-primary) 20%, white);
     --brand-primary-medium: color-mix(in srgb, var(--brand-primary-light) 80%, black);
 
 
     /* ---- Text ---- */
     --brand-text: var(--brand-dark);
-    --brand-text-secondary: color-mix(in srgb, var(--brand-text) 70%, transparent);
-    --brand-muted: color-mix(in srgb, var(--brand-text) 45%, transparent);
+    --brand-text-dark: color-mix(in srgb, var(--brand-text) 80%, black);
+    --brand-text-secondary: color-mix(in srgb, var(--brand-text) 80%, transparent);
+    --brand-muted: color-mix(in srgb, var(--brand-text) 50%, transparent);
 
     /* ---- Background (two-tone dark system) ---- */
-    --brand-bg: var(--brand-light);                                              /* page background — deepest */
-    --brand-surface: white;                                      /* header, footer, hero, cards — one step lighter */
-    --brand-content-bg-mix: color-mix(in srgb, var(--brand-bg) 90%, var(--brand-accent)); /* content wrappers, pagination, sidebar CTA */
+    --brand-bg: white;                                              /* page background — deepest */
+    --brand-surface: var(--brand-light);                                      /* header, footer, hero, cards — one step lighter */
+    --brand-content-bg-mix: color-mix(in srgb, var(--brand-bg) 90%, var(--brand-dark)); /* content wrappers, pagination, sidebar CTA */
 
     /* ---- Accent tint layer ---- */
     --brand-accent-tint: color-mix(in srgb, var(--brand-accent) 30%, var(--brand-surface));
@@ -84,7 +85,7 @@ html {
 
 body {
     background-color: var(--brand-bg);
-    color: var(--brand-text-secondary);
+    color: var(--brand-text);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
@@ -103,7 +104,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-    color: var(--brand-text-secondary);
+    color: var(--brand-text);
+    font-weight: 400;
+    line-height: 1.75;
 }
 
 a {
@@ -359,26 +362,33 @@ a:hover {
 /* =========================================================
    7. CARDS
    ========================================================= */
-.card {
-    --bs-card-bg: var(--brand-accent)
+.card-brand {
+    background-color: var(--brand-content-bg-mix);
 }
 
-
 .card-custom {
-    background-color: var(--brand-primary-dark);
-    color: var(--brand-text-secondary);
-    border: 1px solid var(--brand-bg-border-soft);
+    background-color: var(--brand-accent);
+    color: var(--brand-text);
+    /*border: 1px solid var(--brand-bg-border-soft);*/
     border-radius: 1rem;
-    box-shadow: 0 2px 12px var(--brand-shadow-xs);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-custom:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15) !important;
 }
 
-.card-body {
+.card-custom .card-body {
     background-color: var(--brand-content-bg-mix);
+}
+
+.card-img-placeholder {
+    height: 170px;
+    background-color: var(--brand-text-secondary);
+    color: var(--brand-accent);
 }
 
 .variant-picker {
@@ -396,6 +406,11 @@ a:hover {
     border-radius: var(--bs-border-radius);
 
     box-shadow: 0 8px 24px var(--brand-shadow-sm);
+}
+
+.icon-heart {
+    background-color: var(--brand-surface);
+    color: var(--brand-text);
 }
 
 /*======================
@@ -416,6 +431,18 @@ Blog
     border: 1px solid var(--brand-border-subtle);
     border-radius: 12px;
     box-shadow: 0 2px 12px var(--brand-shadow-xs);
+}
+
+.card-blog:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
 }
 
 .blog-sidebar-section {
@@ -514,8 +541,8 @@ Blog
    ========================================================= */
 
 .brand-logo {
-    height: 100px;
-    width: 100px;
+    height: 80px;
+    width: 80px;
     object-fit: contain;
 }
 
@@ -725,29 +752,29 @@ Blog
    ========================================================= */
 
 .site-footer {
-    background-color: var(--brand-surface);
-    color: var(--brand-text-secondary);
+    background-color: var(--brand-text);
+    color: var(--brand-primary);
 }
 
 .site-footer h5 {
-    color: var(--brand-text);
+    color: var(--brand-primary);
     font-weight: 700;
 }
 
 .site-footer p {
-    color: var(--brand-text-secondary);
+    color: var(--brand-primary-light);
 }
 
 .site-footer .nav-link {
-    color: var(--brand-text-secondary);
+    color: var(--brand-primary-medium);
 }
 
 .site-footer .nav-link:hover {
-    color: var(--brand-primary);
+    color: var(--brand-primary-light);
 }
 
 .site-footer a {
-    color: var(--brand-text-secondary);
+    color: var(--brand-primary-medium);
     text-decoration: none;
 }
 
