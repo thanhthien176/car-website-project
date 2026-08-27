@@ -70,7 +70,7 @@ class User(AbstractUser):
         WRITER = "writer", "Cộng tác viên"
         
     # =========Basic Profile============================
-    bio = models.TextField(blank=True, help_text="Giới thiệu sản phẩm")
+    bio = models.TextField(blank=True, help_text="Giới thiệu bản thân")
     avatar = models.ImageField(upload_to=UploadToPath(base_path="users", sub_path="avatars", slug_field="username"),
                                blank=True,
                                null=True,

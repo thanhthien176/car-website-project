@@ -19,10 +19,7 @@
                 {% include "cars/utils/images/_image_source.html" with image=model.primary_image %}
             
             {% else %}
-                <div class="d-flex align-items-center justify-content-center"
-                    style="height: 160px;">
-                    <i class="bi bi-car-front fs-1"></i>
-                </div>
+                {% include "cars/utils/cars/__placeholder_image.html" %}
             {% endif %}
         </div>
         
