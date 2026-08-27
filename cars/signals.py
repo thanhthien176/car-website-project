@@ -13,6 +13,8 @@ from core.cache.urls_caching import CacheUrl
 
 from .models import BodyType, Brand, CarImage, CarModel, Review, CarVariant, VariantImage
 from users.models import User
+from blogs.models import BlogSection, BrandHistorySection
+
 from .utils.image_utils import convert_to_webp
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,9 @@ _WEBP_REGISTRY = [
     (CarImage,      "image",        "image",        _GALLERY_MAX_SIZE),
     (VariantImage,  "image",        "image",        _GALLERY_MAX_SIZE),
     (User,          "avatar",       "avatar",       _AVATAR),
+    (BlogSection,   "image",        "image",        _GALLERY_MAX_SIZE),
+    (BrandHistorySection,   "image",        "image",        _GALLERY_MAX_SIZE),
+    
 ]
 
 _DELETE_REGISTRY = [
@@ -40,6 +45,8 @@ _DELETE_REGISTRY = [
     (CarImage, "image"),
     (VariantImage, "image"),
     (User, "avatar"),
+    (BlogSection, "image"),
+    (BrandHistorySection, "image"),
 ]
 
 @receiver([post_save, post_delete], sender=None)

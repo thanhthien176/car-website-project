@@ -51,10 +51,31 @@ class BlogPost(ArticleBase):
         verbose_name = "Blog Post"
         verbose_name_plural = "Blog Posts"
         ordering = ["-published_at", "-created_at"]
+    
+    @property    
+    def get_description(self):
+        first_section = self.sections.first() # type: ignore 
+        if not first_section or not first_section.content:
+            return ""
         
+        text = first_section.content.strip()
+        
+        if len(text) <= 120:
+            return text
+        
+        i = 120
+        while i > 0:
+            if text[i] == " ":
+                return f"{text[:i]}..."
+            else:
+                i -= 1
+        
+        return f"{text[:120]}..."
+            
         
     def get_absolute_url(self):
         return reverse("blogs:post_detail", kwargs={"slug": self.slug})
+
     
 
 class BlogSection(ImageAttributionMixin, SectionBase):
