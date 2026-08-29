@@ -89,14 +89,12 @@ class Command(BaseImportCommand):
             "display_order": display_order if display_order else 0,
         }
         
-        computed_slug = slugify(f"{brand.name}-{model_name}")
-        try:
-            car_model = CarModel.objects.get(slug=computed_slug)
-            model_created = False
-        except CarModel.DoesNotExist:
-            car_model = CarModel(brand=brand, name=model_name, **model_defaults)
-            car_model.save()
-            model_created = True
+        
+        car_model, model_created = CarModel.objects.get_or_create(
+            brand=brand, 
+            name=model_name,
+            defaults=model_defaults,)
+    
             
         
         if model_created:

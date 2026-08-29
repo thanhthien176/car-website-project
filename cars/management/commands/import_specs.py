@@ -49,6 +49,7 @@ from django.db import models as djm, transaction
 from django.utils.text import slugify
 
 from cars.models import CarVariant
+from cars.models.car_models import Brand, CarModel
 from .base_import import BaseImportCommand
 
 
@@ -144,19 +145,40 @@ class Command(BaseImportCommand):
     # ------------------------------------------------------------------
 
     def _import_row(self, row, row_num, options, stats):
-        brand = self._require_str(row, "brand_name", row_num, stats)
-        model = self._require_str(row, "model_name", row_num, stats)
-        variant = self._require_str(row, "variant_name", row_num, stats)
- 
-        slug = slugify(f'{brand}-{model}-{variant}')
-        if slug is None:
+        brand_name = self._require_str(row, "brand_name", row_num, stats)
+        model_name = self._require_str(row, "model_name", row_num, stats)
+        variant_name = self._require_str(row, "variant_name", row_num, stats)
+
+        try:
+            brand = Brand.objects.get(name=brand_name)
+        except Brand.DoesNotExist:
+            self.stdout.write(self.style.WARNING(
+                    f"  [Row {row_num}] Brand '{brand_name}' not found - skipped"
+                ))
+            stats["skipped"] += 1
+            return
+            
+            
+        try:
+            car_model = CarModel.objects.get(
+                brand=brand,
+                name=model_name,
+            )
+        except CarModel.DoesNotExist:
+            self.stdout.write(self.style.WARNING(
+                    f"  [Row {row_num}] CarModel '{brand_name} {model_name}' not found - skipped"
+                ))
+            stats["skipped"] += 1
             return
 
         try:
-            variant = CarVariant.objects.get(slug=slug)
+            variant = CarVariant.objects.get(
+                car_model=car_model,
+                name=variant_name,
+            )
         except CarVariant.DoesNotExist:
             self.stdout.write(self.style.WARNING(
-                f"  [Row {row_num}] CarVariant slug '{slug}' not found - skipped"
+                f"  [Row {row_num}] CarVariant '{brand_name} {model_name} {variant_name}' not found - skipped"
             ))
             stats["skipped"] += 1
             return

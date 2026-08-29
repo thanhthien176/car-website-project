@@ -96,7 +96,8 @@ class BaseImportCommand(BaseCommand):
 
             for row_num, row in enumerate(reader, start=2):
                 try:
-                    self._import_row(row, row_num, options, stats)
+                    with transaction.atomic():
+                        self._import_row(row, row_num, options, stats)
                 except Exception as exc:
                     self.stdout.write(self.style.ERROR(f"  [Row {row_num}] Critical Error: {exc}"))
                     stats["errors"] += 1
