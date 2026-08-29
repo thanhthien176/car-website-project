@@ -1,10 +1,13 @@
 {# Picker trigger button #}
 <button class="btn btn-compare-picker btn-sm w-100 mt-2"
-        @click="open = !open"
+        @click="open = !open;"
         hx-get="{% url 'cars:variant_picker' slug=model.slug %}"
         hx-target="#picker-{{ model.slug }}"
         hx-swap="innerHTML"
-        hx-trigger="click[!document.querySelector('#picker-{{ model.slug }}">
+        hx-trigger="click once"
+        >
     <i class="bi bi-git"></i> 
     <span x-text="open ? 'Ẩn phiên bản ▴' : 'Chọn phiên bản so sánh ▾' "></span>
 </button> 
+
+{# "click[!document.querySelector('#picker-{{ model.slug }}')]" #}

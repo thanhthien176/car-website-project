@@ -117,10 +117,10 @@ class VariantPickerView(View):
             'can_add': comparison.can_add_car(),
         })
         
-class VariantPickerCloseView(View):
-    def get(self, request, slug):
-        # Return an empty div replaces the picker — effectively "closing" the dropdown
-        return HttpResponse(f'<div id=f"picker-{slug}"></div>')
+# class VariantPickerCloseView(View):
+#     def get(self, request, slug):
+#         # Return an empty div replaces the picker — effectively "closing" the dropdown
+#         return HttpResponse(f'<div id="picker-{slug}"></div>')
 
 class ClearComparisonView(View):
     pass 

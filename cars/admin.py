@@ -189,7 +189,7 @@ class RatingFilter(admin.SimpleListFilter):
  
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    list_display  = ['name', 'country_of_origin', 'founded_year', 'is_active']
+    list_display  = ['name', 'country_of_origin', 'founded_year', 'is_active', 'display_order']
     list_filter   = ['is_active', 'country_of_origin']
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
@@ -215,7 +215,7 @@ class CarClassAdmin(admin.ModelAdmin):
  
 @admin.register(CarModel)
 class CarModelAdmin(admin.ModelAdmin):
-    list_display  = ['__str__', 'brand', 'body_type', 'model_year', 'avg_rating']
+    list_display  = ['__str__', 'brand', 'body_type', 'model_year', 'avg_rating', 'display_order']
     list_filter   = ['brand', 'body_type', 'car_class', RatingFilter]  
     search_fields = ['name', 'brand__name']
     prepopulated_fields = {'slug': ('name',)}

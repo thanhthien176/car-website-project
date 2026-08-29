@@ -372,7 +372,6 @@ a:hover {
     /*border: 1px solid var(--brand-bg-border-soft);*/
     border-radius: 1rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -383,10 +382,12 @@ a:hover {
 
 .card-custom .card-body {
     background-color: var(--brand-content-bg-mix);
+    border-radius: 0.5rem;
 }
 
 .card-img-placeholder {
     height: 170px;
+    overflow: hidden;
     background-color: var(--brand-text-secondary);
     color: var(--brand-accent);
 }
@@ -397,7 +398,6 @@ a:hover {
     left: 0;
     right: 0;
     z-index: 999;
-    margin-top: 4px;
 
     background-color: var(--brand-accent-tint);
     color: var(--brand-text);
