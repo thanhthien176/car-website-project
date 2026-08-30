@@ -27,9 +27,11 @@ class CarModelListView(ListView):
     
     def get_queryset(self) -> QuerySet:
         
+        # Check car_models in Cache, if it existed, then return car_models
         if car_models := CarCacheService.get_default(self.request.GET):
             return car_models
         
+        # Lazy Evaluation
         qs = CarQueryService.filtered_queryset(self.request.GET)
                 
         qs = CarCacheService.store_default(qs, self.request.GET)       
