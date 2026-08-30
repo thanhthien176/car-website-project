@@ -18,9 +18,11 @@ class VariantQueryService:
             )
             .prefetch_related(
                 'variant_images',
+                'car_model__images',
                 'engine',
                 'dimension',
                 'safety',
                 # 'car_model__reviews',
             )            
         )
+    

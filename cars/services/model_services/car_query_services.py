@@ -52,6 +52,7 @@ class CarQueryService:
             CarModel.objects
             .select_related('brand', 'body_type', 'car_class',)
             .prefetch_related('images')
+            .order_by('images__is_primary', 'images__order')
         )
         
     @staticmethod

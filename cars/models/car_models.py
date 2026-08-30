@@ -273,6 +273,20 @@ class CarVariant(SEOMetaData, models.Model):
         return f'{min_m:,.0f} - {max_m:,.0f} triệu VNĐ'
     
     @property
+    def display_images(self):
+        """
+        Return the variant's images list
+        If the list is null, fallback get CarModel's images list
+        """
+        variant_imgs = list(self.variant_images.all()) # type: ignore
+        
+        if variant_imgs:
+            return variant_imgs
+        
+        return list(self.car_model.images.all())
+        
+        
+    @property
     def primary_image(self):
         """Return URL of primary (or first) VariantImage. Falls back to the
         parent CarModel's primary_image if this variant has no images of
@@ -291,4 +305,5 @@ class CarVariant(SEOMetaData, models.Model):
     
     def get_absolute_url(self):
         return reverse("cars:variant_detail", kwargs={"slug": self.slug})
+    variant_images = None
             
