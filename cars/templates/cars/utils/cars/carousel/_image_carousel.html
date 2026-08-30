@@ -1,0 +1,16 @@
+<div class="carousel-item {% if forloop.first %}active{% endif %}" 
+     style="position: relative;"
+    >
+    <img src="{{ img.image.url }}" class="d-block w-100" alt="{{ img.caption }}" style="object-fit:cover;" />
+
+    <button type="button"
+        class="img-attribution-toggle rounded"
+        @click="openAttribution = (openAttribution === {{ index }}) ? null : {{ index }}"
+        aria-label="Thông tin bản quyền ảnh">
+        <i class="bi bi-info-circle"></i>
+    </button>
+
+    <div class="img-attribution-overlay" x-show="openAttribution === {{ index }}" x-transition x-cloak>
+        {{ img.attribution_html|default:"CC0" }}
+    </div>
+</div>

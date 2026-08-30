@@ -28,26 +28,14 @@
 
         {# ── Model Header ─────────────────────────────────────────────── #}
         <div class="row mb-5">
-            <div class="col-md-5" style="position: relative;">
-                {% if car_model.primary_image %}
-                    <img src="{{ car_model.primary_image.image.url }}" 
-                    alt="{{ car_model }}"
-                    class="img-fluid rounded shadow-sm w-100"
-                    style="max-height:300px; object-fit:cover;">
-
-                    <!-- Source Image -->
-                    {% include "cars/utils/images/_image_source.html" with image=car_model.primary_image %}
-
-                {% else %}
-                <div class="bg-light rounded d-flex align-items-center justify-content-center shadow-sm"
-                    style="height:300px;">
-                    <i class="bi bi-car-front"
-                        style="font-size:5rem; color: #adb5bd;"></i>
-                </div>
-                {% endif %}
+            <div class="col-md-6" style="position: relative;max-height:400px;">
+                
+                {% include "cars/utils/cars/carousel/_carousel_block.html" with car=car_model images=car_model.images.all %}
+                
+                
             </div>
 
-            <div class="col-md-7 mt-4 mt-md-0">
+            <div class="col-md-6 mt-4 mt-md-0">
                 <p class="text-muted mb-1">
                     <a href="{% url 'cars:brand_detail' slug=car_model.brand.slug %}"
                         class="text-decoration-none text-uppercase">

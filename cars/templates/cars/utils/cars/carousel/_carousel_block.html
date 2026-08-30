@@ -1,0 +1,31 @@
+<div id="carousel-{{ car.slug }}" class="carousel slide"
+     x-data="{ openAttribution: null }"
+     x-init="$el.addEventListener('slide.bs.carousel', () => { openAttribution = null })"
+     style="position: relative;"    
+>
+  <div class="carousel-indicators">
+
+    {% for img in images %}
+      {% include "cars/utils/cars/carousel/_button_indicator.html" %}
+    {% endfor %}
+
+  </div>
+
+  <div class="carousel-inner">
+
+    {% for img in images %}
+      {% include "cars/utils/cars/carousel/_image_carousel.html"  with index=forloop.counter0 %}
+
+    {% empty %}
+    <div class="carousel-item active">
+      <i class="bi bi-car-front fs-1"></i>  
+    </div>
+    {% endfor %}
+    
+  </div>
+  
+  {# button prev next #}
+  {% if images|length > 1 %}
+    {% include "cars/utils/cars/carousel/_button_prev_next.html" %}
+  {% endif %}
+</div>

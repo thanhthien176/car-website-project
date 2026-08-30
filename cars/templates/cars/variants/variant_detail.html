@@ -66,38 +66,7 @@
 
         {# Left: Primary image #}
         <div class="col-md-6">
-            {% if variant.primary_image %}
-                <img src="{{ variant.primary_image.image.url }}" 
-                alt="{{ variant }}"
-                class="img-fluid rounded shadow w-100"
-                style="max-height:350px; object-fit: cover;">
-
-                {% include "cars/utils/images/_image_source.html" with image=variant.primary_image %}
-                
-            {% else %}
-                <div class="bg-gradient rounded d-flex align-items-center justify-content-center shadow"
-                    style="height:350px;">
-                    <i class="bi bi-car-front" style="font-size:6rem; color:#adb5bd;"></i>
-                </div>
-            {% endif %}
-
-            {# Thumbnail strip — remaining image #}
-            {% with variant.images.all as all_images %}
-                {% if all_images.count > 1 %}
-                    <div class="d-flex gap-2 mt-2 flex-wrap">
-                        {% for img in all_images %}
-                            <img src="{{ img.image.url }}" 
-                                alt="{{ variant }}"
-                                class="rounded border"
-                                style="height:60px; width: 80px; object-fit:cover; cursor:pointer;">
-
-                            <!-- License Image -->
-                            {% include "cars/utils/images/_image_source.html" with image=img %}
-                        
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
+           {% include "cars/utils/cars/carousel/_carousel_block.html" with car=variant images=variant.display_images %}
         </div>
 
         {# Right: Key info #}
