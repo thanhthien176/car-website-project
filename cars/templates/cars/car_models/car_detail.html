@@ -28,7 +28,7 @@
 
         {# ── Model Header ─────────────────────────────────────────────── #}
         <div class="row mb-5">
-            <div class="col-md-6" style="position: relative;max-height:400px;">
+            <div class="col-md-6" style="max-height:400px;">
                 
                 {% include "cars/utils/cars/carousel/_carousel_block.html" with car=car_model images=car_model.images.all %}
                 
@@ -82,7 +82,7 @@
         </div>
 
         {# ── Variant Grid ─────────────────────────────────────────────── #}
-        <h2 class="mb-4">
+        <h2 class="mt-4">
             Các phiên bản
             <span class="badge hero-section ms-2">{{ variants|length }}</span>
         </h2>

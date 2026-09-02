@@ -284,6 +284,17 @@ class CarVariantAdmin(admin.ModelAdmin):
     def get_body_type(self, obj): 
         return obj.car_model.body_type
     
+@admin.register(CarImage)
+class CarImageAdmin(admin.ModelAdmin):
+    list_display = ['car', 'image', 'caption', 'is_primary', 'order']
+    list_editable = ['image', 'caption', 'is_primary', 'order']
+    
+    
+@admin.register(VariantImage)
+class VariantImageAdmin(admin.ModelAdmin):
+    list_display = ['variant', 'image', 'caption', 'is_primary', 'order']
+    list_editable = ['image', 'caption', 'is_primary', 'order']
+    
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display  = ['author_name', 'car', 'rating', 'is_approved', 'created_at']

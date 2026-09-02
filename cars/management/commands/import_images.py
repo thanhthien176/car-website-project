@@ -94,15 +94,23 @@ class Command(BaseImportCommand):
             target_label = f"CarImage for {car_model}"
             stat_key = "car_image_created"
 
-        success = self._download_image(
-            image_instance, "image", image_url, max_size=(1920, 1920)
-        )
-        if not success:
-            self.stdout.write(self.style.WARNING(
-                f"  [Row {row_num}] Failed to download image from {image_url} - skip"
-            ))
-            stats["skipped"] += 1
-            return
+        r2_key = self._clean_str(row.get("r2_key"))
+        if r2_key:
+            # Already uploaded from local — just assign string, no network
+            image_instance.image.name = r2_key
+        else:
+            # Fallback: keep the old download stream if the row does not have r2_key
+            success = self._download_image(image_instance, "image", row.get("image_url"), max_size=(1920, 1920))
+            if not success:
+                self.stdout.write(self.style.WARNING(f"  [Row {row_num}] Failed to download - skip"))
+                stats["skipped"] += 1
+                return
+            if not success:
+                self.stdout.write(self.style.WARNING(
+                    f"  [Row {row_num}] Failed to download image from {image_url} - skip"
+                ))
+                stats["skipped"] += 1
+                return
 
         image_instance.save()
         stats[stat_key] += 1
