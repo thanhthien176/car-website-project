@@ -78,6 +78,17 @@ class CarImage(ImageAttributionMixin):
     class Meta:
         ordering = ['order']
         verbose_name = "Car picture"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['car', 'source_url'],
+                condition=~models.Q(source_url=''),
+                name='unique_car_image_source_url',
+            ),
+            models.UniqueConstraint(
+                fields=['car', 'image'],
+                name='unique_car_image_path',
+            )
+        ]
         
     def save(self, *args, **kwargs):
         if self.is_primary:
@@ -98,6 +109,17 @@ class VariantImage(ImageAttributionMixin):
     class Meta:
         ordering = ['order']
         verbose_name = 'Variant picture'
+        constraints = [
+                    models.UniqueConstraint(
+                        fields=['variant', 'source_url'],
+                        condition=~models.Q(source_url=''),
+                        name='unique_variant_image_source_url',
+                    ),
+                    models.UniqueConstraint(
+                        fields=['variant', 'image'],
+                        name='unique_variant_image_path',
+                    )
+                ]
     
     def save(self, *args, **kwargs):
         if self.is_primary:

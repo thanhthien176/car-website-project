@@ -24,6 +24,7 @@ import logging
 import os
 import sys
 import time
+import requests
 from pathlib import Path
 
 import boto3
@@ -107,6 +108,12 @@ def resolve_slug(row: dict) -> tuple[str | None, str]:
 # Step 2: Download image — requests first, DrissionPage SessionPage as backup
 # ---------------------------------------------------------------------------
 def fetch_image_bytes(url: str, scraper: Scraper) -> bytes | None:
+    
+    # Use requests to fetch image, if requests is block, the tools will use DrissionPage
+    resp = requests.get( url, headers={"User-Agent": "Mozilla/5.0"},)
+    if resp:
+        return resp.content
+        
     
     try:
         scraper.load_cookies(url)

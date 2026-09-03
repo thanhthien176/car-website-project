@@ -44,7 +44,9 @@ class Command(BaseImportCommand):
             model_year = '2026'
 
         image_url = self._require_str(row, "image_url", row_num, stats)
-        if image_url is None:
+        r2_key = self._clean_str(row.get("r2_key"))
+        source_url = self._clean_str(row.get("source_url")) or ""
+        if image_url is None or r2_key is None:
             return
 
         # ── 1. Find CarModel (must exist) ─────────────────
@@ -86,15 +88,31 @@ class Command(BaseImportCommand):
 
         # ── 4. Create instance, download image, then save ─────────────────
         if variant is not None:
-            image_instance = VariantImage(variant=variant, **common_fields)
-            target_label = f"VariantImage for {variant}"
+            Model = VariantImage
+            lookup = {"variant": variant, "source_url": source_url}
             stat_key = "variant_image_created"
+            target_label = f"VariantImage for {variant}"
         else:
-            image_instance = CarImage(car=car_model, **common_fields)
-            target_label = f"CarImage for {car_model}"
+            Model = CarImage
+            lookup = {"car": car_model, "source_url": image_url}
             stat_key = "car_image_created"
+            target_label = f"CarImage for {car_model}"
+            
+        existing = Model.objects.filter(**lookup).first()
+        
+        if existing is not None and not options["update"]:
+            self.stdout.write(f"  [Row {row_num}] Already imported ({image_url}) - skip")
+            stats["skipped"] += 1
+            return
 
-        r2_key = self._clean_str(row.get("r2_key"))
+        if existing is not None:
+            image_instance = existing
+            for k, v in common_fields.items():
+                setattr(image_instance, k, v)
+        else:
+            image_instance = Model(**lookup, **common_fields)
+        
+        
         if r2_key:
             # Already uploaded from local — just assign string, no network
             image_instance.image.name = r2_key
@@ -102,16 +120,15 @@ class Command(BaseImportCommand):
             # Fallback: keep the old download stream if the row does not have r2_key
             success = self._download_image(image_instance, "image", row.get("image_url"), max_size=(1920, 1920))
             if not success:
-                self.stdout.write(self.style.WARNING(f"  [Row {row_num}] Failed to download - skip"))
-                stats["skipped"] += 1
-                return
-            if not success:
                 self.stdout.write(self.style.WARNING(
                     f"  [Row {row_num}] Failed to download image from {image_url} - skip"
                 ))
                 stats["skipped"] += 1
                 return
 
+            
+
         image_instance.save()
         stats[stat_key] += 1
-        self.stdout.write(f"  + {target_label}")
+        verb = "updated" if existing is not None else "created"
+        self.stdout.write(f"  ~ {target_label} {verb}")
