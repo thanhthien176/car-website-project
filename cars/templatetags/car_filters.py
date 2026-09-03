@@ -53,5 +53,5 @@ def active_url(context, name):
     request = context.get('request')
     if request and request.resolver_match:
         match = request.resolver_match  
-        return 'active' if name in {match.url_name, match.view_name} else ''
+        return 'active' if name in {match.url_name, match.view_name, match.app_name} else ''
     return ''

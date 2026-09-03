@@ -1,8 +1,11 @@
-from .blog_views import BlogPostDetailView, BlogPostListView
-from .brand_hist_views import BrandHistoryView
+from .blog_views import *
+from .brand_hist_views import *
 
 __all__ = [
     'BlogPostDetailView',
     'BlogPostListView',
     'BrandHistoryView',
+    'CategoryPostListView',
+    'TagPostListView',
+    
 ]

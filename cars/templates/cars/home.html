@@ -28,7 +28,7 @@
     {# Featured brands #}
     <section class="mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-3">Hãng xe nổi bật <span class="text-muted fs-6">({{ featured_brands.count }})</span></h2>
+            <h2 class="mb-3">Hãng xe nổi bật<span class="text-muted fs-6">({{ featured_brands.count }})</span></h2>
             <a href="{% url 'cars:brand_list' %}" class="btn btn-outline-brand btn-sm fw-semibold">
                 Tất cả hãng xe <i class="bi bi-arrow-right"></i>
             </a>
@@ -47,7 +47,7 @@
      
     <section class="mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="mb-3">Đánh giá cao nhất</h2>
+        <h2 class="mb-3">Top Rating</h2>
         <a href="{% url 'cars:car_list' %}" class="btn btn-outline-brand btn-sm fw-semibold">
             Tất cả xe <i class="bi bi-arrow-right"></i>
         </a>
@@ -60,7 +60,7 @@
     </section>
 
     <section class="mb-4">
-        <h2 class="my-3">Xe mới cập nhật</h2>
+        <h2 class="my-3">Blogs</h2>
         <div class="row row-cols-1 row-cols-md-4 g-3 mb-3">
             {% for variant in lastest_variants %}
             <div class="col">
