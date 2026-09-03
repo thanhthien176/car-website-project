@@ -50,7 +50,15 @@
         </section>
 
         {% if brand.description %}
-            <p class="lead mb-5">{{ brand.description }}</p>
+        <div x-data="{ expanded : false }">
+            <p class="lead mb-1"
+               :class="expanded ? '' : 'line-clamp-2'">
+               {{ brand.description }}
+            </p>
+            <button @click="expanded = !expanded" class="btn btn-link p-0 text-decoration-none border-0 fw-bold mb-5">
+                <span x-text="expanded ? 'Thu gọn' : 'Xem thêm'"></span>
+            </button>
+        </div>
         {% endif %}
 
         <!-- Car Model Grid -->
