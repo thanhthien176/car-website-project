@@ -1,0 +1,18 @@
+<div class="col-md-6 col-lg-3">
+    <div class="blog-entry">
+        <a href="{% url 'blogs:post_detail' slug=post.slug %}" class="img-link">
+            <img src="{{ post.section.first.image.url }}" alt="Image" class="img-fluid">
+
+        </a>
+        <strong class="d-inline-block mb-2">
+                {{ post.category }}
+        </strong>            
+        <span class="date">{{ post.published_at|date:"d/m/Y" }}</span>
+        <h2><a href="{% url 'blogs:post_detail' slug=post.slug %}">{{ post.title }}</a></h2>
+        <div class="mb-1 blog-meta">
+            {{ post.author.display_name }}
+        </div>
+        <p class="card-description">{{ post.get_description }}</p>
+        <p><a href="{% url 'blogs:post_detail' slug=post.slug %}" class="read-more">Xem chi tiết...</a></p>
+    </div>
+</div>

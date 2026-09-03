@@ -1,0 +1,38 @@
+<div class="col d-flex align-items-stretch">
+    <div class="card card-blog rounded-4 h-100 overflow-hidden border-2">
+        <a href="{% url 'blogs:post_detail' slug=post.slug %}" class="img-link">
+            <img src="{{ post.sections.first.image.url }}" 
+            alt="{{ post.sections.title }}" 
+            class="card-img-top object-fit-cover"
+            style="height:200px" >
+        </a>
+        <div class="card-body d-flex flex-column">
+            <a href="{% url 'blogs:category_post_list' category_slug=post.category.slug %}" class="text-decoration-none mb-1">
+                <strong class="d-inline-block mb-2 blog-post-category">
+                    {{ post.category }}
+                </strong>
+            </a>
+            <div class="mb-auto">
+                <h5 class="card-title">
+                    <a href="{% url 'blogs:post_detail' slug=post.slug %}" class="text-decoration-none">
+                        {{ post.title }}
+                    </a>
+                </h5>
+                <span class="date text-muted">
+                    {{ post.author.display_name }} · {{ post.published_at|date:"d/m/Y" }}
+                </span>
+            </div>
+            
+            <div>
+                <p class="card-text text-truncate-3 card-description">{{ post.sections.first.content }}</p>
+                <p class="mb-0">
+                    <a href="{% url 'blogs:post_detail' slug=post.slug %}" class="read-more">
+                        Continue Reading
+                    </a>
+                </p>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
