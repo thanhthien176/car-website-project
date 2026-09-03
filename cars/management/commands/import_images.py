@@ -29,6 +29,10 @@ class Command(BaseImportCommand):
     _ATTRIBUTION_FIELDS = (
         "author_name", "author_url", "source_name", "source_url", "license",
     )
+    
+    _COMMON_ATTRIBUTION_FIELDS = tuple(
+    f for f in _ATTRIBUTION_FIELDS if f != "source_url"
+    )
 
     def _import_row(self, row, row_num, options, stats):
         brand_name = self._require_str(row, "brand_name", row_num, stats)
@@ -46,6 +50,7 @@ class Command(BaseImportCommand):
         image_url = self._require_str(row, "image_url", row_num, stats)
         r2_key = self._clean_str(row.get("r2_key"))
         source_url = self._clean_str(row.get("source_url")) or ""
+        
         if image_url is None or r2_key is None:
             return
 
@@ -83,7 +88,7 @@ class Command(BaseImportCommand):
             "is_primary": self._to_bool(row.get("is_primary"), default=False),
             "order": self._to_int(row.get("order"), row_num) or 0,
         }
-        for field in self._ATTRIBUTION_FIELDS:
+        for field in self._COMMON_ATTRIBUTION_FIELDS:
             common_fields[field] = self._clean_str(row.get(field))
 
         # ── 4. Create instance, download image, then save ─────────────────
@@ -94,7 +99,7 @@ class Command(BaseImportCommand):
             target_label = f"VariantImage for {variant}"
         else:
             Model = CarImage
-            lookup = {"car": car_model, "source_url": image_url}
+            lookup = {"car": car_model, "source_url": source_url}
             stat_key = "car_image_created"
             target_label = f"CarImage for {car_model}"
             
