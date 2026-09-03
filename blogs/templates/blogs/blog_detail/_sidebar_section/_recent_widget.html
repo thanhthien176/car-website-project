@@ -1,0 +1,30 @@
+<div class="recent-posts-widget widget-item">
+
+    <h3 class="widget-title">Recent Posts</h3>
+
+    {% for post in posts %}
+    
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <img src="{{ post.sections.first.image.url }}" 
+                 alt="{{ post.title }}" 
+                 class="flex-shrink-0 object-fit-cover"
+                 style="width: 50px;height:50px;"
+                 >
+            <div>
+                <h4 class="mb-0 fs-6">
+                    <a href="{% url 'blogs:post_detail' slug=post.slug %}"
+                       class="text-decoration-none"
+                       >
+                        {{ post.title }}
+                    </a>
+                </h4>
+                <time datetime="{{ post.pushlished_at }}" class="text-muted-custom small">
+                    {{ post.pushlished_at | date:"d/m/Y" }}
+                </time>
+            </div>
+        </div>
+        
+    {% endfor %}
+
+    
+</div>

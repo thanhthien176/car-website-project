@@ -1,0 +1,9 @@
+<div class="tags-widget widget-item">
+    <h3 class="widget-title">Tags</h3>
+    <ul>
+        {% for tag in tags %}
+            <li><a href="{% url 'blogs:tag_post_list' tag_slug=tag.slug %}">{{ tag.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+</div>

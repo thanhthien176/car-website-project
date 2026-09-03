@@ -1,0 +1,28 @@
+<section class="blog-section">
+    {% if section.title %}
+    <h2>{{ section.title }}</h2>
+    {% endif %} 
+    
+    {% if section.image %}
+    <figure class="blog-figure">
+
+        <div style="position: relative;">
+        <img
+        src="{{ section.image.url }}"
+        class="blog-image"
+        alt="{{ section.title|default:post.title }}"
+        loading="lazy"
+        style="max-height:300px; object-fit:cover;"
+        />
+
+        {% include "cars/utils/images/_image_source.html" with image=section %}
+        </div>            
+
+        {% if section.title %}
+        <figcaption>{{ section.title }}</figcaption>
+        {% endif %}
+    </figure>
+    {% endif %}
+
+    <div class="blog-text">{{ section.content|linebreaks }}</div>
+</section>

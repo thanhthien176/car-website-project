@@ -1,0 +1,53 @@
+<article class="blog-article">
+        <!-- Back to blog -->
+        <div class="mb-3">
+          <a href="{% url 'blogs:post_list' %}" class="blog-back-link">
+            <i class="bi bi-arrow-left"></i>
+            Tất cả bài viết
+          </a>
+        </div>
+
+        <!-- Category -->
+        {% if post.category %}
+        <div class="mb-3">
+          <a href="#" class="badge badge-brand text-decoration-none">
+            {{ post.category.name }}
+          </a>
+        </div>
+        {% endif %}
+
+        <!-- Title -->
+        <h1 class="blog-title">{{ post.title }}</h1>
+
+        <!-- Metadata -->
+        <div class="blog-meta mb-4">
+          <span>
+            <i class="bi bi-person"></i>
+            {{ post.author.display_name }}
+          </span>
+
+          <span class="blog-meta-separator">·</span>
+
+          <time datetime="{{ post.published_at|date:'c' }}">
+            <i class="bi bi-calendar3"></i>
+            {{ post.published_at|date:"d/m/Y H:i" }}
+          </time>
+        </div>
+
+        <!-- Tags -->
+        {% include "blogs/blog_detail/_detail_section/_tag_detail.html" %}
+
+        <hr class="blog-divider" />
+
+        <!-- =================================
+              ARTICLE CONTENT
+             ================================= -->
+        <div class="blog-content">
+          {% for section in post.sections.all %}
+            {% include "blogs/blog_detail/_detail_section/_section_detail.html" %}
+          
+          {% endfor %}
+        </div>
+ 
+</article>
+

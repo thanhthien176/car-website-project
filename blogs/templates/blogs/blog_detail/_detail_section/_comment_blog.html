@@ -1,0 +1,26 @@
+<section id="blog-comments" class="blog-comments section">
+
+<div class="container">
+
+    <h4 class="comments-count">8 Comments</h4>
+    {% for comment in comments %}
+        <div id="comment-{{ comment.id }}" class="comment">
+        <div class="d-flex">
+            {% if comment.image %}
+                <div class="comment-img"><img src="{{ comment.image.url }}" alt=""></div>
+            {% endif %}
+            <div>
+            <h5><a href="{% url 'users:profile' slug=comment.author.slug %}">{{ comment.author }}</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
+            <time datetime="2020-01-01">01 Jan,2022</time>
+            <p>
+                {{ comment.content }}
+            </div>
+        </div>
+        </div>
+    {% endfor %}
+    
+
+
+</div>
+
+</section>

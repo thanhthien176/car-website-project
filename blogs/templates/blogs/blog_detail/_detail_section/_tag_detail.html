@@ -1,0 +1,7 @@
+{% if post.tags.all %}
+    <div class="blog-tags mb-4">
+        {% for tag in post.tags.all %}
+        <span class="badge blog-tag"> #{{ tag.name }} </span>
+        {% endfor %}
+    </div>
+{% endif %}

@@ -1,0 +1,36 @@
+<div class="widgets-container">
+    <!-- Blog Author Widget -->
+    {% if post.author %}
+        {% include "blogs/blog_detail/_sidebar_section/_author_widget.html" with author=post.author %}
+    
+    {% else %}
+        <div class="widget-item">
+        <i class="bi bi-person-circle"></i>
+        </div>
+    {% endif %}
+
+    <!-- Search Widget -->
+    {% include "blogs/blog_detail/_sidebar_section/_search_widget.html" %}
+
+    <!-- Recent Posts Widget -->
+    {% if recent_posts %}
+        {% include "blogs/blog_detail/_sidebar_section/_recent_widget.html" with posts=recent_posts %}
+    
+    {% else %}
+        <div class="widget-item">
+        <i class="bi bi-stickies-fill"></i>
+        </div>
+    {% endif %}
+
+    <!-- Tags Widget -->
+    {% if tags %}
+        {% include "blogs/blog_detail/_sidebar_section/_tag_widget.html" with tags=tags %}
+    
+    {% else %}
+        <div class="widget-item">
+        <i class="bi bi-tags"></i>
+        </div>
+    {% endif %}
+
+</div>
+

@@ -1,0 +1,40 @@
+<div class="blog-author-widget widget-item" x-data="{ open: false }">
+
+    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex align-items-center w-100">
+        <img src="{{ author.avatar.url }}" class="rounded-circle flex-shrink-0" alt="{{ author.display_name }}">
+        <div>
+            <h4>{{ author.display_name }}</h4>
+            <div class="social-links">
+
+                {% if author.twiter_x %}
+                <a href="{{ author.twiter_x }}"><i class="bi bi-twitter-x"></i></a>
+                {% endif %}
+                
+                <a href="https://facebook.com/#"><i class="bi bi-facebook"></i></a>
+                <a href="https://instagram.com/#"><i class="biu bi-instagram"></i></a>
+                <a href="https://instagram.com/#"><i class="biu bi-linkedin"></i></a>
+            </div>
+
+            {% if author.bio %}
+                <button @click="open = !open" 
+                        class="btn btn-sm btn-link p-0 text-decoration-none shadow-none" 
+                        style="font-size: 0.85rem;">
+                    <span x-text="open ? 'Thu gọn' : 'Xem giới thiệu'"></span>
+                    <i class="bi" :class="open ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div x-show="open" 
+            x-collapse 
+            class="w-100 mt-3 pt-2 border-top">
+        <p class="mb-0 text-muted" style="font-size: 0.9rem;">
+            {{ author.bio }}
+        </p>
+    </div>
+
+    </div>
+
+</div>
