@@ -207,7 +207,7 @@ class CarVariant(SEOMetaData, models.Model):
     
     # classification
     fuel_system = models.CharField(max_length=100, blank=True, help_text="Hệ thống nhiên liệu")
-    fuel_type = models.CharField(max_length=20, choices=FUEL_TYPE_CHOICES)    
+    fuel_type = models.CharField(max_length=20, choices=FUEL_TYPE_CHOICES, help_text="Loại nhiên liệu")    
     
     # price
     price_min = models.DecimalField(max_digits=15, decimal_places=0)
