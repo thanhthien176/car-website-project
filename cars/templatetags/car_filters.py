@@ -44,7 +44,7 @@ def star_range(rating):
         return []
     
 @register.simple_tag(takes_context=True)
-def active_url(context, name):
+def active_url(context, *names):
     """
     Return 'active' if current page URL name matches url_name, else ''.
     Usage: <a class="nav-link {% active_url 'home' %}">
@@ -52,6 +52,9 @@ def active_url(context, name):
     """
     request = context.get('request')
     if request and request.resolver_match:
-        match = request.resolver_match  
-        return 'active' if name in {match.url_name, match.view_name, match.app_name} else ''
+        match = request.resolver_match
+        for name in names:  
+            if name in {match.url_name, match.view_name, match.app_name}:
+                return 'active'
+
     return ''

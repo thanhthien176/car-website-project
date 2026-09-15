@@ -36,7 +36,7 @@
 
                 <!-- Brands -->
                 <li class="nav-item">
-                    <a class="nav-link {% active_url 'brand_list' %}"
+                    <a class="nav-link {% active_url 'brand_list' 'brand_detail' %}"
                        href="{% url 'cars:brand_list' %}">
                         <i class="bi bi-shield-check"></i>
                         <span>Hãng xe</span>
@@ -45,7 +45,7 @@
 
                 <!-- Cars -->
                 <li class="nav-item">
-                    <a class="nav-link {% active_url 'car_list' %}"
+                    <a class="nav-link {% active_url 'car_list' 'car_detail' 'variant_detail' %}"
                        href="{% url 'cars:car_list' %}">
                         <i class="bi bi-car-front"></i>
                         <span>Xe hơi</span>

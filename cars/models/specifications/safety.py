@@ -49,7 +49,7 @@ class SafetySpecification(SpecificationDisplayMixin, models.Model):
     ebs = models.BooleanField(
         default=False, help_text="Đèn báo phanh khẩn cấp (EBS)"
     )
-
+    
     # ===== Tire Pressure =====
     tpms = models.BooleanField(
         default=False, help_text="Cảnh báo áp suất lốp (TPMS)"
