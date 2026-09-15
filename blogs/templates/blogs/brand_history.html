@@ -17,12 +17,19 @@
     <hr>
 
     {% for section in history.sections.all %}
-      <section class="mb-4">
+      <section class="mb-4" x-data="{ show: false }" style="max-width: 990px;">
         {% if section.title %}<h2 class="h4">{{ section.title }}</h2>{% endif %}
         {% if section.image %}
-          <img src="{{ section.image.url }}" class="img-fluid rounded mb-2" alt="{{ section.title }}">
+        <div style="position: relative;">
+          <img src="{{ section.image.url }}" 
+          class="w-100 rounded mb-2" 
+          alt="{{ section.title }}"
+          style="max-height:500px; object-fit:cover;"
+          >
 
           {% include "cars/utils/images/_image_source.html" with image=section %}
+        </div>
+          
         {% endif %}
         <div>{{ section.content|linebreaks }}</div>
       </section>
