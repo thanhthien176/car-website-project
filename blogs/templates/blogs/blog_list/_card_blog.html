@@ -13,7 +13,7 @@
                 </strong>
             </a>
             <div class="mb-auto">
-                <h5 class="card-title">
+                <h5 class="card-title line-clamp-2">
                     <a href="{% url 'blogs:post_detail' slug=post.slug %}" class="text-decoration-none">
                         {{ post.title }}
                     </a>
@@ -24,7 +24,7 @@
             </div>
             
             <div>
-                <p class="card-text text-truncate-3 card-description">{{ post.sections.first.content }}</p>
+                <p class="card-text text-truncate-3 line-clamp-2">{{ post.sections.first.content }}</p>
                 <p class="mb-0">
                     <a href="{% url 'blogs:post_detail' slug=post.slug %}" class="read-more">
                         Continue Reading
