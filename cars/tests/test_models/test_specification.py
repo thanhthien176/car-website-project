@@ -59,8 +59,9 @@ class SpecificationModelTest(TestCase):
     def test_safety_spec_boolean_default_false(self):
         spec = SafetySpecification(variant=self.variant)
         bool_fields = [
-            "pcs", "lda", "lta", "drcc", "ahb", "bsm", "rcta",
-            "abs", "ba", "ebd", "vsc", "trc", "hac", "ebs", "tpws",
+            'abs', 'ba', 'ebd', 'vsc', 'trc', 'hac', 'ebs',
+            'tpms', 'reverse_camera', 'camera_360',
+            'parking_brake', 'secure_door', 'exit_safety',
         ]
         for field in bool_fields:
             self.assertFalse(getattr(spec, field), f"{field} should default to False")

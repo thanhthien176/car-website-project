@@ -78,7 +78,9 @@ class ActiveUrlTagTest(TestCase):
     def test_returns_empty_when_view_name_differs(self):
         request = MagicMock()
         request.resolver_match.view_name = "cars:detail"
-        result = active_url({'request': request}, "blog:detail")
+        request.resolver_match.url_name = "detail"
+        request.resolver_match.app_name = "cars"
+        result = active_url({'request': request}, "blogs:detail")
         self.assertEqual(result, "")
         
     def test_url_name_and_view_name_both_checked(self):
